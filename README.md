@@ -76,6 +76,27 @@ If you need to go back just use. Library supports multibackstack navigation for 
  rootController.popBackStack()
 ```
 
+#### Screens
+
+You can create screen as you want, but you need to inherit your class from `NavigationScreen` interface
+In example I use `NavigationTree` class for it
+
+```kotlin
+ object NavigationTree {
+    enum class Root : NavigationScreen {
+        Start, Container
+    }
+
+    enum class Container : NavigationScreen {
+        Chain
+    }
+
+    enum class Tabs : NavigationScreen {
+        Main, Favorite, Settings
+    }
+}
+```
+
 ### Android Setup
 
 For Android we must support hardware back pressing, so you need to do this in your Single Activity
