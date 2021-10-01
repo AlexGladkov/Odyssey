@@ -112,8 +112,7 @@ Inside this project you can find example and of course if you have an issue or a
 feel free to open new issue in Issues section
 
 [<img src="screenshots/android-screen-favorite.png" width="250" height = "500"/>](screenshots/android-screen-favorite.png)
-
-![Desktop](screenshots/desktop-screen-favorite.png)
+[<img src="screenshots/desktop-screen-favorite.png" width="500" height = "400"/>](screenshots/desktop-screen-favorite.png)
 
 ### License
 ```
