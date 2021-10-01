@@ -44,8 +44,6 @@ class RootController {
 
         _backStackEntry.add(stackEntry)
         _destinationState.value = stackEntry
-
-        println("Backstack $debugName current -> $_backStackEntry")
     }
 
     fun launch(
@@ -74,8 +72,6 @@ class RootController {
             _backStackEntry.removeAt(foundIndex)
             _backStackEntry.add(foundElement)
             _destinationState.value = foundElement
-
-            println("Backstack $debugName current -> $_backStackEntry")
             return
         }
 
@@ -85,12 +81,8 @@ class RootController {
             _backStackEntry.removeAt(foundIndex)
             _backStackEntry.add(stackEntry)
             _destinationState.value = stackEntry
-
-            println("Backstack $debugName current -> $_backStackEntry")
             return
         }
-
-        println("Backstack $debugName current -> $_backStackEntry")
     }
 
     fun newChildRootInstance(screen: NavigationScreen): RootController {
@@ -103,7 +95,6 @@ class RootController {
 
     fun popBackStack(): Boolean {
         var currentChild = childRoot
-        println("Backstack $debugName Current child before -> ${currentChild?.debugName}")
         while (currentChild != null) {
             if (currentChild.popBackStack()) {
                 return true
@@ -112,14 +103,9 @@ class RootController {
             }
         }
 
-        println("Backstack $debugName Current child after -> ${currentChild?.debugName}")
-        println("Backstack $debugName Size -> $_backStackEntry")
-
         if (currentChild == childRoot && _backStackEntry.isEmpty()) {
             return false
         }
-
-        println("Backstack $debugName return false")
 
         _backStackEntry.removeLast()
         if (_backStackEntry.isEmpty()) return false
