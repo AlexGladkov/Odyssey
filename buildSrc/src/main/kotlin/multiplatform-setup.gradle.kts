@@ -19,6 +19,10 @@ kotlin {
 
     ios()
 
+    js(IR) {
+        browser()
+    }
+
     sourceSets {
         named("commonTest") {
             dependencies {

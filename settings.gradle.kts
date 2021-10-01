@@ -7,5 +7,6 @@ include(
     ":odyssey:compose",
 
     ":android",
-    ":desktop"
+    ":desktop",
+    ":web"
 )
