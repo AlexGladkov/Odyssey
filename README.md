@@ -111,7 +111,8 @@ For Android we must support hardware back pressing, so you need to do this in yo
 Inside this project you can find example and of course if you have an issue or a question 
 feel free to open new issue in Issues section
 
-![Android](screenshots/android-screen-favorite.png)
+[<img src="screenshots/android-screen-favorite.png" width="250" height = "500"/>](screenshots/android-screen-favorite.png)
+
 ![Desktop](screenshots/desktop-screen-favorite.png)
 
 ### License
