@@ -1,0 +1,39 @@
+*.iml
+
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+/.idea/gradle.xml
+/.idea/vcs.xml
+/.idea/misc.xml
+/.idea/codeStyles
+.idea/
+.DS_Store
+/captures
+.externalNativeBuild
+.cxx
+
+
+# Built application files
+*.apk
+*.aar
+*.ap_
+*.aab
+
+# Files for the ART/Dalvik VM
+*.dex
+
+# Java class files
+*.class
+
+# Gradle files
+.gradle/
+build/
+
+local.properties
+
+core-data-shared/build/

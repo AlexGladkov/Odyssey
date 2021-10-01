@@ -1,0 +1,18 @@
+package ru.alexgladkov.common.compose.navigation.extensions
+
+import androidx.activity.ComponentActivity
+import androidx.activity.OnBackPressedCallback
+import ru.alexgladkov.odyssey.core.backpress.OnBackPressedDispatcher
+import ru.alexgladkov.odyssey.core.RootController
+
+fun RootController.setupWithActivity(activity: ComponentActivity) {
+    val dispatcher = activity.onBackPressedDispatcher
+    val rootDispatcher = OnBackPressedDispatcher()
+    dispatcher.addCallback(object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            rootDispatcher.onBackPressed()
+        }
+    })
+
+    setupBackPressedDispatcher(rootDispatcher)
+}
