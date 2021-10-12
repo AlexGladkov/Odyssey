@@ -1,22 +1,19 @@
 package ru.alexgladkov.`odyssey-demo`
 
-import androidx.compose.desktop.Window
-import androidx.compose.ui.unit.IntSize
-import ru.alexgladkov.common.compose.RootContainer
+import ru.alexgladkov.common.compose.NavigationTree
+import ru.alexgladkov.common.compose.navigation.generateNavigationGraph
 import ru.alexgladkov.odyssey.core.RootController
+import javax.swing.JFrame
+import javax.swing.SwingUtilities
 
-fun main() {
-    val rootController = RootController()
+fun main() = SwingUtilities.invokeLater {
+    val window = JFrame()
+    window.title = "Odyssey Demo"
+    window.setSize(800, 600)
 
-    Window(
-        title = "Odyssey Demo",
-        size = IntSize(
-            800,
-            600
-        )
-    ) {
-        RootContainer(
-            rootController = rootController,
-        )
-    }
+    val screenHost = AppScreenHost(window)
+    val rootController = RootController(screenHost)
+    rootController.generateNavigationGraph()
+    screenHost.prepareFowDrawing()
+    rootController.launch(NavigationTree.Root.Splash.toString())
 }

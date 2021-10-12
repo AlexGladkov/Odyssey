@@ -1,7 +1,10 @@
 package ru.alexgladkov.odyssey.core
 
+
+/**
+ * Add specific behavior to navigation
+ * @see SingleNewTask - clears backstack and start new screen without history
+ */
 enum class LaunchFlag {
-    SingleTop, // Always save oldest copy in stack
-    NewSingleTask, // Always save newest copy in stack
-    ClearHistory // Clear previous stack
+    SingleNewTask
 }

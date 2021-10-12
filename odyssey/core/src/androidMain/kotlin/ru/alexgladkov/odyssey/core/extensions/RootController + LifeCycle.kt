@@ -14,5 +14,6 @@ fun RootController.setupWithActivity(activity: ComponentActivity) {
         }
     })
 
+    onApplicationFinish = { activity.finish() }
     setupBackPressedDispatcher(rootDispatcher)
 }

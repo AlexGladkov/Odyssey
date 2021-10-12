@@ -13,5 +13,10 @@ kotlin {
             }
         }
         named("commonTest")
+        named("androidMain") {
+            dependencies {
+                implementation(Dependencies.AndroidX.Activity.activityCompose)
+            }
+        }
     }
 }
