@@ -17,55 +17,56 @@ named("commonMain") {
 }
 ```
 
-### Main idea
-
 #### Setup
 
-The main class in library is `RootController` It provides navigation control and host
-backstack inside. 
+[1. Common preparations](documentation/COMMON.md)
 
-For setup navigation graph in common code you need to use
+[2. How to start with Android](documentation/ANDROID.md)
 
-```kotlin
-@Composable
-fun RootContainer(
-    rootController: RootController
-) {
-    RootHost(startScreen = NavigationTree.Root.Start, rootController = rootController) {
-        destination(screen = NavigationTree.Root.Start) {
-            // Here is the place to draw something in Compose
-            // ...
-            // Or you can provide composable function like below
-            SomeScreen(rootController) 
-        }
-    }
-}
-```
+[3. How to start with Desktop](documentation/DESKTOP.md)
+
+[4. How to start with iOS](documentation/IOS.md)
 
 #### Parameters
 
-Params included inside destination by design
+If you need to add params to your navigation just use params parameter in launch function
 
 ```kotlin
-destination(screen = NavigationTree.Root.Start) {
-    val key = params as? String
-    SomeScreen(rootController, params)
+rootController.launch(screen = NavigationTree.Main.Detail.toString(), params = paramState.value)
+```
+
+To catch this value you can use **backStackObserver**
+
+```kotlin
+// Compose example
+val navigation = rootController.backStackObserver.observeAsState()
+val params = (navigation.value?.destination as? DestinationScreen)?.params
+```
+
+```swift
+// iOS Example
+let observer = rootController.backStackObserver.watch { navigation in
+    let params = (navigation.value?.destination as? DestinationScreen)?.params
 }
+
+// Don't forget to destroy observer
+observer.close()
 ```
 
 #### Navigation
 
 You must pass RootController to screen for inner navigation and if you need to open next screen
-just use this
+just use this. You can use String as key for screen
 
 ```kotlin
- rootController.launch(NavigationTree.Root.Container)
+ rootController.launch("splash")
 ```
 
-or this if you want to pass params
+You can use specific flags to make navigation as you want. Now we have only one flag.
+```LaunchFlag.SingleNewTask``` to clear backstack if you need to start new screen from scratch
 
 ```kotlin
- rootController.launch(NavigationTree.Root.Container, params = "Your any object")
+ rootController.launch(screen = "splash", launchFlag = LaunchFlag.SingleNewTask)
 ```
 
 #### Back
@@ -76,35 +77,6 @@ If you need to go back just use. Library supports multibackstack navigation for 
  rootController.popBackStack()
 ```
 
-#### Screens
-
-You can create screen as you want, but you need to inherit your class from `NavigationScreen` interface
-In example I use `NavigationTree` class for it
-
-```kotlin
- object NavigationTree {
-    enum class Root : NavigationScreen {
-        Start, Container
-    }
-
-    enum class Container : NavigationScreen {
-        Chain
-    }
-
-    enum class Tabs : NavigationScreen {
-        Main, Favorite, Settings
-    }
-}
-```
-
-### Android Setup
-
-For Android we must support hardware back pressing, so you need to do this in your Single Activity
-
-```kotlin
-  val rootController = RootController()
-  rootController.setupWithActivity(this)
-```
 
 ### Example
 
