@@ -90,7 +90,7 @@ feel free to open new issue in Issues section
 ```
 MIT License
 
-Copyright (c) 2021 Aleksey Gladkov (@AlexGladkov)
+Copyright (c) 2021 Alex
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
