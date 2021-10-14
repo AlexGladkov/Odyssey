@@ -41,6 +41,11 @@ abstract class DesktopScreenHost constructor(
         destinationObserver.tryEmit(destinationPoint)
     }
 
+    /**
+     * Launch screen
+     *
+     * @param destinationPoint
+     */
     @Composable
     protected abstract fun launchScreen(destinationPoint: DestinationPoint)
 }

@@ -8,8 +8,8 @@ kotlin {
         named("commonMain") {
             dependencies {
                 api(compose.materialIconsExtended)
-                implementation(project(":odyssey:compose"))
-                implementation(project(":odyssey:core"))
+                implementation(project(":odyssey:odyssey-compose"))
+                implementation(project(":odyssey:odyssey-core"))
             }
         }
 

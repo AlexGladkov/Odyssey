@@ -3,9 +3,12 @@ include(
 
     ":common:common-compose",
 
-    ":odyssey:core",
-    ":odyssey:compose",
+    ":odyssey:odyssey-core",
+    ":odyssey:odyssey-compose",
 
     ":android",
     ":desktop"
 )
+
+//includeBuild("convention-plugins")
+rootProject.name = "odyssey"

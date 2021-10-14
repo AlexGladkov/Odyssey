@@ -14,8 +14,8 @@ kotlin {
         named("commonMain") {
             dependencies {
                 implementation(project(":common:common-compose"))
-                implementation(project(":odyssey:core"))
-                implementation(project(":odyssey:compose"))
+                implementation(project(":odyssey:odyssey-core"))
+                implementation(project(":odyssey:odyssey-compose"))
             }
         }
 
