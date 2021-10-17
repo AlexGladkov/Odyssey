@@ -5,6 +5,7 @@ import ru.alexgladkov.odyssey.core.backpress.BackPressedCallback
 import ru.alexgladkov.odyssey.core.backpress.OnBackPressedDispatcher
 import ru.alexgladkov.odyssey.core.controllers.FlowRootController
 import ru.alexgladkov.odyssey.core.controllers.MultiStackRootController
+import ru.alexgladkov.odyssey.core.declarative.RootControllerBuilder
 import ru.alexgladkov.odyssey.core.destination.*
 import ru.alexgladkov.odyssey.core.destination.DestinationPoint
 import ru.alexgladkov.odyssey.core.destination.mapToNavigationEntry
@@ -41,11 +42,20 @@ open class RootController(var screenHost: ScreenHost) {
 
     /**
      * Set navigation graph to RootController
+     * @param block - declarative list of destinations
+     * @see Destination to know more
+     */
+    fun setNavigationGraph(block: RootControllerBuilder.() -> Unit) {
+        _allowedDestinations.clear()
+        _allowedDestinations.addAll(RootControllerBuilder(screenHost).apply(block).build())
+    }
+
+    /**
+     * Set allowed destinations to RootController
      * @param list - list of destinations
      * @see Destination to know more
      */
-    // TODO Replace it to declarative creation
-    fun generateDestinations(list: List<Destination>) {
+    protected fun generateDestinations(list: List<Destination>) {
         _allowedDestinations.clear()
         _allowedDestinations.addAll(list)
     }

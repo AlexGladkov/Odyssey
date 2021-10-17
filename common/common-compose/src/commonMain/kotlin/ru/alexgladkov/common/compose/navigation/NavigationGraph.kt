@@ -1,53 +1,27 @@
 package ru.alexgladkov.common.compose.navigation
 
 import ru.alexgladkov.common.compose.NavigationTree
-import ru.alexgladkov.odyssey.core.RootController
-import ru.alexgladkov.odyssey.core.destination.Destination
-import ru.alexgladkov.odyssey.core.destination.DestinationFlow
-import ru.alexgladkov.odyssey.core.destination.DestinationMultiFlow
-import ru.alexgladkov.odyssey.core.destination.DestinationScreen
+import ru.alexgladkov.odyssey.core.declarative.RootControllerBuilder
 
-fun RootController.generateNavigationGraph() {
-    // TODO - Remove this to declarative creation
-    generateDestinations(ArrayList<Destination>().apply {
-        add(DestinationScreen(NavigationTree.Root.Splash.toString()))
-        add(
-            DestinationFlow(
-                name = NavigationTree.Root.Auth.toString(),
-                screens = ArrayList<DestinationScreen>().apply {
-                    add(DestinationScreen(NavigationTree.Auth.Login.toString()))
-                    add(DestinationScreen(NavigationTree.Auth.TwoFactor.toString()))
-                })
-        )
-        add(
-            DestinationMultiFlow(
-                name = NavigationTree.Root.Main.toString(),
-                flows = ArrayList<DestinationFlow>().apply {
-                    add(DestinationFlow(
-                        name = NavigationTree.Tabs.Main.toString(),
-                        screens = ArrayList<DestinationScreen>().apply {
-                            add(DestinationScreen(NavigationTree.Main.Feed.toString()))
-                            add(DestinationScreen(NavigationTree.Main.Detail.toString()))
-                        }
-                    ))
+fun RootControllerBuilder.generateGraph() {
+    destination(NavigationTree.Root.Splash.name)
+    flow(NavigationTree.Root.Auth.name) {
+        destination(NavigationTree.Auth.Login.name)
+        destination(NavigationTree.Auth.TwoFactor.name)
+    }
+    multistack(NavigationTree.Root.Main.name) {
+        flow(NavigationTree.Tabs.Main.name) {
+            destination(NavigationTree.Main.Feed.name)
+            destination(NavigationTree.Main.Detail.name)
+        }
 
-                    add(DestinationFlow(
-                        name = NavigationTree.Tabs.Favorite.toString(),
-                        screens = ArrayList<DestinationScreen>().apply {
-                            add(DestinationScreen(NavigationTree.Favorite.Flow.toString()))
-                        }
-                    ))
+        flow(NavigationTree.Tabs.Favorite.name) {
+            destination(NavigationTree.Favorite.Flow.name)
+        }
 
-                    add(DestinationFlow(
-                        name = NavigationTree.Tabs.Settings.toString(),
-                        screens = ArrayList<DestinationScreen>().apply {
-                            add(DestinationScreen(NavigationTree.Settings.Profile.toString()))
-                        }
-                    ))
-                }
-            )
-        )
-
-        add(DestinationScreen(NavigationTree.Root.Dialog.toString()))
-    })
+        flow(NavigationTree.Tabs.Settings.name) {
+            destination(NavigationTree.Settings.Profile.name)
+        }
+    }
+    destination(NavigationTree.Root.Dialog.name)
 }
