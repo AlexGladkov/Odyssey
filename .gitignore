@@ -37,3 +37,7 @@ build/
 local.properties
 
 core-data-shared/build/
+
+keys/my-key.asc
+
+*.asc
