@@ -11,7 +11,6 @@ val minSdkVersion by extra(21)
 allprojects {
     repositories {
         google()
-        jcenter()
         mavenCentral()
         mavenLocal()
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
@@ -20,7 +19,7 @@ allprojects {
 }
 
 buildscript {
-    val kotlin_version by extra("1.5.21")
+    val kotlin_version by extra("1.5.31")
     dependencies {
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
     }

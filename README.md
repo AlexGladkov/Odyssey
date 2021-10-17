@@ -11,61 +11,62 @@ First add dependency to gradle
 ```kotlin
 named("commonMain") {
     dependencies {
-        implementation("...") // For core classes
-        implementation("...") // For compose extensions
+        implementation("io.github.alexgladkov:odyssey-core:0.0.1") // For core classes
+        implementation("io.github.alexgladkov:odyssey-compose:0.0.1") // For compose extensions
     }
 }
 ```
-
-### Main idea
 
 #### Setup
 
-The main class in library is `RootController` It provides navigation control and host
-backstack inside. 
+[1. Common preparations](documentation/COMMON.md)
 
-For setup navigation graph in common code you need to use
+[2. How to start with Android](documentation/ANDROID.md)
 
-```kotlin
-@Composable
-fun RootContainer(
-    rootController: RootController
-) {
-    RootHost(startScreen = NavigationTree.Root.Start, rootController = rootController) {
-        destination(screen = NavigationTree.Root.Start) {
-            // Here is the place to draw something in Compose
-            // ...
-            // Or you can provide composable function like below
-            SomeScreen(rootController) 
-        }
-    }
-}
-```
+[3. How to start with Desktop](documentation/DESKTOP.md)
+
+[4. How to start with iOS](documentation/IOS.md)
 
 #### Parameters
 
-Params included inside destination by design
+If you need to add params to your navigation just use params parameter in launch function
 
 ```kotlin
-destination(screen = NavigationTree.Root.Start) {
-    val key = params as? String
-    SomeScreen(rootController, params)
+rootController.launch(screen = "screen_name", params = paramState.value)
+```
+
+To catch this value you can use **backStackObserver**
+
+```kotlin
+// Compose example
+val navigation = rootController.backStackObserver.observeAsState()
+val params = (navigation.value?.destination as? DestinationScreen)?.params
+```
+
+```swift
+// iOS Example
+let observer = rootController.backStackObserver.watch { navigation in
+    let params = (navigation.value?.destination as? DestinationScreen)?.params
 }
+
+// Don't forget to destroy observer
+observer.close()
 ```
 
 #### Navigation
 
 You must pass RootController to screen for inner navigation and if you need to open next screen
-just use this
+just use this. You can use String as key for screen
 
 ```kotlin
- rootController.launch(NavigationTree.Root.Container)
+ rootController.launch("splash")
 ```
 
-or this if you want to pass params
+You can use specific flags to make navigation as you want. Now we have only one flag.
+```LaunchFlag.SingleNewTask``` to clear backstack if you need to start new screen from scratch
 
 ```kotlin
- rootController.launch(NavigationTree.Root.Container, params = "Your any object")
+ rootController.launch(screen = "splash", launchFlag = LaunchFlag.SingleNewTask)
 ```
 
 #### Back
@@ -76,49 +77,20 @@ If you need to go back just use. Library supports multibackstack navigation for 
  rootController.popBackStack()
 ```
 
-#### Screens
-
-You can create screen as you want, but you need to inherit your class from `NavigationScreen` interface
-In example I use `NavigationTree` class for it
-
-```kotlin
- object NavigationTree {
-    enum class Root : NavigationScreen {
-        Start, Container
-    }
-
-    enum class Container : NavigationScreen {
-        Chain
-    }
-
-    enum class Tabs : NavigationScreen {
-        Main, Favorite, Settings
-    }
-}
-```
-
-### Android Setup
-
-For Android we must support hardware back pressing, so you need to do this in your Single Activity
-
-```kotlin
-  val rootController = RootController()
-  rootController.setupWithActivity(this)
-```
 
 ### Example
 
 Inside this project you can find example and of course if you have an issue or a question 
 feel free to open new issue in Issues section
 
-![Android](screenshots/android-screen-favorite.png)
-![Desktop](screenshots/desktop-screen-favorite.png)
+[<img src="screenshots/android-screen-favorite.png" width="250" height = "551" />](screenshots/android-screen-favorite.png)
+[<img src="screenshots/desktop-screen-favorite.png" width="500" height = "375" />](screenshots/desktop-screen-favorite.png)
 
 ### License
 ```
 MIT License
 
-Copyright (c) 2021 Aleksey Gladkov (@AlexGladkov)
+Copyright (c) 2021 Alex
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
