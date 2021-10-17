@@ -32,7 +32,7 @@ named("commonMain") {
 If you need to add params to your navigation just use params parameter in launch function
 
 ```kotlin
-rootController.launch(screen = NavigationTree.Main.Detail.toString(), params = paramState.value)
+rootController.launch(screen = "screen_name", params = paramState.value)
 ```
 
 To catch this value you can use **backStackObserver**
