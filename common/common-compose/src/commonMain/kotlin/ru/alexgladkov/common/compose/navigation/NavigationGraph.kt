@@ -8,7 +8,6 @@ import ru.alexgladkov.odyssey.compose.extensions.screen
 import ru.alexgladkov.odyssey.compose.navigation.RootComposeBuilder
 import ru.alexgladkov.odyssey.compose.navigation.screen
 import ru.alexgladkov.odyssey.compose.navigation.tab
-import ru.alexgladkov.odyssey.core.declarative.RootControllerBuilder
 
 fun buildComposeNavigationGraph(): RootComposeBuilder.() -> Unit {
     return { generateGraph() }
@@ -36,7 +35,7 @@ fun RootComposeBuilder.generateGraph() {
             }
 
             screen(NavigationTree.Main.Detail.toString()) {
-                DetailScreen(rootController, param = params as? String ?: "")
+                DetailScreen(rootController, param = params as DetailParams)
             }
         }
 

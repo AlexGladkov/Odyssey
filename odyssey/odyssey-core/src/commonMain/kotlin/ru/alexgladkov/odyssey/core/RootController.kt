@@ -36,6 +36,9 @@ open class RootController(var screenHost: ScreenHost) {
     /** Use this to get current back stack */
     var backStack: List<NavigationEntry> = _backStack
 
+    /** Use this to check allowed destinations */
+     var allowedDestinations: List<Destination> = _allowedDestinations
+
     /**
      * Debug name need to debug :) if you like console debugging
      * Setup automatically

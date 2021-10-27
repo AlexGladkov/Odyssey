@@ -9,10 +9,12 @@ import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.TextStyle
+import kotlinx.coroutines.delay
 import ru.alexgladkov.odyssey.compose.extensions.observeAsState
 import ru.alexgladkov.odyssey.core.controllers.MultiStackRootController
 
@@ -25,50 +27,51 @@ data class BottomNavigationColors(
 @Composable
 fun BottomNavigationHost(
     screenBundle: ScreenBundle,
-    bottomNavigationColors: BottomNavigationColors  = BottomNavigationColors(),
+    bottomNavigationColors: BottomNavigationColors = BottomNavigationColors(),
     bottomItemModels: List<BottomItemModel>
 ) {
     val multiStackRootController = screenBundle.rootController as MultiStackRootController
     val state = multiStackRootController.backStackObserver.observeAsState()
+    println("multi state -> ${state.value?.destination?.destinationName()}")
 
-    Column(modifier = Modifier.fillMaxSize().background(bottomNavigationColors.backgroundColor)) {
-        Box(modifier = Modifier.weight(1f)) {
-            state.value?.let { entry ->
+    state.value?.let { entry ->
+        Column(modifier = Modifier.fillMaxSize().background(bottomNavigationColors.backgroundColor)) {
+            Box(modifier = Modifier.weight(1f)) {
                 FlowHost(ScreenBundle(rootController = entry.rootController, screenMap = screenBundle.screenMap))
             }
-        }
 
-        BottomNavigation(
-            backgroundColor = bottomNavigationColors.backgroundColor
-        ) {
-            multiStackRootController.childrenRootController.forEach { flowRootController ->
-                val position = multiStackRootController.childrenRootController.indexOf(flowRootController)
-                val isSelected = state.value?.rootController == flowRootController
-                val bottomItemModel = bottomItemModels[position]
+            BottomNavigation(
+                backgroundColor = bottomNavigationColors.backgroundColor
+            ) {
+                multiStackRootController.childrenRootController.forEach { flowRootController ->
+                    val position = multiStackRootController.childrenRootController.indexOf(flowRootController)
+                    val isSelected = state.value?.rootController == flowRootController
+                    val bottomItemModel = bottomItemModels[position]
 
-                BottomNavigationItem(
-                    modifier = Modifier.background(bottomNavigationColors.backgroundColor),
-                    selected = isSelected,
-                    icon = {
-                        bottomItemModel.icon?.let {
-                            Icon(
-                                painter = it,
-                                contentDescription = bottomItemModel.title,
-                                tint = if (isSelected) bottomNavigationColors.selectedColor else bottomNavigationColors.unselectedColor
+                    BottomNavigationItem(
+                        modifier = Modifier.background(bottomNavigationColors.backgroundColor),
+                        selected = isSelected,
+                        icon = {
+                            bottomItemModel.icon?.let {
+                                Icon(
+                                    painter = it,
+                                    contentDescription = bottomItemModel.title,
+                                    tint = if (isSelected) bottomNavigationColors.selectedColor else bottomNavigationColors.unselectedColor
+                                )
+                            }
+                        },
+                        onClick = {
+                            multiStackRootController.switchFlow(position, flowRootController)
+                        },
+                        label = {
+                            Text(
+                                text = bottomItemModel.title,
+                                style = bottomItemModel.style,
+                                color = if (isSelected) bottomNavigationColors.selectedColor else bottomNavigationColors.unselectedColor
                             )
                         }
-                    },
-                    onClick = {
-                        multiStackRootController.switchFlow(position, flowRootController)
-                    },
-                    label = {
-                        Text(
-                            text = bottomItemModel.title,
-                            style = bottomItemModel.style,
-                            color = if (isSelected) bottomNavigationColors.selectedColor else bottomNavigationColors.unselectedColor
-                        )
-                    }
-                )
+                    )
+                }
             }
         }
     }
