@@ -1,27 +1,59 @@
 package ru.alexgladkov.common.compose.navigation
 
 import ru.alexgladkov.common.compose.NavigationTree
+import ru.alexgladkov.common.compose.screens.*
+import ru.alexgladkov.odyssey.compose.extensions.bottomNavigation
+import ru.alexgladkov.odyssey.compose.extensions.flow
+import ru.alexgladkov.odyssey.compose.extensions.screen
+import ru.alexgladkov.odyssey.compose.navigation.RootComposeBuilder
+import ru.alexgladkov.odyssey.compose.navigation.screen
+import ru.alexgladkov.odyssey.compose.navigation.tab
 import ru.alexgladkov.odyssey.core.declarative.RootControllerBuilder
 
-fun RootControllerBuilder.generateGraph() {
-    destination(NavigationTree.Root.Splash.name)
-    flow(NavigationTree.Root.Auth.name) {
-        destination(NavigationTree.Auth.Login.name)
-        destination(NavigationTree.Auth.TwoFactor.name)
+fun buildComposeNavigationGraph(): RootComposeBuilder.() -> Unit {
+    return { generateGraph() }
+}
+
+fun RootComposeBuilder.generateGraph() {
+    screen(NavigationTree.Root.Splash.toString()) {
+        SplashScreen(rootController)
     }
-    multistack(NavigationTree.Root.Main.name) {
-        flow(NavigationTree.Tabs.Main.name) {
-            destination(NavigationTree.Main.Feed.name)
-            destination(NavigationTree.Main.Detail.name)
+
+    flow(name = NavigationTree.Root.Auth.toString()) {
+        screen(NavigationTree.Auth.Login.toString()) {
+            LoginScreen(rootController)
         }
 
-        flow(NavigationTree.Tabs.Favorite.name) {
-            destination(NavigationTree.Favorite.Flow.name)
-        }
-
-        flow(NavigationTree.Tabs.Settings.name) {
-            destination(NavigationTree.Settings.Profile.name)
+        screen(NavigationTree.Auth.TwoFactor.toString()) {
+            LoginCodeScreen(rootController)
         }
     }
-    destination(NavigationTree.Root.Dialog.name)
+
+    bottomNavigation(name = NavigationTree.Root.Main.toString()) {
+        tab(NavigationTree.Tabs.Main.toString()) {
+            screen(NavigationTree.Main.Feed.toString()) {
+                FeedScreen(rootController)
+            }
+
+            screen(NavigationTree.Main.Detail.toString()) {
+                DetailScreen(rootController, param = params as? String ?: "")
+            }
+        }
+
+        tab(NavigationTree.Tabs.Favorite.toString()) {
+            screen(NavigationTree.Favorite.Flow.toString()) {
+                FavoriteScreen(rootController)
+            }
+        }
+
+        tab(NavigationTree.Tabs.Settings.toString()) {
+            screen(NavigationTree.Settings.Profile.toString()) {
+                ProfileScreen()
+            }
+        }
+    }
+
+    screen(NavigationTree.Root.Dialog.toString()) {
+        DialogScreen(rootController)
+    }
 }

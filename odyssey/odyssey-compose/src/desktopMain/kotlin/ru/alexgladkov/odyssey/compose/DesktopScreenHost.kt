@@ -15,11 +15,9 @@ import javax.swing.WindowConstants
  * Class provider to set canvas to draw navigation
  * @param window - root window of main function in Swing Application
  */
-abstract class DesktopScreenHost constructor(
+class DesktopScreenHost constructor(
     private val window: JFrame,
-) : ScreenHost {
-
-    private val destinationObserver: MutableStateFlow<DestinationPoint?> = MutableStateFlow(null)
+) : ComposableScreenHost() {
 
     override fun prepareFowDrawing() {
         val composePanel = ComposePanel()
@@ -36,16 +34,4 @@ abstract class DesktopScreenHost constructor(
         window.setLocationRelativeTo(null)
         window.isVisible = true
     }
-
-    override fun draw(destinationPoint: DestinationPoint) {
-        destinationObserver.tryEmit(destinationPoint)
-    }
-
-    /**
-     * Launch screen
-     *
-     * @param destinationPoint
-     */
-    @Composable
-    protected abstract fun launchScreen(destinationPoint: DestinationPoint)
 }

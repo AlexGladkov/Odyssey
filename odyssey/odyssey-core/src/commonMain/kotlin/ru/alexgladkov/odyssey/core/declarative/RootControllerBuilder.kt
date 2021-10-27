@@ -1,11 +1,9 @@
 package ru.alexgladkov.odyssey.core.declarative
 
-import ru.alexgladkov.odyssey.core.RootController
-import ru.alexgladkov.odyssey.core.ScreenHost
 import ru.alexgladkov.odyssey.core.destination.Destination
 import ru.alexgladkov.odyssey.core.destination.DestinationScreen
 
-class RootControllerBuilder(private val screenHost: ScreenHost) {
+class RootControllerBuilder {
 
     private val _destinations: MutableList<Destination> = mutableListOf()
 
