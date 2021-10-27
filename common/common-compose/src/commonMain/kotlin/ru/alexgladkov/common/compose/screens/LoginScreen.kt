@@ -14,11 +14,11 @@ import ru.alexgladkov.common.compose.NavigationTree
 import ru.alexgladkov.odyssey.core.RootController
 
 @Composable
-fun LoginScreen(rootController: RootController) {
+fun LoginScreen(rootController: RootController, source: String? = null) {
     Box(modifier = Modifier.fillMaxSize()) {
         Text(
             modifier = Modifier.padding(24.dp),
-            text = "Login Screen", fontWeight = FontWeight.Medium, fontSize = 28.sp,
+            text = "Login Screen from $source", fontWeight = FontWeight.Medium, fontSize = 28.sp,
             color = Color.Black
         )
 
@@ -32,7 +32,7 @@ fun LoginScreen(rootController: RootController) {
             Spacer(modifier = Modifier.weight(1f))
 
             Button(onClick = {
-                rootController.launch(NavigationTree.Auth.TwoFactor.toString())
+                rootController.launch(NavigationTree.Auth.TwoFactor.toString(), "Phone")
             }) {
                 Text("Go to Confirm Code")
             }

@@ -21,11 +21,11 @@ fun RootComposeBuilder.generateGraph() {
 
     flow(name = NavigationTree.Root.Auth.toString()) {
         screen(NavigationTree.Auth.Login.toString()) {
-            LoginScreen(rootController)
+            LoginScreen(rootController, params as? String)
         }
 
         screen(NavigationTree.Auth.TwoFactor.toString()) {
-            LoginCodeScreen(rootController)
+            LoginCodeScreen(rootController, params as? String)
         }
     }
 

@@ -34,6 +34,7 @@ abstract class ComposableScreenHost : ScreenHost {
     @Composable
     protected fun launchScreen(destinationPoint: DestinationPoint) {
         val state = destinationPoint.rootController.backStackObserver.observeAsState()
+
         state.value?.let { entry ->
             when (val destination = entry.destination) {
                 is DestinationScreen -> {
@@ -42,7 +43,13 @@ abstract class ComposableScreenHost : ScreenHost {
                 }
 
                 is DestinationFlow -> {
-                    FlowHost(ScreenBundle(rootController = entry.rootController, screenMap = _destinationMap))
+                    FlowHost(
+                        ScreenBundle(
+                            rootController = entry.rootController,
+                            params = destination.params,
+                            screenMap = _destinationMap
+                        )
+                    )
                 }
 
                 is DestinationMultiFlow -> {

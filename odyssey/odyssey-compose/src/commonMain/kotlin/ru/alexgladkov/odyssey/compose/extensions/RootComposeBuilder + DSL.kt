@@ -2,6 +2,8 @@ package ru.alexgladkov.odyssey.compose.extensions
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import ru.alexgladkov.odyssey.compose.helpers.BottomItemModel
+import ru.alexgladkov.odyssey.compose.helpers.BottomNavigationColors
 import ru.alexgladkov.odyssey.compose.helpers.BottomNavigationHost
 import ru.alexgladkov.odyssey.compose.helpers.ScreenBundle
 import ru.alexgladkov.odyssey.compose.navigation.ComposeFlowBuilder
@@ -43,7 +45,19 @@ fun RootComposeBuilder.bottomNavigation(
     val destinationMultiFlow = builder.apply(block).build()
 
     addScreenValue(name = name, content = {
-        BottomNavigationHost(screenBundle = this, selectedColor, unselectedColor, backgroundColor)
+        BottomNavigationHost(
+            screenBundle = this,
+            bottomNavigationColors = BottomNavigationColors(
+                selectedColor = selectedColor,
+                unselectedColor = unselectedColor,
+                backgroundColor = backgroundColor
+            ),
+            bottomItemModels = listOf(
+                BottomItemModel(title = "Main"),
+                BottomItemModel(title = "Favorite"),
+                BottomItemModel(title = "Settings")
+            )
+        )
     })
     addDestination(screenMap = builder.screenMap, destination = destinationMultiFlow)
 }

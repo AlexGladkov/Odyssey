@@ -13,6 +13,8 @@ fun FlowHost(screenBundle: ScreenBundle) {
 
     navigation.value?.let { entry ->
         val render = screenBundle.screenMap[entry.destination.destinationName()]
-        render?.invoke(screenBundle.copy(params = params))
+        render?.invoke(
+            screenBundle.copy(params = if (flowRootController.backStack.size == 1) screenBundle.params else params)
+        )
     }
 }

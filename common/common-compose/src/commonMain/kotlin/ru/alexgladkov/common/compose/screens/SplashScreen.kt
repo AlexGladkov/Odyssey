@@ -28,7 +28,7 @@ fun SplashScreen(rootController: RootController) {
 
         Column(modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp)) {
             Button(onClick = {
-                rootController.launch(NavigationTree.Root.Auth.toString())
+                rootController.launch(NavigationTree.Root.Auth.toString(), params = "Splash")
             }) {
                 Text("Go to Auth Screen")
             }

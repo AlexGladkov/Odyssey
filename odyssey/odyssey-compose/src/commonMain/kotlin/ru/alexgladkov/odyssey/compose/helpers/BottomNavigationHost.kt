@@ -6,24 +6,32 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.text.TextStyle
 import ru.alexgladkov.odyssey.compose.extensions.observeAsState
 import ru.alexgladkov.odyssey.core.controllers.MultiStackRootController
+
+data class BottomItemModel(val title: String, val style: TextStyle = TextStyle.Default, val icon: Painter? = null)
+data class BottomNavigationColors(
+    val selectedColor: Color = Color.Black, val unselectedColor: Color = Color.DarkGray,
+    val backgroundColor: Color = Color.White
+)
 
 @Composable
 fun BottomNavigationHost(
     screenBundle: ScreenBundle,
-    selectedColor: Color = Color.Black,
-    unselectedColor: Color = Color.DarkGray,
-    backgroundColor: Color = Color.White
+    bottomNavigationColors: BottomNavigationColors  = BottomNavigationColors(),
+    bottomItemModels: List<BottomItemModel>
 ) {
     val multiStackRootController = screenBundle.rootController as MultiStackRootController
     val state = multiStackRootController.backStackObserver.observeAsState()
 
-    Column(modifier = Modifier.fillMaxSize().background(backgroundColor)) {
+    Column(modifier = Modifier.fillMaxSize().background(bottomNavigationColors.backgroundColor)) {
         Box(modifier = Modifier.weight(1f)) {
             state.value?.let { entry ->
                 FlowHost(ScreenBundle(rootController = entry.rootController, screenMap = screenBundle.screenMap))
@@ -31,24 +39,33 @@ fun BottomNavigationHost(
         }
 
         BottomNavigation(
-            backgroundColor = backgroundColor
+            backgroundColor = bottomNavigationColors.backgroundColor
         ) {
             multiStackRootController.childrenRootController.forEach { flowRootController ->
                 val position = multiStackRootController.childrenRootController.indexOf(flowRootController)
                 val isSelected = state.value?.rootController == flowRootController
-                val bottomItemModel = multiStackRootController.childrenRootController[position]
+                val bottomItemModel = bottomItemModels[position]
 
                 BottomNavigationItem(
-                    modifier = Modifier.background(backgroundColor),
+                    modifier = Modifier.background(bottomNavigationColors.backgroundColor),
                     selected = isSelected,
-                    icon = {},
+                    icon = {
+                        bottomItemModel.icon?.let {
+                            Icon(
+                                painter = it,
+                                contentDescription = bottomItemModel.title,
+                                tint = if (isSelected) bottomNavigationColors.selectedColor else bottomNavigationColors.unselectedColor
+                            )
+                        }
+                    },
                     onClick = {
                         multiStackRootController.switchFlow(position, flowRootController)
                     },
                     label = {
                         Text(
-                            text = bottomItemModel.debugName.toString(),
-                            color = if (isSelected) selectedColor else unselectedColor
+                            text = bottomItemModel.title,
+                            style = bottomItemModel.style,
+                            color = if (isSelected) bottomNavigationColors.selectedColor else bottomNavigationColors.unselectedColor
                         )
                     }
                 )

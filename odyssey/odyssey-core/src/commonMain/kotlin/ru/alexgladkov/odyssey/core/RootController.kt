@@ -33,6 +33,9 @@ open class RootController(var screenHost: ScreenHost) {
     /** Use this to control backstack changing */
     var backStackObserver: CFlow<NavigationEntry?> = _backStackObserver.wrap()
 
+    /** Use this to get current back stack */
+    var backStack: List<NavigationEntry> = _backStack
+
     /**
      * Debug name need to debug :) if you like console debugging
      * Setup automatically
@@ -122,13 +125,13 @@ open class RootController(var screenHost: ScreenHost) {
         }
 
         when (destination) {
-            is DestinationFlow -> createFlowAndPresent(destination)
+            is DestinationFlow -> createFlowAndPresent(destination, destinationScreen.params)
             is DestinationMultiFlow -> createMultiFlowAndPresent(destination)
             is DestinationScreen -> present(destinationPoint = DestinationPoint(destinationScreen, this))
         }
     }
 
-    private fun createFlowAndPresent(destinationFlow: DestinationFlow) {
+    private fun createFlowAndPresent(destinationFlow: DestinationFlow, params: Any? = null) {
         val firstDestination = destinationFlow.screens.first()
         val flowRootController = FlowRootController(screenHost)
         flowRootController.parentRootController = this
@@ -139,7 +142,7 @@ open class RootController(var screenHost: ScreenHost) {
         flowRootController._backStack.add(firstNavigationEntry)
         flowRootController._backStackObserver.tryEmit(firstNavigationEntry)
 
-        val navigationEntry = destinationFlow.mapToNavigationEntry(flowRootController)
+        val navigationEntry = destinationFlow.copy(params = params).mapToNavigationEntry(flowRootController)
         _backStack.add(navigationEntry)
         _backStackObserver.tryEmit(navigationEntry)
     }
