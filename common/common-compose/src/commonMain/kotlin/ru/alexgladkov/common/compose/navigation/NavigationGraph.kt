@@ -53,6 +53,6 @@ fun RootComposeBuilder.generateGraph() {
     }
 
     screen(NavigationTree.Root.Dialog.toString()) {
-        DialogScreen(rootController)
+        DialogScreen(rootController, params = params as DialogParams)
     }
 }

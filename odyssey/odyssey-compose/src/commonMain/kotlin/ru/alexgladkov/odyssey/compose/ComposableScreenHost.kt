@@ -39,7 +39,13 @@ abstract class ComposableScreenHost : ScreenHost {
             when (val destination = entry.destination) {
                 is DestinationScreen -> {
                     val render = _destinationMap[entry.destination.destinationName()]
-                    render?.invoke(ScreenBundle(destinationPoint.rootController, _destinationMap))
+                    render?.invoke(
+                        ScreenBundle(
+                            rootController = destinationPoint.rootController,
+                            params = destination.params,
+                            screenMap = _destinationMap
+                        )
+                    )
                 }
 
                 is DestinationFlow -> {
@@ -54,7 +60,10 @@ abstract class ComposableScreenHost : ScreenHost {
 
                 is DestinationMultiFlow -> {
                     _destinationMap[destination.name]
-                        ?.invoke(ScreenBundle(rootController = entry.rootController, screenMap = _destinationMap))
+                        ?.invoke(ScreenBundle(
+                            rootController = entry.rootController,
+                            screenMap = _destinationMap)
+                        )
                 }
 
                 else -> throw IllegalStateException("This destination type isn't implemented")
