@@ -13,8 +13,10 @@ import androidx.compose.ui.unit.sp
 import ru.alexgladkov.common.compose.NavigationTree
 import ru.alexgladkov.odyssey.core.RootController
 
+data class DetailParams(val title: String)
+
 @Composable
-fun DetailScreen(rootController: RootController, param: String) {
+fun DetailScreen(rootController: RootController, param: DetailParams) {
     Box(modifier = Modifier.fillMaxSize()) {
         Text(
             modifier = Modifier.padding(24.dp),

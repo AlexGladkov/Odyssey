@@ -41,7 +41,7 @@ fun FeedScreen(rootController: RootController) {
 
         Row(modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp)) {
             Button(onClick = {
-                rootController.launch(NavigationTree.Main.Detail.toString(), paramState.value)
+                rootController.launch(NavigationTree.Main.Detail.toString(), DetailParams(paramState.value))
             }) {
                 Text("Go to Detail")
             }

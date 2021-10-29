@@ -5,6 +5,7 @@ import ru.alexgladkov.odyssey.core.backpress.BackPressedCallback
 import ru.alexgladkov.odyssey.core.backpress.OnBackPressedDispatcher
 import ru.alexgladkov.odyssey.core.controllers.FlowRootController
 import ru.alexgladkov.odyssey.core.controllers.MultiStackRootController
+import ru.alexgladkov.odyssey.core.declarative.RootControllerBuilder
 import ru.alexgladkov.odyssey.core.destination.*
 import ru.alexgladkov.odyssey.core.destination.DestinationPoint
 import ru.alexgladkov.odyssey.core.destination.mapToNavigationEntry
@@ -32,6 +33,12 @@ open class RootController(var screenHost: ScreenHost) {
     /** Use this to control backstack changing */
     var backStackObserver: CFlow<NavigationEntry?> = _backStackObserver.wrap()
 
+    /** Use this to get current back stack */
+    var backStack: List<NavigationEntry> = _backStack
+
+    /** Use this to check allowed destinations */
+     var allowedDestinations: List<Destination> = _allowedDestinations
+
     /**
      * Debug name need to debug :) if you like console debugging
      * Setup automatically
@@ -41,11 +48,20 @@ open class RootController(var screenHost: ScreenHost) {
 
     /**
      * Set navigation graph to RootController
+     * @param block - declarative list of destinations
+     * @see Destination to know more
+     */
+    fun setNavigationGraph(block: RootControllerBuilder.() -> Unit) {
+        _allowedDestinations.clear()
+        _allowedDestinations.addAll(RootControllerBuilder().apply(block).build())
+    }
+
+    /**
+     * Set allowed destinations to RootController
      * @param list - list of destinations
      * @see Destination to know more
      */
-    // TODO Replace it to declarative creation
-    fun generateDestinations(list: List<Destination>) {
+    fun setNavigationGraph(list: List<Destination>) {
         _allowedDestinations.clear()
         _allowedDestinations.addAll(list)
     }
@@ -112,24 +128,24 @@ open class RootController(var screenHost: ScreenHost) {
         }
 
         when (destination) {
-            is DestinationFlow -> createFlowAndPresent(destination)
+            is DestinationFlow -> createFlowAndPresent(destination, destinationScreen.params)
             is DestinationMultiFlow -> createMultiFlowAndPresent(destination)
             is DestinationScreen -> present(destinationPoint = DestinationPoint(destinationScreen, this))
         }
     }
 
-    private fun createFlowAndPresent(destinationFlow: DestinationFlow) {
+    private fun createFlowAndPresent(destinationFlow: DestinationFlow, params: Any? = null) {
         val firstDestination = destinationFlow.screens.first()
         val flowRootController = FlowRootController(screenHost)
         flowRootController.parentRootController = this
         flowRootController.debugName = destinationFlow.name
-        flowRootController.generateDestinations(destinationFlow.screens)
+        flowRootController.setNavigationGraph(destinationFlow.screens)
 
         val firstNavigationEntry = firstDestination.mapToNavigationEntry(flowRootController)
         flowRootController._backStack.add(firstNavigationEntry)
         flowRootController._backStackObserver.tryEmit(firstNavigationEntry)
 
-        val navigationEntry = destinationFlow.mapToNavigationEntry(flowRootController)
+        val navigationEntry = destinationFlow.copy(params = params).mapToNavigationEntry(flowRootController)
         _backStack.add(navigationEntry)
         _backStackObserver.tryEmit(navigationEntry)
     }
@@ -138,13 +154,13 @@ open class RootController(var screenHost: ScreenHost) {
         val multiStackRootController = MultiStackRootController(screenHost)
         multiStackRootController.parentRootController = this
         multiStackRootController.debugName = destinationMultiFlow.name
-        multiStackRootController.generateDestinations(destinationMultiFlow.flows)
+        multiStackRootController.setNavigationGraph(destinationMultiFlow.flows)
 
         destinationMultiFlow.flows.forEach { destinationFlow ->
             val firstDestination = destinationFlow.screens.first()
             val flowRootController = FlowRootController(screenHost)
             flowRootController.debugName = destinationFlow.name
-            flowRootController.generateDestinations(destinationFlow.screens)
+            flowRootController.setNavigationGraph(destinationFlow.screens)
 
             val firstNavEntry = firstDestination.mapToNavigationEntry(flowRootController)
             multiStackRootController.childrenRootController.add(flowRootController)
