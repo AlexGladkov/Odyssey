@@ -24,7 +24,10 @@ fun FavoriteScreen(rootController: RootController) {
 
         Row(modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp)) {
             Button(onClick = {
-                rootController.parentRootController?.parentRootController?.launch(NavigationTree.Root.Dialog.name)
+                rootController.parentRootController?.parentRootController?.launch(
+                    NavigationTree.Root.Dialog.name,
+                    DialogParams("Favorite")
+                )
             }) {
                 Text("Open Modal Dialog")
             }
