@@ -4,6 +4,7 @@ import ru.alexgladkov.common.compose.NavigationTree
 import ru.alexgladkov.common.compose.screens.*
 import ru.alexgladkov.odyssey.compose.extensions.bottomNavigation
 import ru.alexgladkov.odyssey.compose.extensions.flow
+import ru.alexgladkov.odyssey.compose.extensions.multistack
 import ru.alexgladkov.odyssey.compose.extensions.screen
 import ru.alexgladkov.odyssey.compose.navigation.RootComposeBuilder
 import ru.alexgladkov.odyssey.compose.navigation.screen

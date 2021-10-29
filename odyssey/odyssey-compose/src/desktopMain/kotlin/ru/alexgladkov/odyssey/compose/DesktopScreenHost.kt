@@ -1,11 +1,7 @@
 package ru.alexgladkov.odyssey.compose
 
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.awt.ComposePanel
-import kotlinx.coroutines.flow.MutableStateFlow
 import ru.alexgladkov.odyssey.compose.extensions.observeAsState
-import ru.alexgladkov.odyssey.core.ScreenHost
-import ru.alexgladkov.odyssey.core.destination.DestinationPoint
 import ru.alexgladkov.odyssey.core.extensions.wrap
 import java.awt.BorderLayout
 import javax.swing.JFrame
@@ -22,6 +18,8 @@ class DesktopScreenHost constructor(
     override fun prepareFowDrawing() {
         val composePanel = ComposePanel()
 
+        // Below function setup drawing, you can extend it
+        // by adding CompositionLocalProviders or something else
         composePanel.setContent {
             val destinationState = destinationObserver.wrap().observeAsState()
             destinationState.value?.let {
