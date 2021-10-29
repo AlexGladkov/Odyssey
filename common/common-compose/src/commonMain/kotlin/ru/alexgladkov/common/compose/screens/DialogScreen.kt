@@ -16,12 +16,14 @@ import androidx.compose.ui.unit.sp
 import ru.alexgladkov.common.compose.NavigationTree
 import ru.alexgladkov.odyssey.core.RootController
 
+data class DialogParams(val value: String)
+
 @Composable
-fun DialogScreen(rootController: RootController) {
+fun DialogScreen(rootController: RootController, params: DialogParams) {
     Box(modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier.padding(24.dp)) {
             Text(
-                text = "Modal Dialog Screen", fontWeight = FontWeight.Medium, fontSize = 28.sp,
+                text = "Modal Dialog Screen with ${params.value}", fontWeight = FontWeight.Medium, fontSize = 28.sp,
                 color = Color.Black
             )
         }

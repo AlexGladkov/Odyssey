@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "io.github.alexgladkov"
-version = "0.0.1"
+version = "0.1.3"
 
 kotlin {
     android {

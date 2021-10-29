@@ -11,9 +11,9 @@ import ru.alexgladkov.odyssey.core.RootController
  * @param params - bunch of params needed for this screen
  * @param screens - list of screens for sub navigation
  */
-class DestinationFlow(
+data class DestinationFlow(
     val name: String,
-    private val params: Any? = null,
+    val params: Any? = null,
     val screens: List<DestinationScreen>
 ) : Destination {
     override fun destinationName(): String = name

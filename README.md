@@ -11,8 +11,8 @@ First add dependency to gradle
 ```kotlin
 named("commonMain") {
     dependencies {
-        implementation("io.github.alexgladkov:odyssey-core:0.0.1") // For core classes
-        implementation("io.github.alexgladkov:odyssey-compose:0.0.1") // For compose extensions
+        implementation("io.github.alexgladkov:odyssey-core:0.1.3") // For core classes
+        implementation("io.github.alexgladkov:odyssey-compose:0.1.3") // For compose extensions
     }
 }
 ```
@@ -33,24 +33,6 @@ If you need to add params to your navigation just use params parameter in launch
 
 ```kotlin
 rootController.launch(screen = "screen_name", params = paramState.value)
-```
-
-To catch this value you can use **backStackObserver**
-
-```kotlin
-// Compose example
-val navigation = rootController.backStackObserver.observeAsState()
-val params = (navigation.value?.destination as? DestinationScreen)?.params
-```
-
-```swift
-// iOS Example
-let observer = rootController.backStackObserver.watch { navigation in
-    let params = (navigation.value?.destination as? DestinationScreen)?.params
-}
-
-// Don't forget to destroy observer
-observer.close()
 ```
 
 #### Navigation

@@ -1,32 +1,48 @@
 ### How to use it with android
 
-First you need create your Application Screen Host
+For working with Android I've created helper class AndroidScreenHost and now to setup Activity you just need to use this 
+in your `onCreate` function
 
 ```kotlin
-// You need to inherit from AndroidScreenHost
-class AppScreenHost(composeActivity: ComponentActivity) : AndroidScreenHost(composeActivity) {
+AndroidScreenHost(this)
+    .setupActivityWithRootController(
+        startScreen = NavigationTree.Root.Splash.toString(),
+        block = buildComposeNavigationGraph()
+    )
+```
 
-    @Composable
-    override fun launchScreen(destinationPoint: DestinationPoint) {
-        val state = destinationPoint.rootController.backStackObserver.observeAsState()
-        state.value?.let { entry ->
-            when (entry.destination.destinationName()) {
-                // Here you can set up your root layer navigation
-                "splash" -> SplashScreen(entry.rootController)
+If you need to customize parameters of your ScreenHost you can create your own ScreenHost class like this
+
+```kotlin
+class AndroidScreenHost constructor(
+    val composeActivity: ComponentActivity,
+    // add your params here
+) : ComposableScreenHost() {
+
+    override fun prepareFowDrawing() {
+        // Below function setup drawing, you can extend it 
+        // by adding CompositionLocalProviders or something else
+        composeActivity.setContent {
+            val destinationState = destinationObserver.wrap().observeAsState()
+            destinationState.value?.let {
+                launchScreen(it)
             }
         }
     }
 }
 ```
 
-Then you need tune your Main Activity like this
+And you need to create your own extension to setup back press callback
 
 ```kotlin
-val screenHost = AppScreenHost(this)
-val rootController = RootController(screenHost)
-rootController.generateNavigationGraph()
-// setupWithActivity need to handle hardware back button
-rootController.setupWithActivity(this) 
-screenHost.prepareFowDrawing()
-rootController.launch("splash")
+fun AndroidScreenHost.setupActivityWithRootController(startScreen: String, block: RootComposeBuilder.() -> Unit) {
+    prepareFowDrawing()
+
+    val builder = RootComposeBuilder(screenHost = this)
+    val rootController = builder.apply(block).build()
+    rootController.setupWithActivity(composeActivity)
+
+    setScreenMap(builder.screenMap)
+    rootController.launch(screen = startScreen)
+}
 ```

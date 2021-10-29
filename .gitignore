@@ -38,8 +38,6 @@ local.properties
 
 core-data-shared/build/
 
-keys/
+keys/my-key.asc
 
-odyssey/odyssey-compose/my-key.asc
-
-odyssey/odyssey-core/my-key.asc
+*.asc

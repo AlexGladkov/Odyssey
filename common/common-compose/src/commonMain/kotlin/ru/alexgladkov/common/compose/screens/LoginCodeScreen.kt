@@ -14,11 +14,11 @@ import ru.alexgladkov.common.compose.NavigationTree
 import ru.alexgladkov.odyssey.core.RootController
 
 @Composable
-fun LoginCodeScreen(rootController: RootController) {
+fun LoginCodeScreen(rootController: RootController, type: String?) {
     Box(modifier = Modifier.fillMaxSize()) {
         Text(
             modifier = Modifier.padding(24.dp),
-            text = "Login Code Screen", fontWeight = FontWeight.Medium, fontSize = 28.sp,
+            text = "Login Code Screen (${type})", fontWeight = FontWeight.Medium, fontSize = 28.sp,
             color = Color.Black
         )
 

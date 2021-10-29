@@ -3,8 +3,6 @@ package ru.alexgladkov.odyssey.compose.extensions
 import androidx.compose.runtime.*
 import ru.alexgladkov.odyssey.core.extensions.CFlow
 
-internal class ComposeExtensionRoot
-
 @Composable
 fun <T> CFlow<T>.observeAsState(initial: T? = null): State<T?> {
     val state = remember { mutableStateOf(initial) }

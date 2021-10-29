@@ -1,11 +1,7 @@
 package ru.alexgladkov.odyssey.compose
 
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.awt.ComposePanel
-import kotlinx.coroutines.flow.MutableStateFlow
 import ru.alexgladkov.odyssey.compose.extensions.observeAsState
-import ru.alexgladkov.odyssey.core.ScreenHost
-import ru.alexgladkov.odyssey.core.destination.DestinationPoint
 import ru.alexgladkov.odyssey.core.extensions.wrap
 import java.awt.BorderLayout
 import javax.swing.JFrame
@@ -15,15 +11,15 @@ import javax.swing.WindowConstants
  * Class provider to set canvas to draw navigation
  * @param window - root window of main function in Swing Application
  */
-abstract class DesktopScreenHost constructor(
+class DesktopScreenHost constructor(
     private val window: JFrame,
-) : ScreenHost {
-
-    private val destinationObserver: MutableStateFlow<DestinationPoint?> = MutableStateFlow(null)
+) : ComposableScreenHost() {
 
     override fun prepareFowDrawing() {
         val composePanel = ComposePanel()
 
+        // Below function setup drawing, you can extend it
+        // by adding CompositionLocalProviders or something else
         composePanel.setContent {
             val destinationState = destinationObserver.wrap().observeAsState()
             destinationState.value?.let {
@@ -36,16 +32,4 @@ abstract class DesktopScreenHost constructor(
         window.setLocationRelativeTo(null)
         window.isVisible = true
     }
-
-    override fun draw(destinationPoint: DestinationPoint) {
-        destinationObserver.tryEmit(destinationPoint)
-    }
-
-    /**
-     * Launch screen
-     *
-     * @param destinationPoint
-     */
-    @Composable
-    protected abstract fun launchScreen(destinationPoint: DestinationPoint)
 }
