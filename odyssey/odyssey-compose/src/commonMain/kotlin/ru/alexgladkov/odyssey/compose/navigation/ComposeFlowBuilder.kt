@@ -8,6 +8,11 @@ import ru.alexgladkov.odyssey.core.RootController
 import ru.alexgladkov.odyssey.core.destination.DestinationFlow
 import ru.alexgladkov.odyssey.core.destination.DestinationScreen
 
+/**
+ * Compose flow builder, declarative helper for navigation graph builder
+ * @see DestinationFlow
+ * @property name - flow name
+ */
 class ComposeFlowBuilder(val name: String) {
 
     private val _destinations: MutableList<DestinationScreen> = mutableListOf()

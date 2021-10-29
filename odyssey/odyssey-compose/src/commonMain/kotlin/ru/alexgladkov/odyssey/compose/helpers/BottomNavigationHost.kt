@@ -18,9 +18,29 @@ import kotlinx.coroutines.delay
 import ru.alexgladkov.odyssey.compose.extensions.observeAsState
 import ru.alexgladkov.odyssey.core.controllers.MultiStackRootController
 
+/**
+ * Bottom item model
+ * Helper class to create bottom navigation host
+ * @see BottomNavigationHost
+ *
+ * @property title - tab title
+ * @property style - tab title style
+ * @property icon - tab icon
+ */
 data class BottomItemModel(val title: String, val style: TextStyle = TextStyle.Default, val icon: Painter? = null)
+
+/**
+ * Bottom navigation colors
+ * Helper class to create bottom navigation host
+ * @see BottomNavigationHost
+ *
+ * @property selectedColor - color when tab selected
+ * @property unselectedColor - color when tab unselected
+ * @property backgroundColor
+ */
 data class BottomNavigationColors(
-    val selectedColor: Color = Color.Black, val unselectedColor: Color = Color.DarkGray,
+    val selectedColor: Color = Color.Black,
+    val unselectedColor: Color = Color.DarkGray,
     val backgroundColor: Color = Color.White
 )
 
@@ -32,7 +52,6 @@ fun BottomNavigationHost(
 ) {
     val multiStackRootController = screenBundle.rootController as MultiStackRootController
     val state = multiStackRootController.backStackObserver.observeAsState()
-    println("multi state -> ${state.value?.destination?.destinationName()}")
 
     state.value?.let { entry ->
         Column(modifier = Modifier.fillMaxSize().background(bottomNavigationColors.backgroundColor)) {

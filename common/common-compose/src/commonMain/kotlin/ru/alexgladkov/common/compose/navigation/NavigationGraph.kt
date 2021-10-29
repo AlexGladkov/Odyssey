@@ -6,6 +6,7 @@ import ru.alexgladkov.odyssey.compose.extensions.bottomNavigation
 import ru.alexgladkov.odyssey.compose.extensions.flow
 import ru.alexgladkov.odyssey.compose.extensions.multistack
 import ru.alexgladkov.odyssey.compose.extensions.screen
+import ru.alexgladkov.odyssey.compose.helpers.BottomItemModel
 import ru.alexgladkov.odyssey.compose.navigation.RootComposeBuilder
 import ru.alexgladkov.odyssey.compose.navigation.screen
 import ru.alexgladkov.odyssey.compose.navigation.tab
@@ -29,7 +30,14 @@ fun RootComposeBuilder.generateGraph() {
         }
     }
 
-    bottomNavigation(name = NavigationTree.Root.Main.toString()) {
+    bottomNavigation(
+        name = NavigationTree.Root.Main.toString(),
+        bottomItemModels = listOf(
+            BottomItemModel(title = "Main"),
+            BottomItemModel(title = "Favorite"),
+            BottomItemModel(title = "Settings")
+        )
+    ) {
         tab(NavigationTree.Tabs.Main.toString()) {
             screen(NavigationTree.Main.Feed.toString()) {
                 FeedScreen(rootController)

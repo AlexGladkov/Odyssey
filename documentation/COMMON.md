@@ -1,6 +1,7 @@
 ### How to use it with desktop
 
 First you need to create navigation graph. For this use extension function to `RootComposeBuilder`
+
 ```kotlin
 fun RootComposeBuilder.generateGraph()
 ```
@@ -8,6 +9,7 @@ fun RootComposeBuilder.generateGraph()
 You can provide array of 3 types of Destinations
 
 #### Create simple screen
+
 ```kotlin
 fun RootComposeBuilder.generateGraph() {
     screen(name = "splash") {
@@ -16,8 +18,8 @@ fun RootComposeBuilder.generateGraph() {
 }
 ```
 
-
 #### Create flow with screens
+
 Flow is a chain of screens connected with one root controller with his own backstack
 
 ```kotlin
@@ -38,16 +40,23 @@ fun RootComposeBuilder.generateGraph() {
 ```
 
 #### Create multi stack with flows
+
 Multistack is a bunch of flow which has their own navigation history
 
 BottomNavigationView for example
 
-You can use it with two ways
-First, I've created production ready extension `bottomNavigation`
+You can use it with two ways First, I've created production ready extension `bottomNavigation`
 
 ```kotlin
 fun RootComposeBuilder.generateGraph() {
-    bottomNavigation(name = "main_screen") {
+    bottomNavigation(
+        name = "main_screen",
+        bottomItemModels = listOf(
+            BottomItemModel(title = "Main"),
+            BottomItemModel(title = "Favorite"),
+            BottomItemModel(title = "Settings")
+        )
+    ) {
         tab(name = "main_tab") {
             screen(name = "feed") {
                 FeedScreen(rootController)

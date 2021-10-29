@@ -9,7 +9,13 @@ import ru.alexgladkov.odyssey.compose.helpers.ScreenMap
 import ru.alexgladkov.odyssey.core.RootController
 import ru.alexgladkov.odyssey.core.ScreenHost
 import ru.alexgladkov.odyssey.core.destination.Destination
+import ru.alexgladkov.odyssey.core.destination.DestinationFlow
 
+/**
+ * Base builder, declarative helper for navigation graph builder
+ * @see RootController
+ * @property screenHost - canvas to draw UI
+ */
 class RootComposeBuilder(
     private val screenHost: ScreenHost
 ) {

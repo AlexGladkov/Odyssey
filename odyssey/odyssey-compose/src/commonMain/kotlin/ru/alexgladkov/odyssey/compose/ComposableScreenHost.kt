@@ -15,6 +15,10 @@ import ru.alexgladkov.odyssey.core.destination.DestinationMultiFlow
 import ru.alexgladkov.odyssey.core.destination.DestinationPoint
 import ru.alexgladkov.odyssey.core.destination.DestinationScreen
 
+
+/**
+ * Base class for connecting RootController and Composable canvas
+ */
 abstract class ComposableScreenHost : ScreenHost {
 
     private val _destinationMap: MutableScreenMap = hashMapOf()

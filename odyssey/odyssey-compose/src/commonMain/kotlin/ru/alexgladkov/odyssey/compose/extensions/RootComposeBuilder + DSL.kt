@@ -39,6 +39,7 @@ fun RootComposeBuilder.bottomNavigation(
     selectedColor: Color = Color.Black,
     unselectedColor: Color = Color.DarkGray,
     backgroundColor: Color = Color.White,
+    bottomItemModels: List<BottomItemModel>,
     block: ComposeMultiStackBuilder.() -> Unit
 ) {
     val builder = ComposeMultiStackBuilder(name)
@@ -52,11 +53,7 @@ fun RootComposeBuilder.bottomNavigation(
                 unselectedColor = unselectedColor,
                 backgroundColor = backgroundColor
             ),
-            bottomItemModels = listOf(
-                BottomItemModel(title = "Main"),
-                BottomItemModel(title = "Favorite"),
-                BottomItemModel(title = "Settings")
-            )
+            bottomItemModels = bottomItemModels
         )
     })
     addDestination(screenMap = builder.screenMap, destination = destinationMultiFlow)

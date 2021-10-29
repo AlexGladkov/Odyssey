@@ -5,6 +5,11 @@ import ru.alexgladkov.odyssey.compose.helpers.ScreenMap
 import ru.alexgladkov.odyssey.core.destination.DestinationFlow
 import ru.alexgladkov.odyssey.core.destination.DestinationMultiFlow
 
+/**
+ * Compose multi stack builder, declarative helper for navigation graph builder
+ * @see DestinationMultiFlow
+ * @property name - flow name
+ */
 class ComposeMultiStackBuilder(val name: String) {
 
     private val _destinations: MutableList<DestinationFlow> = mutableListOf()
