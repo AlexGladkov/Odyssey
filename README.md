@@ -11,8 +11,8 @@ First add dependency to gradle
 ```kotlin
 named("commonMain") {
     dependencies {
-        implementation("io.github.alexgladkov:odyssey-core:0.1.3") // For core classes
-        implementation("io.github.alexgladkov:odyssey-compose:0.1.3") // For compose extensions
+        implementation("io.github.alexgladkov:odyssey-core:0.1.4") // For core classes
+        implementation("io.github.alexgladkov:odyssey-compose:0.1.4") // For compose extensions
     }
 }
 ```
