@@ -21,6 +21,10 @@ fun RootComposeBuilder.generateGraph() {
     }
 
     flow(name = NavigationTree.Root.Auth.toString()) {
+        screen(NavigationTree.Auth.Onboarding.toString()) {
+            OnboardingScreen(rootController)
+        }
+
         screen(NavigationTree.Auth.Login.toString()) {
             LoginScreen(rootController, params as? String)
         }

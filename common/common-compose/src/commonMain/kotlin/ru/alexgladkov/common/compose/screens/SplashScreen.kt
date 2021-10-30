@@ -15,6 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.alexgladkov.common.compose.NavigationTree
+import ru.alexgladkov.odyssey.core.LaunchFlag
 import ru.alexgladkov.odyssey.core.RootController
 
 @Composable
@@ -28,7 +29,7 @@ fun SplashScreen(rootController: RootController) {
 
         Column(modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp)) {
             Button(onClick = {
-                rootController.launch(NavigationTree.Root.Auth.toString(), params = "Splash")
+                rootController.launch(NavigationTree.Root.Auth.toString(), params = "Splash", LaunchFlag.SingleNewTask)
             }) {
                 Text("Go to Auth Screen")
             }

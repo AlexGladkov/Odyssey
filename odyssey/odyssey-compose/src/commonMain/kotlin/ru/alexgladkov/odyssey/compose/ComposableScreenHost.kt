@@ -1,5 +1,7 @@
 package ru.alexgladkov.odyssey.compose
 
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -64,9 +66,11 @@ abstract class ComposableScreenHost : ScreenHost {
 
                 is DestinationMultiFlow -> {
                     _destinationMap[destination.name]
-                        ?.invoke(ScreenBundle(
-                            rootController = entry.rootController,
-                            screenMap = _destinationMap)
+                        ?.invoke(
+                            ScreenBundle(
+                                rootController = entry.rootController,
+                                screenMap = _destinationMap
+                            )
                         )
                 }
 

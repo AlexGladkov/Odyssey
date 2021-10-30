@@ -14,27 +14,19 @@ import ru.alexgladkov.common.compose.NavigationTree
 import ru.alexgladkov.odyssey.core.RootController
 
 @Composable
-fun LoginScreen(rootController: RootController, source: String? = null) {
+fun OnboardingScreen(rootController: RootController) {
     Box(modifier = Modifier.fillMaxSize()) {
         Text(
             modifier = Modifier.padding(24.dp),
-            text = "Login Screen", fontWeight = FontWeight.Medium, fontSize = 28.sp,
+            text = "Onboarding Screen", fontWeight = FontWeight.Medium, fontSize = 28.sp,
             color = Color.Black
         )
 
-        Row(modifier = Modifier.align(Alignment.BottomStart).fillMaxWidth().padding(16.dp)) {
+        Row(modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp)) {
             Button(onClick = {
-                rootController.popBackStack()
+                rootController.launch(NavigationTree.Auth.Login.toString(), "Onboarding")
             }) {
-                Text("Go back")
-            }
-
-            Spacer(modifier = Modifier.weight(1f))
-
-            Button(onClick = {
-                rootController.launch(NavigationTree.Auth.TwoFactor.toString(), "Phone")
-            }) {
-                Text("Go to Confirm Code")
+                Text("Go to Login")
             }
         }
     }
