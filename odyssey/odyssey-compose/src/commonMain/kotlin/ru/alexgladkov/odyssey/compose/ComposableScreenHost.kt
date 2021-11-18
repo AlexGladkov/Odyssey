@@ -37,7 +37,8 @@ abstract class ComposableScreenHost : ScreenHost {
 
     @Composable
     protected fun launchScreen(destinationPoint: DestinationPoint) {
-        val state = destinationPoint.rootController.backStackObserver.observeAsState()
+        val state = destinationPoint.rootController.backStackObserver
+            .observeAsState(destinationPoint.rootController.backStack.last())
 
         state.value?.let { entry ->
             when (val destination = entry.destination) {
