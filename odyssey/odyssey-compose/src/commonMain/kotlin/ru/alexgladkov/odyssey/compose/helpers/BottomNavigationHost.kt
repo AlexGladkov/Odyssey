@@ -4,17 +4,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.TextStyle
-import kotlinx.coroutines.delay
 import ru.alexgladkov.odyssey.compose.extensions.observeAsState
 import ru.alexgladkov.odyssey.core.controllers.MultiStackRootController
 
@@ -51,7 +46,7 @@ fun BottomNavigationHost(
     bottomItemModels: List<BottomItemModel>
 ) {
     val multiStackRootController = screenBundle.rootController as MultiStackRootController
-    val state = multiStackRootController.backStackObserver.observeAsState()
+    val state = multiStackRootController.backStackObserver.observeAsState(multiStackRootController.backStack.first())
 
     state.value?.let { entry ->
         Column(modifier = Modifier.fillMaxSize().background(bottomNavigationColors.backgroundColor)) {

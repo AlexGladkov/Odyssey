@@ -10,6 +10,12 @@ import ru.alexgladkov.odyssey.core.controllers.FlowRootController
 import ru.alexgladkov.odyssey.core.destination.DestinationScreen
 
 @OptIn(ExperimentalAnimationApi::class)
+/**
+ * Flow host
+ * Use this for switch between screens inside flow root controller
+ *
+ * @param screenBundle - params, rootcontroller, etc
+ */
 @Composable
 fun FlowHost(screenBundle: ScreenBundle) {
     val flowRootController = screenBundle.rootController as FlowRootController
@@ -40,6 +46,18 @@ fun FlowHost(screenBundle: ScreenBundle) {
                     )
                 )
             }
+        ) {
+            currentRender?.invoke(
+                screenBundle.copy(params = if (flowRootController.backStack.size == 1) screenBundle.params else params)
+            )
+        }
+
+        Box(
+            modifier = Modifier.graphicsLayer {
+                translationX = previousPosition
+            }
+        ) {
+            previousRender?.invoke(screenBundle)
         }
     }
 }

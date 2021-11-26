@@ -1,6 +1,7 @@
 package ru.alexgladkov.odyssey.compose.extensions
 
 import androidx.compose.runtime.*
+import ru.alexgladkov.odyssey.core.NavigationEntry
 import ru.alexgladkov.odyssey.core.extensions.CFlow
 import ru.alexgladkov.odyssey.core.extensions.Closeable
 
