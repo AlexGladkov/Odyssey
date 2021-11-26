@@ -2,6 +2,7 @@ package ru.alexgladkov.odyssey.compose.extensions
 
 import androidx.compose.runtime.*
 import ru.alexgladkov.odyssey.core.extensions.CFlow
+import ru.alexgladkov.odyssey.core.extensions.Closeable
 
 @Composable
 fun <T> CFlow<T>.observeAsState(initial: T? = null): State<T?> {
@@ -15,4 +16,27 @@ fun <T> CFlow<T>.observeAsState(initial: T? = null): State<T?> {
     }
 
     return state
+}
+
+@Composable
+fun <T> CFlow<T>.launchAsState(key: T?, initial: T): T {
+    var navigation by remember(key) { mutableStateOf(initial) }
+    var observer: Closeable? = null
+    val flow = this
+
+    LaunchedEffect(key) {
+        observer = flow.watch {
+            it?.let {
+                navigation = it
+            }
+        }
+    }
+
+    DisposableEffect(key) {
+        onDispose {
+            observer?.close()
+        }
+    }
+
+    return navigation
 }

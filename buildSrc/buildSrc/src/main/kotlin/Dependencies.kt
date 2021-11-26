@@ -5,7 +5,7 @@ object Dependencies {
     }
 
     object Images {
-        const val kamel = "com.alialbaali.kamel:kamel-image:0.2.0"
+        const val kamel = "com.alialbaali.kamel:kamel-image:0.3.0"
     }
 
     object JetBrains {
@@ -50,10 +50,6 @@ object Dependencies {
     }
 
     object Android {
-        object Compose {
-            const val navigation = "androidx.navigation:navigation-compose:2.4.0-alpha03"
-        }
-
         object Tools {
             object Build {
                 const val gradlePlugin = "com.android.tools.build:gradle:4.1.0"

@@ -56,7 +56,10 @@ fun BottomNavigationHost(
     state.value?.let { entry ->
         Column(modifier = Modifier.fillMaxSize().background(bottomNavigationColors.backgroundColor)) {
             Box(modifier = Modifier.weight(1f)) {
-                FlowHost(ScreenBundle(rootController = entry.rootController, screenMap = screenBundle.screenMap))
+                TabHost(
+                    navigationEntry = entry,
+                    ScreenBundle(rootController = entry.rootController, screenMap = screenBundle.screenMap)
+                )
             }
 
             BottomNavigation(
