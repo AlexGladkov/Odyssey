@@ -2,6 +2,7 @@ package ru.alexgladkov.odyssey.core.destination
 
 import ru.alexgladkov.odyssey.core.NavigationEntry
 import ru.alexgladkov.odyssey.core.RootController
+import ru.alexgladkov.odyssey.core.animations.AnimationType
 
 /**
  * Inner class for navigation and handle controller between stack transitions
@@ -10,8 +11,9 @@ import ru.alexgladkov.odyssey.core.RootController
  */
 data class DestinationPoint(
     val destinationScreen: DestinationScreen,
-    val rootController: RootController
+    val rootController: RootController,
+    val animationType: AnimationType
 )
 
 internal fun DestinationPoint.mapToNavigationEntry(): NavigationEntry =
-    NavigationEntry(destinationScreen, rootController)
+    NavigationEntry(destinationScreen, animationType, rootController)

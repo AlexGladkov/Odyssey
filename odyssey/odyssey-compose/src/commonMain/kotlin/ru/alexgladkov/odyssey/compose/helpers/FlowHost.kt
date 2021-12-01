@@ -2,10 +2,11 @@ package ru.alexgladkov.odyssey.compose.helpers
 
 import androidx.compose.animation.*
 import androidx.compose.runtime.*
-import ru.alexgladkov.odyssey.compose.animations.AnimatedPush
+import ru.alexgladkov.odyssey.compose.animations.AnimatedTransition
 import ru.alexgladkov.odyssey.compose.extensions.launchAsState
 import ru.alexgladkov.odyssey.compose.extensions.observeAsState
 import ru.alexgladkov.odyssey.core.NavigationEntry
+import ru.alexgladkov.odyssey.core.animations.AnimationType
 import ru.alexgladkov.odyssey.core.controllers.FlowRootController
 import ru.alexgladkov.odyssey.core.destination.DestinationScreen
 
@@ -19,45 +20,24 @@ import ru.alexgladkov.odyssey.core.destination.DestinationScreen
 @Composable
 fun FlowHost(screenBundle: ScreenBundle) {
     val flowRootController = screenBundle.rootController as FlowRootController
-    val navigation by flowRootController.backStackObserver.observeAsState()
+    val navigation = flowRootController.backStackObserver.observeAsState(flowRootController.backStack.last())
+    val params = (navigation.value?.destination as? DestinationScreen)?.params
     var currentStackCount by remember { mutableStateOf(flowRootController.backStack.size) }
     val destinationStackCount = flowRootController.backStack.size
 
-    // This ugly hack needs to prevent double display for previous flow state.
-    // Fixme: need to fix it for navigation optimization
-    if (flowRootController.allowedDestinations.map { it.destinationName() }
-            .contains(navigation?.destination?.destinationName().orEmpty())) {
-        val params = (navigation?.destination as? DestinationScreen)?.params
-
-        AnimatedPush(
-            targetState = navigation,
-            isForward = destinationStackCount > currentStackCount,
-            transitionTime = 300,
-            onAnimationEnd = { currentStackCount = destinationStackCount }
-        ) {
-            this?.destination?.destinationName()?.let {
-                val render = screenBundle.screenMap[it]
-                render?.invoke(
-                    screenBundle.copy(
-                        params = if (flowRootController.backStack.size == 1)
-                            screenBundle.params
-                        else
-                            params
-                    )
-                )
+    navigation.value?.let { entry ->
+        AnimatedTransition(
+            targetState = entry,
+            animation = entry.animationType,
+            isForwardDirection = destinationStackCount > currentStackCount,
+            onAnimationEnd = {
+                currentStackCount = destinationStackCount
             }
         ) {
-            currentRender?.invoke(
+            val render = screenBundle.screenMap[destination.destinationName()]
+            render?.invoke(
                 screenBundle.copy(params = if (flowRootController.backStack.size == 1) screenBundle.params else params)
             )
-        }
-
-        Box(
-            modifier = Modifier.graphicsLayer {
-                translationX = previousPosition
-            }
-        ) {
-            previousRender?.invoke(screenBundle)
         }
     }
 }
@@ -70,38 +50,48 @@ fun FlowHost(screenBundle: ScreenBundle) {
  * @param screenBundle - params, rootcontroller, etc
  */
 @Composable
-fun TabHost(navigationEntry: NavigationEntry?, screenBundle: ScreenBundle) {
-    val flowRootController = screenBundle.rootController as FlowRootController
-    val previousRootController = remember { mutableStateOf(screenBundle.rootController) }
+fun TabHost(
+    navigationEntry: NavigationEntry,
+    screenBundle: ScreenBundle,
+) {
+    val flowRootController = navigationEntry.rootController as FlowRootController
     var currentStackCount by remember { mutableStateOf(flowRootController.backStack.size) }
     val destinationStackCount = flowRootController.backStack.size
     val navigation = flowRootController.backStackObserver
         .launchAsState(key = navigationEntry, initial = flowRootController.backStack.last())
+    var currentRootController by remember { mutableStateOf(navigationEntry.rootController.debugName) }
+    val isTabSwitched = currentRootController != navigationEntry.rootController.debugName
 
-    // Check if we switch tabs (root controller changed)
-    if (flowRootController.debugName == previousRootController.value.debugName) {
-        AnimatedPush(
+    navigation?.let {
+        AnimatedTransition(
             targetState = navigation,
-            isForward = destinationStackCount > currentStackCount,
-            transitionTime = 300,
-            onAnimationEnd = { currentStackCount = destinationStackCount }
-        ) {
-            val params = (this?.destination as? DestinationScreen)?.params
-            this?.let { entry ->
-                val render = screenBundle.screenMap[entry.destination.destinationName()]
-                render?.invoke(
-                    screenBundle.copy(params = params)
-                )
+            animation = if (isTabSwitched) AnimationType.None else navigation.animationType,
+            isForwardDirection = destinationStackCount > currentStackCount,
+            onAnimationEnd = {
+                currentRootController = navigationEntry.rootController.debugName.orEmpty()
+                currentStackCount = destinationStackCount
             }
-        }
-    } else {
-        previousRootController.value = flowRootController
-        val params = (navigation?.destination as? DestinationScreen)?.params
-        navigation?.let { entry ->
-            val render = screenBundle.screenMap[entry.destination.destinationName()]
+        ) {
+            val params = (destination as? DestinationScreen)?.params
+            val render = screenBundle.screenMap[destination.destinationName()]
             render?.invoke(
                 screenBundle.copy(params = params)
             )
+        }
+    }
+}
+
+private fun resolveAnimationType(
+    defaultAnimationType: AnimationType,
+    launchAnimationType: AnimationType
+): AnimationType {
+    return if (defaultAnimationType == launchAnimationType) {
+        defaultAnimationType
+    } else {
+        if (launchAnimationType !is AnimationType.None) {
+            launchAnimationType
+        } else {
+            defaultAnimationType
         }
     }
 }

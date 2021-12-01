@@ -1,9 +1,6 @@
 package ru.alexgladkov.common.compose.screens
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -17,6 +14,7 @@ import androidx.compose.ui.unit.sp
 import ru.alexgladkov.common.compose.NavigationTree
 import ru.alexgladkov.odyssey.core.LaunchFlag
 import ru.alexgladkov.odyssey.core.RootController
+import ru.alexgladkov.odyssey.core.animations.AnimationType
 
 @Composable
 fun SplashScreen(rootController: RootController) {
@@ -28,11 +26,29 @@ fun SplashScreen(rootController: RootController) {
         )
 
         Column(modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp)) {
-            Button(onClick = {
-                rootController.launch(NavigationTree.Root.Auth.toString(), params = "Splash", LaunchFlag.SingleNewTask)
-            }) {
-                Text("Go to Auth Screen")
+            Row {
+                Button(onClick = {
+                    rootController.present(
+                        screen = NavigationTree.Root.Auth.toString(),
+                        params = "Splash",
+                        launchFlag = LaunchFlag.SingleNewTask
+                    )
+                }) {
+                    Text("Auth With No History")
+                }
+
+                Spacer(modifier = Modifier.weight(1f))
+
+                Button(onClick = {
+                    rootController.present(
+                        screen = NavigationTree.Root.Auth.toString(),
+                        params = "Splash",
+                    )
+                }) {
+                    Text("Auth With History")
+                }
             }
+
         }
     }
 }

@@ -6,6 +6,17 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
+/**
+ * Overriden AnimatedContent function from core Compose
+ * Contains End Animation Callback
+ *
+ * @param targetState - observed state
+ * @param modifier
+ * @param transitionSpec - provide animation and transformation
+ * @param contentAlignment
+ * @param onAnimationEnd - calls when animation end
+ * @param content
+ */
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun <S> AnimatedContentWithCallback(

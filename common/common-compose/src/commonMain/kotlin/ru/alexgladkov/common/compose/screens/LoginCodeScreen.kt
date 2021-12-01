@@ -8,11 +8,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.alexgladkov.common.compose.NavigationTree
+import ru.alexgladkov.odyssey.core.animations.defaultPresentationAnimation
 import ru.alexgladkov.odyssey.core.RootController
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -35,7 +35,10 @@ fun LoginCodeScreen(rootController: RootController, type: String?) {
             Spacer(modifier = Modifier.weight(1f))
 
             Button(onClick = {
-                rootController.parentRootController?.launch(NavigationTree.Root.Main.toString())
+                rootController.parentRootController?.launch(
+                    screen = NavigationTree.Root.Main.toString(),
+                    animationType = defaultPresentationAnimation()
+                )
             }) {
                 Text("Go to Main")
             }

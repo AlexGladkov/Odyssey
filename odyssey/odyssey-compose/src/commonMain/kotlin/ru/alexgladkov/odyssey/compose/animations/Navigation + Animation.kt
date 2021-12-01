@@ -3,47 +3,33 @@ package ru.alexgladkov.odyssey.compose.animations
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
+import ru.alexgladkov.odyssey.core.animations.AnimationType
 
-enum class AnimationType {
-    Push, Present, Fade
-}
-
+/**
+ * Animated transition
+ *
+ * @param targetState - compose state to observe animation
+ * @param animation - type of animations (@see AnimationType for more)
+ * @param isForwardDirection - animation direction (true for forward, false for backward)
+ * @param onAnimationEnd - animation end callback
+ * @param content - composable to animate
+ */
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun <T> AnimatedPush(
+fun <T> AnimatedTransition(
     targetState: T,
-    transitionTime: Int,
-    isForward: Boolean,
+    animation: AnimationType,
+    isForwardDirection: Boolean,
     onAnimationEnd: (() -> Unit)? = null,
     content: @Composable T.() -> Unit
 ) {
     AnimatedNavigation(
         targetState = targetState,
-        transitionSpec = {
-            if (isForward) {
-                // Forward animation
-                (slideInHorizontally(
-                    animationSpec = tween(transitionTime),
-                    initialOffsetX = { width -> width })
-                        + fadeIn(animationSpec = tween(transitionTime)) with
-                        slideOutHorizontally(
-                            animationSpec = tween(transitionTime),
-                            targetOffsetX = { width -> -width })
-                        + fadeOut(animationSpec = tween(transitionTime)))
-                    .using(
-                        SizeTransform(clip = false)
-                    )
-            } else {
-                (slideInHorizontally(animationSpec = tween(transitionTime), initialOffsetX = { width -> -width })
-                        + fadeIn(animationSpec = tween(transitionTime)) with
-                        slideOutHorizontally(
-                            animationSpec = tween(transitionTime), targetOffsetX = { width -> width })
-                        + fadeOut(animationSpec = tween(transitionTime))
-                        )
-                    .using(
-                        SizeTransform(clip = false)
-                    )
-            }
+        transitionSpec = when (animation) {
+            is AnimationType.Present -> providePresentationTransition(isForwardDirection, animation.animationTime)
+            is AnimationType.Fade -> provideCrossFadeTransition(animation.animationTime)
+            AnimationType.None -> providePresentationTransition(isForwardDirection, 1)
+            is AnimationType.Push -> providePushTransition(isForwardDirection, animation.animationTime)
         },
         onAnimationEnd = onAnimationEnd,
         content = content

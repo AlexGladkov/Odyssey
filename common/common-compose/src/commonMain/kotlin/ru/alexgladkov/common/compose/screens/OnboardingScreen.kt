@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.alexgladkov.common.compose.NavigationTree
 import ru.alexgladkov.odyssey.core.RootController
+import ru.alexgladkov.odyssey.core.animations.AnimationType
 
 @Composable
 fun OnboardingScreen(rootController: RootController) {
@@ -24,7 +25,7 @@ fun OnboardingScreen(rootController: RootController) {
 
         Row(modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp)) {
             Button(onClick = {
-                rootController.launch(NavigationTree.Auth.Login.toString(), "Onboarding")
+                rootController.push(NavigationTree.Auth.Login.toString(), params ="Onboarding")
             }) {
                 Text("Go to Login")
             }

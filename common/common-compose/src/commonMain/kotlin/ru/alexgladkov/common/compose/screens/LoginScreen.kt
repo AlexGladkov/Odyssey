@@ -32,7 +32,7 @@ fun LoginScreen(rootController: RootController, source: String? = null) {
             Spacer(modifier = Modifier.weight(1f))
 
             Button(onClick = {
-                rootController.launch(NavigationTree.Auth.TwoFactor.toString(), "Phone")
+                rootController.push(NavigationTree.Auth.TwoFactor.toString(), "Phone")
             }) {
                 Text("Go to Confirm Code")
             }

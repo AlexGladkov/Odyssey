@@ -1,0 +1,15 @@
+{
+  "configuration": [
+    "name"
+    :
+    "gradle run",
+    "type"
+    :
+    "gradle",
+    "tasks"
+    :
+    [
+      "run "
+    ]
+  ]
+}

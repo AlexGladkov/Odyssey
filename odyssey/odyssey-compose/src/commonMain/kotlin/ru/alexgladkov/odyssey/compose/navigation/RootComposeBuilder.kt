@@ -8,6 +8,7 @@ import ru.alexgladkov.odyssey.compose.helpers.ScreenBundle
 import ru.alexgladkov.odyssey.compose.helpers.ScreenMap
 import ru.alexgladkov.odyssey.core.RootController
 import ru.alexgladkov.odyssey.core.ScreenHost
+import ru.alexgladkov.odyssey.core.animations.AnimationType
 import ru.alexgladkov.odyssey.core.destination.Destination
 import ru.alexgladkov.odyssey.core.destination.DestinationFlow
 

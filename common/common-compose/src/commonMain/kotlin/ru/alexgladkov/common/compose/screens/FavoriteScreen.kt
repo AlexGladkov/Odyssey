@@ -11,6 +11,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.alexgladkov.common.compose.NavigationTree
+import ru.alexgladkov.odyssey.core.animations.defaultPresentationAnimation
 import ru.alexgladkov.odyssey.core.RootController
 
 @Composable
@@ -26,7 +27,8 @@ fun FavoriteScreen(rootController: RootController) {
             Button(onClick = {
                 rootController.parentRootController?.parentRootController?.launch(
                     NavigationTree.Root.Dialog.name,
-                    DialogParams("Favorite")
+                    params = DialogParams("Favorite"),
+                    animationType = defaultPresentationAnimation()
                 )
             }) {
                 Text("Open Modal Dialog")
