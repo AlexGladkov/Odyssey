@@ -1,6 +1,10 @@
 package ru.alexgladkov.odyssey.core
 
 import kotlinx.coroutines.flow.MutableStateFlow
+import ru.alexgladkov.odyssey.core.animations.AnimationType
+import ru.alexgladkov.odyssey.core.animations.defaultFadeAnimation
+import ru.alexgladkov.odyssey.core.animations.defaultPresentationAnimation
+import ru.alexgladkov.odyssey.core.animations.defaultPushAnimation
 import ru.alexgladkov.odyssey.core.backpress.BackPressedCallback
 import ru.alexgladkov.odyssey.core.backpress.OnBackPressedDispatcher
 import ru.alexgladkov.odyssey.core.controllers.FlowRootController
@@ -36,9 +40,6 @@ open class RootController(var screenHost: ScreenHost) {
     /** Use this to get current back stack */
     var backStack: List<NavigationEntry> = _backStack
 
-    /** Use this to check allowed destinations */
-     var allowedDestinations: List<Destination> = _allowedDestinations
-
     /**
      * Debug name need to debug :) if you like console debugging
      * Setup automatically
@@ -73,10 +74,73 @@ open class RootController(var screenHost: ScreenHost) {
      * @param screen - screen code, for example "splash". Must be included
      * in navigation graph or will cause an error
      * @param params - any bunch of params you need for the screen
+     * @param animationType - preferred animationType
      * @param launchFlag - flag if you want to change default behavior @see LaunchFlag
      */
-    fun launch(screen: String, params: Any? = null, launchFlag: LaunchFlag? = null) {
-        launch(DestinationScreen(name = screen, params = params), launchFlag)
+    fun launch(
+        screen: String, params: Any? = null,
+        animationType: AnimationType = AnimationType.None,
+        launchFlag: LaunchFlag? = null
+    ) {
+        launch(
+            destinationScreen = DestinationScreen(name = screen, params = params),
+            animationType = animationType,
+            launchFlag = launchFlag
+        )
+    }
+
+    /**
+     * Helper function to draw screen with presentation (aka modal) style
+     * @param screen - screen code, for example "splash". Must be included
+     * in navigation graph or will cause an error
+     * @param params - any bunch of params you need for the screen
+     * @param launchFlag - flag if you want to change default behavior @see LaunchFlag
+     */
+    fun present(
+        screen: String, params: Any? = null,
+        launchFlag: LaunchFlag? = null
+    ) {
+        launch(
+            destinationScreen = DestinationScreen(name = screen, params = params),
+            animationType = defaultPresentationAnimation(),
+            launchFlag = launchFlag
+        )
+    }
+
+    /**
+     * Helper function to draw screen with push style (inner navigation)
+     * @param screen - screen code, for example "splash". Must be included
+     * in navigation graph or will cause an error
+     * @param params - any bunch of params you need for the screen
+     * @param launchFlag - flag if you want to change default behavior @see LaunchFlag
+     */
+    fun push(
+        screen: String, params: Any? = null,
+        launchFlag: LaunchFlag? = null
+    ) {
+        launch(
+            destinationScreen = DestinationScreen(name = screen, params = params),
+            animationType = defaultPushAnimation(),
+            launchFlag = launchFlag
+        )
+    }
+
+    /**
+     * Helper function to draw screen with crossfade style
+     * @param screen - screen code, for example "splash". Must be included
+     * in navigation graph or will cause an error
+     * @param params - any bunch of params you need for the screen
+     * @param launchFlag - flag if you want to change default behavior @see LaunchFlag
+     */
+    fun fade(
+        screen: String, params: Any? = null,
+        launchFlag: LaunchFlag? = null
+    ) {
+        launch(
+            destinationScreen = DestinationScreen(name = screen, params = params),
+            animationType = defaultFadeAnimation(),
+            launchFlag = launchFlag
+        )
     }
 
     /**
@@ -94,8 +158,9 @@ open class RootController(var screenHost: ScreenHost) {
                 return false
             }
 
-            _backStack.removeLast()
-            val lastDestination = _backStack.last().destination.mapToNavigationEntry(_backStack.last().rootController)
+            val last = _backStack.removeLast()
+            val lastDestination = _backStack.last().destination
+                .mapToNavigationEntry(_backStack.last().rootController, last.animationType)
             _backStackObserver.tryEmit(lastDestination)
         }
 
@@ -118,7 +183,11 @@ open class RootController(var screenHost: ScreenHost) {
         }
     }
 
-    private fun launch(destinationScreen: DestinationScreen, launchFlag: LaunchFlag? = null) {
+    private fun launch(
+        destinationScreen: DestinationScreen,
+        animationType: AnimationType,
+        launchFlag: LaunchFlag? = null
+    ) {
         when (launchFlag) {
             LaunchFlag.SingleNewTask -> _backStack.clear()
         }
@@ -128,29 +197,39 @@ open class RootController(var screenHost: ScreenHost) {
         }
 
         when (destination) {
-            is DestinationFlow -> createFlowAndPresent(destination, destinationScreen.params)
-            is DestinationMultiFlow -> createMultiFlowAndPresent(destination)
-            is DestinationScreen -> present(destinationPoint = DestinationPoint(destinationScreen, this))
+            is DestinationFlow -> createFlowAndPresent(destination, animationType, destinationScreen.params)
+            is DestinationMultiFlow -> createMultiFlowAndPresent(destination, animationType)
+            is DestinationScreen -> present(
+                destinationPoint = DestinationPoint(
+                    destinationScreen = destinationScreen,
+                    animationType = animationType,
+                    rootController = this
+                )
+            )
         }
     }
 
-    private fun createFlowAndPresent(destinationFlow: DestinationFlow, params: Any? = null) {
+    private fun createFlowAndPresent(
+        destinationFlow: DestinationFlow,
+        animationType: AnimationType,
+        params: Any? = null
+    ) {
         val firstDestination = destinationFlow.screens.first()
         val flowRootController = FlowRootController(screenHost)
         flowRootController.parentRootController = this
         flowRootController.debugName = destinationFlow.name
         flowRootController.setNavigationGraph(destinationFlow.screens)
 
-        val firstNavigationEntry = firstDestination.mapToNavigationEntry(flowRootController)
+        val firstNavigationEntry = firstDestination.mapToNavigationEntry(flowRootController, animationType)
         flowRootController._backStack.add(firstNavigationEntry)
         flowRootController._backStackObserver.tryEmit(firstNavigationEntry)
 
-        val navigationEntry = destinationFlow.copy(params = params).mapToNavigationEntry(flowRootController)
+        val navigationEntry = destinationFlow.copy(params = params).mapToNavigationEntry(flowRootController, animationType)
         _backStack.add(navigationEntry)
         _backStackObserver.tryEmit(navigationEntry)
     }
 
-    private fun createMultiFlowAndPresent(destinationMultiFlow: DestinationMultiFlow) {
+    private fun createMultiFlowAndPresent(destinationMultiFlow: DestinationMultiFlow, animationType: AnimationType) {
         val multiStackRootController = MultiStackRootController(screenHost)
         multiStackRootController.parentRootController = this
         multiStackRootController.debugName = destinationMultiFlow.name
@@ -162,19 +241,19 @@ open class RootController(var screenHost: ScreenHost) {
             flowRootController.debugName = destinationFlow.name
             flowRootController.setNavigationGraph(destinationFlow.screens)
 
-            val firstNavEntry = firstDestination.mapToNavigationEntry(flowRootController)
+            val firstNavEntry = firstDestination.mapToNavigationEntry(flowRootController, AnimationType.None)
             multiStackRootController.childrenRootController.add(flowRootController)
             flowRootController.parentRootController = multiStackRootController
             flowRootController._backStack.add(firstNavEntry)
             flowRootController._backStackObserver.tryEmit(firstNavEntry)
         }
 
-        val multiStackNavigationEntry = destinationMultiFlow.mapToNavigationEntry(multiStackRootController)
+        val multiStackNavigationEntry = destinationMultiFlow.mapToNavigationEntry(multiStackRootController, animationType)
         _backStack.add(multiStackNavigationEntry)
         _backStackObserver.tryEmit(multiStackNavigationEntry)
 
         val firstFlowNavigationEntry = destinationMultiFlow.flows.first()
-            .mapToNavigationEntry(multiStackRootController.childrenRootController.first())
+            .mapToNavigationEntry(multiStackRootController.childrenRootController.first(), animationType)
         multiStackRootController._backStack.add(firstFlowNavigationEntry)
         multiStackRootController._backStackObserver.tryEmit(firstFlowNavigationEntry)
     }

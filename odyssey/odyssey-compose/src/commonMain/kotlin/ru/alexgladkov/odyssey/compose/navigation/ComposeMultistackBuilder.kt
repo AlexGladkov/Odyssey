@@ -8,7 +8,7 @@ import ru.alexgladkov.odyssey.core.destination.DestinationMultiFlow
 /**
  * Compose multi stack builder, declarative helper for navigation graph builder
  * @see DestinationMultiFlow
- * @property name - flow name
+ * @param name - flow name
  */
 class ComposeMultiStackBuilder(val name: String) {
 
@@ -25,7 +25,10 @@ class ComposeMultiStackBuilder(val name: String) {
     fun build(): DestinationMultiFlow = DestinationMultiFlow(name, _destinations)
 }
 
-fun ComposeMultiStackBuilder.tab(name: String, block: ComposeFlowBuilder.() -> Unit) {
+fun ComposeMultiStackBuilder.tab(
+    name: String,
+    block: ComposeFlowBuilder.() -> Unit
+) {
     val builder = ComposeFlowBuilder(name)
     val destinationFlow = builder.apply(block).build()
 

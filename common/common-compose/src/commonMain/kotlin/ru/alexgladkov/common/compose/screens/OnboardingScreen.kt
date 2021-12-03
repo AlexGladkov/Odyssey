@@ -11,27 +11,23 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.alexgladkov.common.compose.NavigationTree
-import ru.alexgladkov.odyssey.core.animations.defaultPresentationAnimation
 import ru.alexgladkov.odyssey.core.RootController
+import ru.alexgladkov.odyssey.core.animations.AnimationType
 
 @Composable
-fun FavoriteScreen(rootController: RootController) {
+fun OnboardingScreen(rootController: RootController) {
     Box(modifier = Modifier.fillMaxSize()) {
         Text(
             modifier = Modifier.padding(24.dp),
-            text = "Favorite Screen", fontWeight = FontWeight.Medium, fontSize = 28.sp,
+            text = "Onboarding Screen", fontWeight = FontWeight.Medium, fontSize = 28.sp,
             color = Color.Black
         )
 
         Row(modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp)) {
             Button(onClick = {
-                rootController.parentRootController?.parentRootController?.launch(
-                    NavigationTree.Root.Dialog.name,
-                    params = DialogParams("Favorite"),
-                    animationType = defaultPresentationAnimation()
-                )
+                rootController.push(NavigationTree.Auth.Login.toString(), params ="Onboarding")
             }) {
-                Text("Open Modal Dialog")
+                Text("Go to Login")
             }
         }
     }

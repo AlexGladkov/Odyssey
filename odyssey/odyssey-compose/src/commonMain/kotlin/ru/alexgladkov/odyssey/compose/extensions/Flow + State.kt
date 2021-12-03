@@ -20,7 +20,7 @@ fun <T> CFlow<T>.observeAsState(initial: T? = null): State<T?> {
 }
 
 @Composable
-fun <T> CFlow<T>.launchAsState(key: T?, initial: T): T {
+fun <T, R> CFlow<T>.launchAsState(key: R?, initial: T): T {
     var navigation by remember(key) { mutableStateOf(initial) }
     var observer: Closeable? = null
     val flow = this

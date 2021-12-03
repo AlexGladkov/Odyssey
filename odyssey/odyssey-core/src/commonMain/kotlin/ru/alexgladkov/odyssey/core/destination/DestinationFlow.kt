@@ -2,6 +2,7 @@ package ru.alexgladkov.odyssey.core.destination
 
 import ru.alexgladkov.odyssey.core.NavigationEntry
 import ru.alexgladkov.odyssey.core.RootController
+import ru.alexgladkov.odyssey.core.animations.AnimationType
 
 /**
  * One of the types of Destination class.
@@ -16,8 +17,9 @@ data class DestinationFlow(
     val params: Any? = null,
     val screens: List<DestinationScreen>
 ) : Destination {
+
     override fun destinationName(): String = name
 }
 
-fun DestinationFlow.mapToNavigationEntry(rootController: RootController): NavigationEntry =
-    NavigationEntry(destination = this, rootController = rootController)
+fun DestinationFlow.mapToNavigationEntry(rootController: RootController, animationType: AnimationType): NavigationEntry =
+    NavigationEntry(destination = this, rootController = rootController, animationType = animationType)

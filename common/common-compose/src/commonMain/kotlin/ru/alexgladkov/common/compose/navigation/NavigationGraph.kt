@@ -10,17 +10,22 @@ import ru.alexgladkov.odyssey.compose.helpers.BottomItemModel
 import ru.alexgladkov.odyssey.compose.navigation.RootComposeBuilder
 import ru.alexgladkov.odyssey.compose.navigation.screen
 import ru.alexgladkov.odyssey.compose.navigation.tab
+import ru.alexgladkov.odyssey.core.animations.AnimationType
 
 fun buildComposeNavigationGraph(): RootComposeBuilder.() -> Unit {
     return { generateGraph() }
 }
 
 fun RootComposeBuilder.generateGraph() {
-    screen(NavigationTree.Root.Splash.toString()) {
+    screen(NavigationTree.Root.Splash.name) {
         SplashScreen(rootController)
     }
 
     flow(name = NavigationTree.Root.Auth.toString()) {
+        screen(NavigationTree.Auth.Onboarding.toString()) {
+            OnboardingScreen(rootController)
+        }
+
         screen(NavigationTree.Auth.Login.toString()) {
             LoginScreen(rootController, params as? String)
         }

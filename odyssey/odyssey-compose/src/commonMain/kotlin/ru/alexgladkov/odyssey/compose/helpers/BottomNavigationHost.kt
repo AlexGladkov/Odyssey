@@ -5,12 +5,16 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
+import androidx.compose.runtime.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.TextStyle
 import ru.alexgladkov.odyssey.compose.extensions.observeAsState
+import ru.alexgladkov.odyssey.core.NavigationEntry
 import ru.alexgladkov.odyssey.core.controllers.MultiStackRootController
 
 /**
@@ -47,45 +51,64 @@ fun BottomNavigationHost(
 ) {
     val multiStackRootController = screenBundle.rootController as MultiStackRootController
     val state = multiStackRootController.backStackObserver.observeAsState(multiStackRootController.backStack.first())
+    state.value?.let {
+        BottomNavigationView(
+            bottomNavigationColors = bottomNavigationColors,
+            screenBundle = screenBundle,
+            entry = it,
+            multiStackRootController = multiStackRootController,
+            bottomItemModels = bottomItemModels
+        )
+    }
+}
 
-    state.value?.let { entry ->
-        Column(modifier = Modifier.fillMaxSize().background(bottomNavigationColors.backgroundColor)) {
-            Box(modifier = Modifier.weight(1f)) {
-                TabHost(navigationEntry = entry, screenBundle = ScreenBundle(rootController = entry.rootController, screenMap = screenBundle.screenMap))
-            }
+@Composable
+fun BottomNavigationView(
+    bottomNavigationColors: BottomNavigationColors,
+    entry: NavigationEntry,
+    screenBundle: ScreenBundle,
+    multiStackRootController: MultiStackRootController,
+    bottomItemModels: List<BottomItemModel>
+) {
+    Column(modifier = Modifier.fillMaxSize().background(bottomNavigationColors.backgroundColor)) {
+        Box(modifier = Modifier.weight(1f)) {
+            TabHost(
+                screenBundle = ScreenBundle(rootController = entry.rootController, screenMap = screenBundle.screenMap),
+                navigationEntry = entry,
+            )
+        }
 
-            BottomNavigation(
-                backgroundColor = bottomNavigationColors.backgroundColor
-            ) {
-                multiStackRootController.childrenRootController.forEach { flowRootController ->
-                    val position = multiStackRootController.childrenRootController.indexOf(flowRootController)
-                    val isSelected = state.value?.rootController == flowRootController
-                    val bottomItemModel = bottomItemModels[position]
+        BottomNavigation(
+            backgroundColor = bottomNavigationColors.backgroundColor
+        ) {
+            multiStackRootController.childrenRootController.forEach { flowRootController ->
+                val position = multiStackRootController.childrenRootController.indexOf(flowRootController)
+                val isSelected = entry.rootController == flowRootController
+                val bottomItemModel = bottomItemModels[position]
 
-                    BottomNavigationItem(
-                        modifier = Modifier.background(bottomNavigationColors.backgroundColor),
-                        selected = isSelected,
-                        icon = {
-                            bottomItemModel.icon?.let {
-                                Icon(
-                                    painter = it,
-                                    contentDescription = bottomItemModel.title,
-                                    tint = if (isSelected) bottomNavigationColors.selectedColor else bottomNavigationColors.unselectedColor
-                                )
-                            }
-                        },
-                        onClick = {
-                            multiStackRootController.switchFlow(position, flowRootController)
-                        },
-                        label = {
-                            Text(
-                                text = bottomItemModel.title,
-                                style = bottomItemModel.style,
-                                color = if (isSelected) bottomNavigationColors.selectedColor else bottomNavigationColors.unselectedColor
+                BottomNavigationItem(
+                    modifier = Modifier.background(bottomNavigationColors.backgroundColor),
+                    selected = isSelected,
+                    icon = {
+                        bottomItemModel.icon?.let {
+                            Icon(
+                                painter = it,
+                                contentDescription = bottomItemModel.title,
+                                tint = if (isSelected) bottomNavigationColors.selectedColor else bottomNavigationColors.unselectedColor
                             )
                         }
-                    )
-                }
+                    },
+                    onClick = {
+                        multiStackRootController.switchFlow(position, flowRootController)
+                    },
+                    label = {
+                        Text(
+                            text = bottomItemModel.title,
+                            style = bottomItemModel.style,
+                            color = if (isSelected) bottomNavigationColors.selectedColor else bottomNavigationColors.unselectedColor
+                        )
+                    }
+                )
             }
         }
     }

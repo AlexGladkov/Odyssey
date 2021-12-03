@@ -1,5 +1,6 @@
 package ru.alexgladkov.odyssey.core.declarative
 
+import ru.alexgladkov.odyssey.core.animations.AnimationType
 import ru.alexgladkov.odyssey.core.destination.Destination
 import ru.alexgladkov.odyssey.core.destination.DestinationScreen
 
@@ -11,8 +12,8 @@ class RootControllerBuilder {
         _destinations.add(DestinationScreen(destination))
     }
 
-    fun flow(name: String, block: FlowBuilder.() -> Unit) {
-        _destinations.add(FlowBuilder(name).apply(block).build())
+    fun flow(name: String, animationType: AnimationType, block: FlowBuilder.() -> Unit) {
+        _destinations.add(FlowBuilder(name, animationType).apply(block).build())
     }
 
     fun multistack(name: String, block: MultistackFlowBuilder.() -> Unit) {
