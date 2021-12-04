@@ -11,8 +11,6 @@ import ru.alexgladkov.odyssey.core.controllers.FlowRootController
 import ru.alexgladkov.odyssey.core.controllers.MultiStackRootController
 import ru.alexgladkov.odyssey.core.declarative.RootControllerBuilder
 import ru.alexgladkov.odyssey.core.destination.*
-import ru.alexgladkov.odyssey.core.destination.DestinationPoint
-import ru.alexgladkov.odyssey.core.destination.mapToNavigationEntry
 import ru.alexgladkov.odyssey.core.extensions.CFlow
 import ru.alexgladkov.odyssey.core.extensions.wrap
 
@@ -209,6 +207,49 @@ open class RootController(var screenHost: ScreenHost) {
         }
     }
 
+    fun popTo(
+        screen: String, params: Any? = null,
+        animationType: AnimationType = AnimationType.None,
+        launchFlag: LaunchFlag? = null
+    ) {
+        popTo(
+            destinationScreen = DestinationScreen(name = screen, params = params),
+            animationType = animationType,
+            launchFlag = launchFlag,
+        )
+    }
+
+    private fun popTo(
+        destinationScreen: DestinationScreen,
+        animationType: AnimationType,
+        launchFlag: LaunchFlag? = null
+    ) {
+        when (launchFlag) {
+            LaunchFlag.SingleNewTask -> _backStack.clear()
+        }
+
+        val destination = _allowedDestinations.firstOrNull { point ->
+            point.destinationName() == destinationScreen.name
+        }
+
+        when (destination) {
+            is DestinationFlow -> createFlowAndDelete(
+                destination,
+                animationType,
+                destinationScreen.params
+            )
+            is DestinationMultiFlow -> createMultiFlowAndDelete(destination, animationType)
+            is DestinationScreen -> delete(
+                destinationPoint = DestinationPoint(
+                    destinationScreen = destinationScreen,
+                    animationType = animationType,
+                    rootController = this
+                )
+            )
+        }
+
+    }
+
     private fun createFlowAndPresent(
         destinationFlow: DestinationFlow,
         animationType: AnimationType,
@@ -227,6 +268,28 @@ open class RootController(var screenHost: ScreenHost) {
         val navigationEntry = destinationFlow.copy(params = params).mapToNavigationEntry(flowRootController, animationType)
         _backStack.add(navigationEntry)
         _backStackObserver.tryEmit(navigationEntry)
+    }
+
+
+    private fun createFlowAndDelete(
+        destinationFlow: DestinationFlow,
+        animationType: AnimationType,
+        params: Any? = null
+    ) {
+        val firstDestination = destinationFlow.screens.first()
+        val flowRootController = FlowRootController(screenHost)
+        flowRootController.parentRootController = this
+        flowRootController.debugName = destinationFlow.name
+        flowRootController.setNavigationGraph(destinationFlow.screens)
+
+        val firstNavigationEntry =
+            firstDestination.mapToNavigationEntry(flowRootController, animationType)
+        flowRootController._backStack.add(firstNavigationEntry)
+        flowRootController._backStackObserver.tryEmit(firstNavigationEntry)
+
+        val navigationEntry = destinationFlow.copy(params = params)
+            .mapToNavigationEntry(flowRootController, animationType)
+        _backStack.remove(navigationEntry)
     }
 
     private fun createMultiFlowAndPresent(destinationMultiFlow: DestinationMultiFlow, animationType: AnimationType) {
@@ -258,6 +321,39 @@ open class RootController(var screenHost: ScreenHost) {
         multiStackRootController._backStackObserver.tryEmit(firstFlowNavigationEntry)
     }
 
+    private fun createMultiFlowAndDelete(
+        destinationMultiFlow: DestinationMultiFlow,
+        animationType: AnimationType
+    ) {
+        val multiStackRootController = MultiStackRootController(screenHost)
+        multiStackRootController.parentRootController = this
+        multiStackRootController.debugName = destinationMultiFlow.name
+        multiStackRootController.setNavigationGraph(destinationMultiFlow.flows)
+
+        destinationMultiFlow.flows.forEach { destinationFlow ->
+            val firstDestination = destinationFlow.screens.first()
+            val flowRootController = FlowRootController(screenHost)
+            flowRootController.debugName = destinationFlow.name
+            flowRootController.setNavigationGraph(destinationFlow.screens)
+
+            val firstNavEntry =
+                firstDestination.mapToNavigationEntry(flowRootController, AnimationType.None)
+            multiStackRootController.childrenRootController.add(flowRootController)
+            flowRootController.parentRootController = multiStackRootController
+            flowRootController._backStack.remove(firstNavEntry)
+        }
+
+        val multiStackNavigationEntry = destinationMultiFlow.mapToNavigationEntry(multiStackRootController, animationType)
+        _backStack.remove(multiStackNavigationEntry)
+
+        val firstFlowNavigationEntry = destinationMultiFlow.flows.first()
+            .mapToNavigationEntry(
+                multiStackRootController.childrenRootController.first(),
+                animationType
+            )
+        multiStackRootController._backStack.remove(firstFlowNavigationEntry)
+    }
+
     protected open fun present(destinationPoint: DestinationPoint) {
         val navigationEntry = destinationPoint.mapToNavigationEntry()
 
@@ -268,5 +364,14 @@ open class RootController(var screenHost: ScreenHost) {
 
         _backStack.add(navigationEntry)
         _backStackObserver.tryEmit(navigationEntry)
+    }
+
+    protected open fun delete(destinationPoint: DestinationPoint) {
+        val navigationEntry = destinationPoint.mapToNavigationEntry()
+        _backStack.remove(navigationEntry)
+        if (_backStack.isEmpty()) {
+            // Start drawing process when first screen passed
+            screenHost.draw(destinationPoint)
+        }
     }
 }
