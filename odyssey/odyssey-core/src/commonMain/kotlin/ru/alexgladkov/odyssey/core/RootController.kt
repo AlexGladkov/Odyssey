@@ -269,4 +269,23 @@ open class RootController(var screenHost: ScreenHost) {
         _backStack.add(navigationEntry)
         _backStackObserver.tryEmit(navigationEntry)
     }
+
+    fun popTo(screen: String, params: Any? = null) {
+        popTo(DestinationScreen(screen, params))
+    }
+
+    private fun popTo(destinationScreen: DestinationScreen) {
+        var lastDestination: Destination
+        var lastEntry: NavigationEntry
+        do {
+            lastEntry = _backStack.removeLast()
+            lastDestination = lastEntry.destination
+        } while (lastDestination != destinationScreen)
+
+        val navigationEntry = lastDestination.mapToNavigationEntry(
+            _backStack.last().rootController,
+            lastEntry.animationType
+        )
+        _backStackObserver.tryEmit(navigationEntry)
+    }
 }
