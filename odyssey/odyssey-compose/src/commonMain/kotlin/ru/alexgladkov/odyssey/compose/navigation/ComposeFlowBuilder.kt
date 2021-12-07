@@ -5,13 +5,14 @@ import ru.alexgladkov.odyssey.compose.helpers.MutableScreenMap
 import ru.alexgladkov.odyssey.compose.helpers.ScreenBundle
 import ru.alexgladkov.odyssey.compose.helpers.ScreenMap
 import ru.alexgladkov.odyssey.core.RootController
+import ru.alexgladkov.odyssey.core.animations.AnimationType
 import ru.alexgladkov.odyssey.core.destination.DestinationFlow
 import ru.alexgladkov.odyssey.core.destination.DestinationScreen
 
 /**
  * Compose flow builder, declarative helper for navigation graph builder
  * @see DestinationFlow
- * @property name - flow name
+ * @param name - flow name
  */
 class ComposeFlowBuilder(val name: String) {
 
@@ -25,9 +26,13 @@ class ComposeFlowBuilder(val name: String) {
         _screenMap[name] = content
     }
 
-    fun build(): DestinationFlow = DestinationFlow(name = name, screens = _destinations)
+    fun build(): DestinationFlow = DestinationFlow(
+        name = name,
+        screens = _destinations
+    )
 }
 
-fun ComposeFlowBuilder.screen(name: String, content: @Composable ScreenBundle.() -> Unit) {
+fun ComposeFlowBuilder.screen(name: String,
+                              content: @Composable ScreenBundle.() -> Unit) {
     addScreen(name = name, content = content)
 }

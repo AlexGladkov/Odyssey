@@ -18,13 +18,13 @@ fun LoginScreen(rootController: RootController, source: String? = null) {
     Box(modifier = Modifier.fillMaxSize()) {
         Text(
             modifier = Modifier.padding(24.dp),
-            text = "Login Screen from $source", fontWeight = FontWeight.Medium, fontSize = 28.sp,
+            text = "Login Screen", fontWeight = FontWeight.Medium, fontSize = 28.sp,
             color = Color.Black
         )
 
         Row(modifier = Modifier.align(Alignment.BottomStart).fillMaxWidth().padding(16.dp)) {
             Button(onClick = {
-                rootController.parentRootController?.popBackStack()
+                rootController.popBackStack()
             }) {
                 Text("Go back")
             }
@@ -32,7 +32,7 @@ fun LoginScreen(rootController: RootController, source: String? = null) {
             Spacer(modifier = Modifier.weight(1f))
 
             Button(onClick = {
-                rootController.launch(NavigationTree.Auth.TwoFactor.toString(), "Phone")
+                rootController.push(NavigationTree.Auth.TwoFactor.toString(), "Phone")
             }) {
                 Text("Go to Confirm Code")
             }

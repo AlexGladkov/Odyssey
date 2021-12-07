@@ -9,17 +9,30 @@ import ru.alexgladkov.odyssey.compose.helpers.ScreenBundle
 import ru.alexgladkov.odyssey.compose.navigation.ComposeFlowBuilder
 import ru.alexgladkov.odyssey.compose.navigation.ComposeMultiStackBuilder
 import ru.alexgladkov.odyssey.compose.navigation.RootComposeBuilder
+import ru.alexgladkov.odyssey.core.animations.AnimationType
 import ru.alexgladkov.odyssey.core.destination.DestinationScreen
 
-fun RootComposeBuilder.screen(name: String, content: @Composable ScreenBundle.() -> Unit) {
-    addDestination(destination = DestinationScreen(name), screenMap = hashMapOf(name to content))
+fun RootComposeBuilder.screen(
+    name: String,
+    content: @Composable ScreenBundle.() -> Unit
+) {
+    addDestination(
+        destination = DestinationScreen(name),
+        screenMap = hashMapOf(name to content)
+    )
 }
 
-fun RootComposeBuilder.flow(name: String, block: ComposeFlowBuilder.() -> Unit) {
+fun RootComposeBuilder.flow(
+    name: String,
+    block: ComposeFlowBuilder.() -> Unit
+) {
     val builder = ComposeFlowBuilder(name)
     val destinationFlow = builder.apply(block).build()
 
-    addDestination(screenMap = builder.screenMap, destination = destinationFlow)
+    addDestination(
+        screenMap = builder.screenMap,
+        destination = destinationFlow
+    )
 }
 
 fun RootComposeBuilder.multistack(
@@ -31,7 +44,10 @@ fun RootComposeBuilder.multistack(
     val destinationMultiFlow = builder.apply(block).build()
 
     addScreenValue(name = name, content = host)
-    addDestination(screenMap = builder.screenMap, destination = destinationMultiFlow)
+    addDestination(
+        screenMap = builder.screenMap,
+        destination = destinationMultiFlow
+    )
 }
 
 fun RootComposeBuilder.bottomNavigation(
@@ -56,5 +72,7 @@ fun RootComposeBuilder.bottomNavigation(
             bottomItemModels = bottomItemModels
         )
     })
-    addDestination(screenMap = builder.screenMap, destination = destinationMultiFlow)
+    addDestination(
+        screenMap = builder.screenMap,
+        destination = destinationMultiFlow)
 }
