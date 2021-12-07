@@ -15,6 +15,8 @@ import ru.alexgladkov.common.compose.NavigationTree
 import ru.alexgladkov.odyssey.core.LaunchFlag
 import ru.alexgladkov.odyssey.core.RootController
 import ru.alexgladkov.odyssey.core.animations.AnimationType
+import ru.alexgladkov.odyssey.core.animations.defaultFadeAnimation
+import ru.alexgladkov.odyssey.core.animations.defaultPresentationAnimation
 
 @Composable
 fun SplashScreen(rootController: RootController) {

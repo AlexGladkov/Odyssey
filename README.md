@@ -1,10 +1,14 @@
+[![Maven metadata URL](https://img.shields.io/maven-metadata/v?color=blue&metadataUrl=https://s01.oss.sonatype.org/service/local/repo_groups/public/content/io/github/alexgladkov/odyssey-core/maven-metadata.xml&style=for-the-badge)](https://repo.maven.apache.org/maven2/io/github/alexgladkov/)
+[![Support Platform](https://img.shields.io/static/v1?label=platforms&message=windows%20|%20macos%20|%20linux%20|%20android&color=green&style=for-the-badge)](https://github.com/AlexGladkov/Odyssey/tree/main/common/common-compose)
+[![Compose Version](https://img.shields.io/static/v1?label=Compose%20version&message=v%201.0.0&color=purple&style=for-the-badge)](https://www.jetbrains.com/ru-ru/lp/compose-mpp/)
+
 **Odyssey**
 
 Odyssey it's a declarative multiplatform navigation library for Multiplatform Compose
 
 🚧 WARNING! It's an early preview, so you use it with your own responsibility
 
-### How to start
+### Getting Started
 
 First add dependency to gradle
 
@@ -17,7 +21,7 @@ named("commonMain") {
 }
 ```
 
-#### Setup
+#### Navigation
 
 [1. Common preparations](documentation/COMMON.md)
 
@@ -26,6 +30,8 @@ named("commonMain") {
 [3. How to start with Desktop](documentation/DESKTOP.md)
 
 [4. How to start with iOS](documentation/IOS.md)
+
+[5. Animations](documentation/ANIMATIONS.md)
 
 #### Parameters
 
