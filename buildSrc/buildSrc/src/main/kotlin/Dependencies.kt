@@ -11,7 +11,7 @@ object Dependencies {
     object JetBrains {
         object Kotlin {
             // __KOTLIN_COMPOSE_VERSION__
-            private const val VERSION = "1.5.31"
+            private const val VERSION = "1.6.10"
             const val gradlePlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$VERSION"
             const val testCommon = "org.jetbrains.kotlin:kotlin-test-common:$VERSION"
             const val testJunit = "org.jetbrains.kotlin:kotlin-test-junit:$VERSION"
@@ -20,8 +20,8 @@ object Dependencies {
 
             const val dateTime = "org.jetbrains.kotlinx:kotlinx-datetime:0.2.1"
 
-            const val serialization = "org.jetbrains.kotlinx:kotlinx-serialization-core:1.2.2"
-            const val serializationPlugin = "org.jetbrains.kotlin:kotlin-serialization:$VERSION"
+            const val serialization = "org.jetbrains.kotlinx:kotlinx-serialization-core:1.3.1"
+            const val serializationPlugin = "org.jetbrains.kotlin:kotlin-serialization:1.5.31"
 
             private const val coroutinesVersion = "1.5.1-native-mt"
             const val coroutines =
@@ -32,7 +32,7 @@ object Dependencies {
 
         object Compose {
             // __LATEST_COMPOSE_RELEASE_VERSION__
-            private const val VERSION = "1.0.0"
+            private const val VERSION = "1.0.1-rc2"
             const val gradlePlugin = "org.jetbrains.compose:compose-gradle-plugin:$VERSION"
         }
 
