@@ -1,9 +1,9 @@
-package ru.alexgladkov.odyssey.core.extensions
+package ru.alexgladkov.odyssey.compose.extensions
 
 import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
+import ru.alexgladkov.odyssey.compose.RootController
 import ru.alexgladkov.odyssey.core.backpress.OnBackPressedDispatcher
-import ru.alexgladkov.odyssey.core.RootController
 
 fun RootController.setupWithActivity(activity: ComponentActivity) {
     val dispatcher = activity.onBackPressedDispatcher

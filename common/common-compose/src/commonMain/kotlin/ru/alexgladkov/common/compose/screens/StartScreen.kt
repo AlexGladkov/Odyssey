@@ -15,21 +15,21 @@ import androidx.compose.ui.unit.sp
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
 
 @Composable
-fun OnboardingScreen(count: Int) {
+fun StartScreen() {
     val rootController = LocalRootController.current
 
     Box(modifier = Modifier.fillMaxSize()) {
         Text(
             modifier = Modifier.padding(16.dp),
-            text = "Onboarding Screen $count",
+            text = "Welcome to our app",
             fontSize = 24.sp, fontWeight = FontWeight.Medium
         )
 
         Button(modifier = Modifier.padding(16.dp).fillMaxWidth()
             .align(Alignment.BottomCenter), onClick = {
-            rootController.push(key = "onboarding", params = count + 1)
+            rootController.push("cities")
         }) {
-            Text("Show next")
+            Text("Choose your regions")
         }
     }
 }
