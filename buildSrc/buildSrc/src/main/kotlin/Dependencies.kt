@@ -57,6 +57,10 @@ object Dependencies {
         }
     }
 
+    object Utils {
+        const val UUID = "com.benasher44:uuid:0.3.1"
+    }
+
     object AndroidX {
         object AppCompat {
             const val appCompat = "androidx.appcompat:appcompat:1.3.0-beta01"

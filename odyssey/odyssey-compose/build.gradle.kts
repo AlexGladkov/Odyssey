@@ -19,6 +19,7 @@ kotlin {
         named("commonMain") {
             dependencies {
                 implementation(project(":odyssey:odyssey-core"))
+                implementation(Dependencies.Utils.UUID)
             }
         }
         named("commonTest")

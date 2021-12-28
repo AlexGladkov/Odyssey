@@ -15,12 +15,14 @@ import ru.alexgladkov.odyssey.core.screen.ScreenInteractor
 import ru.alexgladkov.odyssey.core.wrap
 
 @Composable
-fun Navigator(startScreen: String = "") {
+fun Navigator(startScreen: String = "", startParams: Any? = null) {
     val rootController = LocalRootController.current
     var navConfiguration: NavConfiguration by remember {
         mutableStateOf(
             Screen(
                 key = startScreen,
+                realKey = startScreen,
+                params = startParams,
                 animationType = if (startScreen.isEmpty()) defaultFadeAnimation() else defaultPresentationAnimation()
             ).wrap()
         )
@@ -29,13 +31,13 @@ fun Navigator(startScreen: String = "") {
     var closeable: Closeable? = null
 
     AnimatedHost(
-        currentScreen = ScreenBundle(key = screen.key, params = screen.params),
+        currentScreen = ScreenBundle(key = screen.key, realKey = screen.realKey, params = screen.params),
         removeScreen = navConfiguration.removeScreen,
         animationType = screen.animationType,
         isForward = screen.isForward,
         modifier = Modifier.fillMaxSize()
     ) { currentScreen ->
-        val render = rootController.screenMap[currentScreen.key]
+        val render = rootController.screenMap[currentScreen.realKey]
         render?.invoke(currentScreen.params)
             ?: throw IllegalStateException("Screen $currentScreen not found in screenMap")
     }
@@ -45,7 +47,7 @@ fun Navigator(startScreen: String = "") {
             navConfiguration = it
         }
 
-        rootController.launch(startScreen)
+        rootController.launch(startScreen, startParams)
     }
 
     DisposableEffect(Unit) {

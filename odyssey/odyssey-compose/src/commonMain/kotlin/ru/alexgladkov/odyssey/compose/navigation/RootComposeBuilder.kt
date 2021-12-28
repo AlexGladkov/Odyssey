@@ -5,14 +5,13 @@ import ru.alexgladkov.odyssey.compose.RootController
 import ru.alexgladkov.odyssey.compose.Render
 import ru.alexgladkov.odyssey.compose.ScreenType
 import ru.alexgladkov.odyssey.compose.helpers.FlowBuilderModel
+import ru.alexgladkov.odyssey.compose.helpers.MultiStackBuilderModel
 
 /**
  * Base builder, declarative helper for navigation graph builder
  * @see RootController
- * @property screenHost - canvas to draw UI
  */
 class RootComposeBuilder {
-
     private val _screens: MutableList<AllowedDestination> = mutableListOf()
     private val _screenMap: HashMap<String, Render<Any?>> = hashMapOf()
 
@@ -34,6 +33,19 @@ class RootComposeBuilder {
             AllowedDestination(
                 key = key,
                 screenType = ScreenType.Flow(flowBuilderModel = flowBuilderModel)
+            )
+        )
+    }
+
+    fun addMultiStack(
+        key: String,
+        bottomNavModel: BottomNavModel,
+        multiStackBuilderModel: MultiStackBuilderModel
+    ) {
+        _screens.add(
+            AllowedDestination(
+                key = key,
+                screenType = ScreenType.MultiStack(multiStackBuilderModel, bottomNavModel)
             )
         )
     }

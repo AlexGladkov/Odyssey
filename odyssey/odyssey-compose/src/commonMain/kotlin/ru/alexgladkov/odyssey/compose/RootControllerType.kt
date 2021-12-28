@@ -1,5 +1,5 @@
 package ru.alexgladkov.odyssey.compose
 
 enum class RootControllerType {
-    Root, Flow
+    Root, Flow, MultiStack
 }

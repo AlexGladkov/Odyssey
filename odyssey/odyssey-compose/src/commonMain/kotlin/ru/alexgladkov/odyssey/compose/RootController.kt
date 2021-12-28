@@ -3,10 +3,13 @@ package ru.alexgladkov.odyssey.compose
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import kotlinx.coroutines.flow.MutableStateFlow
+import ru.alexgladkov.odyssey.compose.base.MultiStackNavigator
 import ru.alexgladkov.odyssey.compose.base.Navigator
-import ru.alexgladkov.odyssey.compose.helpers.FlowBuilderModel
-import ru.alexgladkov.odyssey.compose.helpers.FlowBundle
+import ru.alexgladkov.odyssey.compose.controllers.MultiStackRootController
+import ru.alexgladkov.odyssey.compose.helpers.*
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
+import ru.alexgladkov.odyssey.compose.navigation.BottomNavModel
+import ru.alexgladkov.odyssey.compose.navigation.TabItem
 import ru.alexgladkov.odyssey.core.LaunchFlag
 import ru.alexgladkov.odyssey.core.NavConfiguration
 import ru.alexgladkov.odyssey.core.animations.AnimationType
@@ -19,7 +22,8 @@ import ru.alexgladkov.odyssey.core.extensions.wrap
 import ru.alexgladkov.odyssey.core.screen.Screen
 import ru.alexgladkov.odyssey.core.wrap
 import java.lang.IllegalStateException
-import kotlin.random.Random
+import java.util.*
+import kotlin.collections.HashMap
 
 typealias Render<T> = @Composable (T) -> Unit
 
@@ -27,7 +31,8 @@ sealed class ScreenType {
     object Simple : ScreenType()
     data class Flow(val flowBuilderModel: FlowBuilderModel) : ScreenType()
     object BottomSheet : ScreenType()
-    object MultiStack : ScreenType()
+    data class MultiStack(val multiStackBuilderModel: MultiStackBuilderModel, val bottomNavModel: BottomNavModel) :
+        ScreenType()
 }
 
 data class AllowedDestination(
@@ -35,7 +40,7 @@ data class AllowedDestination(
     val screenType: ScreenType
 )
 
-class RootController(private val rootControllerType: RootControllerType = RootControllerType.Root) {
+open class RootController(private val rootControllerType: RootControllerType = RootControllerType.Root) {
     private val _allowedDestinations: MutableList<AllowedDestination> = mutableListOf()
     private val _backstack = mutableListOf<Screen>()
     private val _currentScreen: MutableStateFlow<NavConfiguration> = MutableStateFlow(Screen().wrap())
@@ -134,9 +139,13 @@ class RootController(private val rootControllerType: RootControllerType = RootCo
 
         when (screenType) {
             is ScreenType.Flow -> launchFlowScreen(key, params, animationType, screenType.flowBuilderModel, launchFlag)
-            is ScreenType.BottomSheet -> TODO("Add Bottom Sheet implementation")
+            is ScreenType.BottomSheet -> TODO("Add bottom sheet implementation")
             is ScreenType.Simple -> launchSimpleScreen(key, params, animationType, launchFlag)
-            is ScreenType.MultiStack -> TODO("Add Multi stack implementation")
+            is ScreenType.MultiStack -> launchMultiStackScreen(
+                animationType,
+                screenType.multiStackBuilderModel,
+                screenType.bottomNavModel
+            )
         }
     }
 
@@ -156,8 +165,26 @@ class RootController(private val rootControllerType: RootControllerType = RootCo
             .wrap(with = last.key)
     }
 
+    /**
+     * Find first RootController in hierarchy
+     */
+    fun findRootController(): RootController {
+        var currentRootController = this
+        while (currentRootController.parentRootController != null) {
+            currentRootController = currentRootController.parentRootController!!
+        }
+
+        return currentRootController
+    }
+
     private fun launchSimpleScreen(key: String, params: Any?, animationType: AnimationType, launchFlag: LaunchFlag?) {
-        val strongKey = if (_keyList.contains(key)) randomizeKey(key) else key
+        val strongKey = if (_keyList.contains(key))
+            randomizeKey(key)
+        else {
+            _keyList.add(key)
+            key
+        }
+
         val screen = if (_backstack.isEmpty() && launchFlag == null) {
             Screen(key = strongKey, realKey = key, params = params)
         } else {
@@ -168,7 +195,6 @@ class RootController(private val rootControllerType: RootControllerType = RootCo
             LaunchFlag.SingleNewTask -> _backstack.clear()
         }
 
-        _keyList.add(strongKey)
         _backstack.add(screen)
         _currentScreen.value = screen.wrap()
     }
@@ -179,7 +205,7 @@ class RootController(private val rootControllerType: RootControllerType = RootCo
         flowBuilderModel: FlowBuilderModel,
         launchFlag: LaunchFlag?
     ) {
-        if (rootControllerType == RootControllerType.Flow) throw IllegalStateException("Don't use flow inside flow, call parent instead")
+        if (rootControllerType == RootControllerType.Flow) throw IllegalStateException("Don't use flow inside flow, call findRootController() instead")
 
         when (launchFlag) {
             LaunchFlag.SingleNewTask -> _backstack.clear()
@@ -209,6 +235,29 @@ class RootController(private val rootControllerType: RootControllerType = RootCo
         _currentScreen.value = screen.wrap()
     }
 
+    private fun launchMultiStackScreen(
+        animationType: AnimationType,
+        multiStackBuilderModel: MultiStackBuilderModel,
+        bottomNavModel: BottomNavModel
+    ) {
+        if (rootControllerType == RootControllerType.Flow || rootControllerType == RootControllerType.MultiStack)
+            throw IllegalStateException("Don't use flow inside flow, call findRootController instead")
+
+        val rootController = MultiStackRootController(bottomNavModel = bottomNavModel)
+        rootController.setupTabItems(multiStackBuilderModel.tabItems)
+        val screen = Screen(
+            key = multiStackKey,
+            realKey = multiStackKey,
+            animationType = animationType,
+            params = MultiStackBundle(
+                rootController = rootController
+            )
+        )
+
+        _backstack.add(screen)
+        _currentScreen.value = screen.wrap()
+    }
+
     private fun initServiceScreens() {
         if (rootControllerType == RootControllerType.Root) {
             _screenMap[flowKey] = {
@@ -216,15 +265,25 @@ class RootController(private val rootControllerType: RootControllerType = RootCo
                 CompositionLocalProvider(
                     LocalRootController provides bundle.rootController
                 ) {
-                    Navigator(bundle.key)
+                    Navigator(bundle.key, bundle.params)
+                }
+            }
+
+            _screenMap[multiStackKey] = {
+                val bundle = it as MultiStackBundle
+                CompositionLocalProvider(
+                    LocalRootController provides bundle.rootController
+                ) {
+                    MultiStackNavigator(null)
                 }
             }
         }
     }
 
-    private fun randomizeKey(key: String) = "$key${Random(10000).nextInt()}"
+    private fun randomizeKey(key: String): String = "$key${UUID.randomUUID()}"
 
     companion object {
         private const val flowKey = "odyssey_flow_reserved_type"
+        private const val multiStackKey = "odyssey_multi_stack_reserved_type"
     }
 }
