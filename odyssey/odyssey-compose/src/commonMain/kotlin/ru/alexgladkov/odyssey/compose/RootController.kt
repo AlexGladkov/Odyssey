@@ -6,10 +6,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import ru.alexgladkov.odyssey.compose.base.MultiStackNavigator
 import ru.alexgladkov.odyssey.compose.base.Navigator
 import ru.alexgladkov.odyssey.compose.controllers.MultiStackRootController
+import ru.alexgladkov.odyssey.compose.controllers.TabNavigationModel
 import ru.alexgladkov.odyssey.compose.helpers.*
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
 import ru.alexgladkov.odyssey.compose.navigation.BottomNavModel
-import ru.alexgladkov.odyssey.compose.navigation.TabItem
 import ru.alexgladkov.odyssey.core.LaunchFlag
 import ru.alexgladkov.odyssey.core.NavConfiguration
 import ru.alexgladkov.odyssey.core.animations.AnimationType
@@ -45,7 +45,6 @@ open class RootController(private val rootControllerType: RootControllerType = R
     private val _backstack = mutableListOf<Screen>()
     private val _currentScreen: MutableStateFlow<NavConfiguration> = MutableStateFlow(Screen().wrap())
     private val _screenMap = mutableMapOf<String, Render<Any?>>()
-    private val _keyList = mutableListOf<String>()
     private var _onBackPressedDispatcher: OnBackPressedDispatcher? = null
 
     var parentRootController: RootController? = null
@@ -159,7 +158,6 @@ open class RootController(private val rootControllerType: RootControllerType = R
             return
         }
 
-        _keyList.remove(last.key)
         _currentScreen.value = _backstack.last()
             .copy(animationType = last.animationType, isForward = false)
             .wrap(with = last.key)
@@ -177,18 +175,20 @@ open class RootController(private val rootControllerType: RootControllerType = R
         return currentRootController
     }
 
-    private fun launchSimpleScreen(key: String, params: Any?, animationType: AnimationType, launchFlag: LaunchFlag?) {
-        val strongKey = if (_keyList.contains(key))
-            randomizeKey(key)
-        else {
-            _keyList.add(key)
-            key
-        }
-
-        val screen = if (_backstack.isEmpty() && launchFlag == null) {
-            Screen(key = strongKey, realKey = key, params = params)
+    fun drawCurrentScreen() {
+        if (_backstack.isEmpty()) {
+            launch(key = _allowedDestinations.first().key)
         } else {
-            Screen(key = strongKey, realKey = key, params = params, animationType = animationType)
+            val current = _backstack.last()
+            _currentScreen.value = current.copy(animationType = AnimationType.None).wrap()
+        }
+    }
+
+    private fun launchSimpleScreen(key: String, params: Any?, animationType: AnimationType, launchFlag: LaunchFlag?) {
+        val screen = if (_backstack.isEmpty() && launchFlag == null) {
+            Screen(key = randomizeKey(key), realKey = key, params = params)
+        } else {
+            Screen(key = randomizeKey(key), realKey = key, params = params, animationType = animationType)
         }
 
         when (launchFlag) {
@@ -243,8 +243,17 @@ open class RootController(private val rootControllerType: RootControllerType = R
         if (rootControllerType == RootControllerType.Flow || rootControllerType == RootControllerType.MultiStack)
             throw IllegalStateException("Don't use flow inside flow, call findRootController instead")
 
-        val rootController = MultiStackRootController(bottomNavModel = bottomNavModel)
-        rootController.setupTabItems(multiStackBuilderModel.tabItems)
+        val configurations = multiStackBuilderModel.tabItems.map {
+            val rootController = RootController(RootControllerType.Tab)
+            rootController.parentRootController = this
+            rootController.updateScreenMap(it.screenMap)
+            rootController.setNavigationGraph(it.allowedDestination)
+            TabNavigationModel(tabInfo = it, rootController = rootController)
+        }
+        val rootController = MultiStackRootController(
+            bottomNavModel = bottomNavModel,
+            tabItems = configurations
+        )
         val screen = Screen(
             key = multiStackKey,
             realKey = multiStackKey,

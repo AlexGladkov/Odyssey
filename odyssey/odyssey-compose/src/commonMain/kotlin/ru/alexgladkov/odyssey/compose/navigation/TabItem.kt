@@ -6,6 +6,9 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.TextStyle
 
 abstract class TabItem {
+    val name: String
+        get() = this::class.java.simpleName
+
     abstract val configuration: TabConfiguration
         @Composable get
 }

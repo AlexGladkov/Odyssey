@@ -25,7 +25,7 @@ fun RootComposeBuilder.flow(
     )
 }
 
-fun RootComposeBuilder.multistack(
+fun RootComposeBuilder.bottomNavigation(
     name: String,
     bottomNavModel: BottomNavModel,
     builder: MultiStackBuilder.() -> Unit
