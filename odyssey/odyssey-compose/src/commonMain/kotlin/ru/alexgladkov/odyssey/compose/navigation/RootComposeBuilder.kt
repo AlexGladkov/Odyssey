@@ -5,7 +5,8 @@ import ru.alexgladkov.odyssey.compose.RootController
 import ru.alexgladkov.odyssey.compose.Render
 import ru.alexgladkov.odyssey.compose.ScreenType
 import ru.alexgladkov.odyssey.compose.helpers.FlowBuilderModel
-import ru.alexgladkov.odyssey.compose.helpers.MultiStackBuilderModel
+import ru.alexgladkov.odyssey.compose.navigation.bottom.MultiStackBuilderModel
+import ru.alexgladkov.odyssey.compose.navigation.bottom.BottomNavModel
 
 /**
  * Base builder, declarative helper for navigation graph builder
@@ -14,8 +15,6 @@ import ru.alexgladkov.odyssey.compose.helpers.MultiStackBuilderModel
 class RootComposeBuilder {
     private val _screens: MutableList<AllowedDestination> = mutableListOf()
     private val _screenMap: HashMap<String, Render<Any?>> = hashMapOf()
-
-    val screenMap: HashMap<String, Render<Any?>> = _screenMap
 
     fun addScreen(
         key: String,

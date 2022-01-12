@@ -17,29 +17,23 @@ import ru.alexgladkov.odyssey.core.wrap
 @Composable
 fun Navigator(startScreen: String = "", startParams: Any? = null) {
     val rootController = LocalRootController.current
-    var navConfiguration: NavConfiguration by remember {
-        mutableStateOf(
-            Screen(
-                key = startScreen,
-                realKey = startScreen,
-                params = startParams,
-                animationType = if (startScreen.isEmpty()) defaultFadeAnimation() else defaultPresentationAnimation()
-            ).wrap()
-        )
-    }
-    val screen = navConfiguration.screen
+    var navConfiguration: NavConfiguration? by remember { mutableStateOf(null) }
     var closeable: Closeable? = null
 
-    AnimatedHost(
-        currentScreen = ScreenBundle(key = screen.key, realKey = screen.realKey, params = screen.params),
-        removeScreen = navConfiguration.removeScreen,
-        animationType = screen.animationType,
-        isForward = screen.isForward,
-        modifier = Modifier.fillMaxSize()
-    ) { currentScreen ->
-        val render = rootController.screenMap[currentScreen.realKey]
-        render?.invoke(currentScreen.params)
-            ?: throw IllegalStateException("Screen $currentScreen not found in screenMap")
+    navConfiguration?.let { config ->
+        val screen = config.screen
+
+        AnimatedHost(
+            currentScreen = ScreenBundle(key = screen.key, realKey = screen.realKey, params = screen.params),
+            removeScreen = config.removeScreen,
+            animationType = screen.animationType,
+            isForward = screen.isForward,
+            modifier = Modifier.fillMaxSize()
+        ) { currentScreen ->
+            val render = rootController.screenMap[currentScreen.realKey]
+            render?.invoke(currentScreen.params)
+                ?: throw IllegalStateException("Screen $currentScreen not found in screenMap")
+        }
     }
 
     LaunchedEffect(Unit) {

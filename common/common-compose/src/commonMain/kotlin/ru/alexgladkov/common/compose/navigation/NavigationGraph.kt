@@ -9,7 +9,7 @@ import ru.alexgladkov.odyssey.compose.extensions.flow
 import ru.alexgladkov.odyssey.compose.extensions.bottomNavigation
 import ru.alexgladkov.odyssey.compose.extensions.screen
 import ru.alexgladkov.odyssey.compose.helpers.screen
-import ru.alexgladkov.odyssey.compose.helpers.tab
+import ru.alexgladkov.odyssey.compose.navigation.bottom.tab
 import ru.alexgladkov.odyssey.compose.navigation.RootComposeBuilder
 
 fun RootComposeBuilder.generateGraph() {
@@ -55,7 +55,7 @@ fun RootComposeBuilder.mainScreen() {
 
 fun RootComposeBuilder.onboardingFlow() {
     flow(name = "onboarding") {
-        screen(name = "onboarding") {
+        screen(name = "onboarding_start") {
             OnboardingScreen(count = it as Int)
         }
     }

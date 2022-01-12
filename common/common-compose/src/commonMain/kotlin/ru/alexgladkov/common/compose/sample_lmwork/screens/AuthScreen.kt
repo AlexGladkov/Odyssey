@@ -1,4 +1,4 @@
-package ru.alexgladkov.common.compose.screens
+package ru.alexgladkov.common.compose.sample_lmwork.screens
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,26 +9,21 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import ru.alexgladkov.common.compose.sample_lmwork.NavigationTree
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
 
 @Composable
-fun CartScreen() {
+fun AuthScreen() {
     val rootController = LocalRootController.current
 
-    Box(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-        Text("Cart", fontSize = 26.sp, fontWeight = FontWeight.Medium)
-
+    Box(modifier = Modifier.fillMaxSize()) {
         Button(
-            modifier = Modifier.align(Alignment.BottomStart)
-                .fillMaxWidth().padding(16.dp),
+            modifier = Modifier.fillMaxWidth().align(Alignment.Center).padding(16.dp),
             onClick = {
-                rootController.findRootController()
-                    .present(screen = "checkout")
+                rootController.push(NavigationTree.Auth.LoginWeb.name)
             }) {
-            Text("Start Checkout")
+            Text("Login")
         }
     }
 }

@@ -3,13 +3,15 @@ package ru.alexgladkov.odyssey.compose
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import kotlinx.coroutines.flow.MutableStateFlow
-import ru.alexgladkov.odyssey.compose.base.MultiStackNavigator
+import ru.alexgladkov.odyssey.compose.base.BottomBarNavigator
 import ru.alexgladkov.odyssey.compose.base.Navigator
 import ru.alexgladkov.odyssey.compose.controllers.MultiStackRootController
 import ru.alexgladkov.odyssey.compose.controllers.TabNavigationModel
+import ru.alexgladkov.odyssey.compose.extensions.createUniqueKey
 import ru.alexgladkov.odyssey.compose.helpers.*
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
-import ru.alexgladkov.odyssey.compose.navigation.BottomNavModel
+import ru.alexgladkov.odyssey.compose.navigation.bottom.BottomNavModel
+import ru.alexgladkov.odyssey.compose.navigation.bottom.MultiStackBuilderModel
 import ru.alexgladkov.odyssey.core.LaunchFlag
 import ru.alexgladkov.odyssey.core.NavConfiguration
 import ru.alexgladkov.odyssey.core.animations.AnimationType
@@ -21,8 +23,6 @@ import ru.alexgladkov.odyssey.core.extensions.CFlow
 import ru.alexgladkov.odyssey.core.extensions.wrap
 import ru.alexgladkov.odyssey.core.screen.Screen
 import ru.alexgladkov.odyssey.core.wrap
-import java.lang.IllegalStateException
-import java.util.*
 import kotlin.collections.HashMap
 
 typealias Render<T> = @Composable (T) -> Unit
@@ -103,8 +103,8 @@ open class RootController(private val rootControllerType: RootControllerType = R
      * @param params - any bunch of params you need for the screen
      * @param launchFlag - flag if you want to change default behavior @see LaunchFlag
      */
-    fun present(key: String, params: Any? = null, launchFlag: LaunchFlag? = null) {
-        launch(key, params, defaultPresentationAnimation(), launchFlag)
+    fun present(screen: String, params: Any? = null, launchFlag: LaunchFlag? = null) {
+        launch(screen, params, defaultPresentationAnimation(), launchFlag)
     }
 
     /**
@@ -114,8 +114,8 @@ open class RootController(private val rootControllerType: RootControllerType = R
      * @param params - any bunch of params you need for the screen
      * @param launchFlag - flag if you want to change default behavior @see LaunchFlag
      */
-    fun push(key: String, params: Any? = null, launchFlag: LaunchFlag? = null) {
-        launch(key, params, defaultPushAnimation(), launchFlag)
+    fun push(screen: String, params: Any? = null, launchFlag: LaunchFlag? = null) {
+        launch(screen, params, defaultPushAnimation(), launchFlag)
     }
 
     /**
@@ -129,17 +129,17 @@ open class RootController(private val rootControllerType: RootControllerType = R
      * @param launchFlag - flag if you want to change default behavior @see LaunchFlag
      */
     fun launch(
-        key: String, params: Any? = null,
+        screen: String, params: Any? = null,
         animationType: AnimationType = AnimationType.None,
         launchFlag: LaunchFlag? = null
     ) {
-        val screenType = _allowedDestinations.find { it.key == key }?.screenType
+        val screenType = _allowedDestinations.find { it.key == screen }?.screenType
             ?: throw IllegalStateException("Can't find screen in destination. Did you provide this screen?")
 
         when (screenType) {
-            is ScreenType.Flow -> launchFlowScreen(key, params, animationType, screenType.flowBuilderModel, launchFlag)
+            is ScreenType.Flow -> launchFlowScreen(screen, params, animationType, screenType.flowBuilderModel, launchFlag)
             is ScreenType.BottomSheet -> TODO("Add bottom sheet implementation")
-            is ScreenType.Simple -> launchSimpleScreen(key, params, animationType, launchFlag)
+            is ScreenType.Simple -> launchSimpleScreen(screen, params, animationType, launchFlag)
             is ScreenType.MultiStack -> launchMultiStackScreen(
                 animationType,
                 screenType.multiStackBuilderModel,
@@ -177,7 +177,7 @@ open class RootController(private val rootControllerType: RootControllerType = R
 
     fun drawCurrentScreen() {
         if (_backstack.isEmpty()) {
-            launch(key = _allowedDestinations.first().key)
+            launch(screen = _allowedDestinations.first().key)
         } else {
             val current = _backstack.last()
             _currentScreen.value = current.copy(animationType = AnimationType.None).wrap()
@@ -283,13 +283,13 @@ open class RootController(private val rootControllerType: RootControllerType = R
                 CompositionLocalProvider(
                     LocalRootController provides bundle.rootController
                 ) {
-                    MultiStackNavigator(null)
+                    BottomBarNavigator()
                 }
             }
         }
     }
 
-    private fun randomizeKey(key: String): String = "$key${UUID.randomUUID()}"
+    private fun randomizeKey(key: String): String = createUniqueKey(key)
 
     companion object {
         private const val flowKey = "odyssey_flow_reserved_type"

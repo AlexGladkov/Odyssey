@@ -27,7 +27,3 @@ class FlowBuilder(val name: String) {
         )
     }
 }
-
-fun FlowBuilder.screen(name: String, content: Render<Any?>) {
-    addScreen(name = name, content = content)
-}

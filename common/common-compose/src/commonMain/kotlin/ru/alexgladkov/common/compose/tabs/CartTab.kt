@@ -1,13 +1,9 @@
 package ru.alexgladkov.common.compose.tabs
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.sp
-import ru.alexgladkov.odyssey.compose.navigation.TabConfiguration
-import ru.alexgladkov.odyssey.compose.navigation.TabItem
+import ru.alexgladkov.odyssey.compose.navigation.bottom.TabConfiguration
+import ru.alexgladkov.odyssey.compose.navigation.bottom.TabItem
 
 class CartTab : TabItem() {
 

@@ -52,7 +52,7 @@ fun ProductScreen() {
                 item {
                     Text(
                         modifier = Modifier.clickable {
-                            rootController.push(key = "product")
+                            rootController.push(screen = "product")
                         }.fillMaxSize().padding(16.dp),
                         text = it.title
                     )

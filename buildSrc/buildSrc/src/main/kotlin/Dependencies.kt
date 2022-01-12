@@ -1,5 +1,8 @@
 object Dependencies {
 
+    val odyssey = "0.3.7"
+    val odysseyPackage = "io.github.alexgladkov"
+
     object DI {
         const val kodein = "org.kodein.di:kodein-di:7.1.0"
     }

@@ -9,7 +9,6 @@ import ru.alexgladkov.odyssey.compose.controllers.MultiStackRootController
 import ru.alexgladkov.odyssey.compose.controllers.TabNavigationModel
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
 import ru.alexgladkov.odyssey.core.NavConfiguration
-import ru.alexgladkov.odyssey.core.animations.AnimationType
 import ru.alexgladkov.odyssey.core.extensions.Closeable
 import ru.alexgladkov.odyssey.core.screen.ScreenBundle
 
@@ -53,34 +52,45 @@ fun ColumnScope.TabNavigator(currentTab: TabNavigationModel) {
 }
 
 @Composable
-fun MultiStackNavigator(startParams: Any?) {
+fun BottomBarNavigator() {
     val rootController = LocalRootController.current as MultiStackRootController
     var tabItem: TabNavigationModel by remember { mutableStateOf(rootController.tabItems.first()) }
     var stackCloseable: Closeable? = null
+    val bottomNavConfiguration = rootController.bottomNavModel.bottomNavConfiguration
 
     Column(modifier = Modifier.fillMaxSize()) {
         TabNavigator(tabItem)
 
-        val bottomNavConfiguration = rootController.bottomNavModel.bottomNavConfiguration
         BottomNavigation(
             backgroundColor = bottomNavConfiguration.backgroundColor
         ) {
             rootController.tabItems.forEach { currentItem ->
                 val configuration = currentItem.tabInfo.tabItem.configuration
+                val isSelected = tabItem == currentItem
 
                 BottomNavigationItem(
-                    selected = tabItem == currentItem,
+                    selected = isSelected,
                     selectedContentColor = configuration.selectedColor
                         ?: bottomNavConfiguration.selectedColor,
                     unselectedContentColor = configuration.unselectedColor
                         ?: bottomNavConfiguration.unselectedColor,
                     icon = {
-                        configuration.icon?.let {
-                            Icon(
-                                it,
-                                contentDescription = configuration.title
-                            )
+                        if (isSelected) {
+                            configuration.selectedIcon?.let {
+                                Icon(
+                                    painter = it,
+                                    contentDescription = configuration.title
+                                )
+                            }
+                        } else {
+                            configuration.unselectedIcon?.let {
+                                Icon(
+                                    painter = it,
+                                    contentDescription = configuration.title
+                                )
+                            }
                         }
+
                     },
                     label = {
                         Text(
@@ -95,6 +105,7 @@ fun MultiStackNavigator(startParams: Any?) {
         }
     }
 
+    rootController.bottomNavModel.launchedEffect.invoke()
     LaunchedEffect(Unit) {
         stackCloseable = rootController.stackChangeObserver.watch {
             tabItem = it

@@ -30,7 +30,7 @@ fun OnboardingScreen(count: Int) {
             Button(modifier = Modifier.padding(16.dp).fillMaxWidth()
                 .align(Alignment.BottomCenter), onClick = {
                 rootController.findRootController()
-                    .present(key = "main", launchFlag = LaunchFlag.SingleNewTask)
+                    .present(screen = "main", launchFlag = LaunchFlag.SingleNewTask)
             }) {
                 Text("Open App")
             }
@@ -50,7 +50,7 @@ fun OnboardingScreen(count: Int) {
 
             Button(modifier = Modifier.padding(16.dp).fillMaxWidth()
                 .align(Alignment.BottomCenter), onClick = {
-                rootController.push(key = "onboarding", params = count + 1)
+                rootController.push(screen = "onboarding", params = count + 1)
             }) {
                 Text("Show next")
             }

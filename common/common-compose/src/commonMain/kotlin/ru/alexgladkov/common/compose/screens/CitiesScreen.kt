@@ -33,7 +33,7 @@ fun CitiesScreen() {
             cities.forEach {
                 item {
                     Text(modifier = Modifier.clickable {
-                        rootController.present(key = "onboarding", params = 1)
+                        rootController.present(screen = "onboarding", params = 1)
                     }.fillMaxWidth().padding(16.dp), text = it.title)
                 }
             }
