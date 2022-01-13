@@ -41,7 +41,7 @@ fun Navigator(startScreen: String = "", startParams: Any? = null) {
             navConfiguration = it
         }
 
-        rootController.launch(startScreen, startParams)
+        rootController.drawCurrentScreen(startParams)
     }
 
     DisposableEffect(Unit) {

@@ -44,6 +44,7 @@ open class RootController(private val rootControllerType: RootControllerType = R
     private val _allowedDestinations: MutableList<AllowedDestination> = mutableListOf()
     private val _backstack = mutableListOf<Screen>()
     private val _currentScreen: MutableStateFlow<NavConfiguration> = MutableStateFlow(Screen().wrap())
+    private var _childrenRootController: MutableList<RootController> = mutableListOf()
     private val _screenMap = mutableMapOf<String, Render<Any?>>()
     private var _onBackPressedDispatcher: OnBackPressedDispatcher? = null
 
@@ -137,13 +138,20 @@ open class RootController(private val rootControllerType: RootControllerType = R
             ?: throw IllegalStateException("Can't find screen in destination. Did you provide this screen?")
 
         when (screenType) {
-            is ScreenType.Flow -> launchFlowScreen(screen, params, animationType, screenType.flowBuilderModel, launchFlag)
+            is ScreenType.Flow -> launchFlowScreen(
+                screen,
+                params,
+                animationType,
+                screenType.flowBuilderModel,
+                launchFlag
+            )
             is ScreenType.BottomSheet -> TODO("Add bottom sheet implementation")
             is ScreenType.Simple -> launchSimpleScreen(screen, params, animationType, launchFlag)
             is ScreenType.MultiStack -> launchMultiStackScreen(
                 animationType,
                 screenType.multiStackBuilderModel,
-                screenType.bottomNavModel
+                screenType.bottomNavModel,
+                launchFlag
             )
         }
     }
@@ -151,16 +159,33 @@ open class RootController(private val rootControllerType: RootControllerType = R
     /**
      * Returns to previous screen
      */
-    fun popBackStack() {
-        val last = _backstack.removeLast()
-        if (_backstack.isEmpty()) {
-            onApplicationFinish?.invoke()
-            return
+    open fun popBackStack() {
+        when (_backstack.last().key) {
+            flowKey -> removeTopScreen(_childrenRootController.last())
+            multiStackKey -> _childrenRootController.last().popBackStack()
+            else -> removeTopScreen(this)
         }
+    }
 
-        _currentScreen.value = _backstack.last()
-            .copy(animationType = last.animationType, isForward = false)
-            .wrap(with = last.key)
+    private fun removeTopScreen(rootController: RootController?) {
+        rootController?.let {
+            val isLastScreen = it._backstack.size <= 1
+            if (isLastScreen) {
+                if (it.debugName == "Root") {
+                    it.onApplicationFinish?.invoke()
+                } else {
+                    removeTopScreen(it.parentRootController)
+                    it.parentRootController?._childrenRootController?.removeLast()
+                }
+            } else {
+                val last = it._backstack.removeLast()
+                val current = it._backstack.last()
+
+                it._currentScreen.value = current
+                    .copy(animationType = last.animationType, isForward = false)
+                    .wrap(with = last.key)
+            }
+        }
     }
 
     /**
@@ -175,9 +200,9 @@ open class RootController(private val rootControllerType: RootControllerType = R
         return currentRootController
     }
 
-    fun drawCurrentScreen() {
+    fun drawCurrentScreen(startParams: Any? = null) {
         if (_backstack.isEmpty()) {
-            launch(screen = _allowedDestinations.first().key)
+            launch(screen = _allowedDestinations.first().key, params = startParams)
         } else {
             val current = _backstack.last()
             _currentScreen.value = current.copy(animationType = AnimationType.None).wrap()
@@ -215,12 +240,13 @@ open class RootController(private val rootControllerType: RootControllerType = R
         rootController.debugName = key
         rootController.parentRootController = this
         rootController.onApplicationFinish = {
-            rootController.setupBackPressedDispatcher(null)
             rootController.parentRootController?.popBackStack()
         }
-        rootController.setupBackPressedDispatcher(_onBackPressedDispatcher)
+
         rootController.updateScreenMap(flowBuilderModel.screenMap)
         rootController.setNavigationGraph(flowBuilderModel.allowedDestination)
+        _childrenRootController.add(rootController)
+
         val screen = Screen(
             key = flowKey,
             realKey = flowKey,
@@ -238,22 +264,34 @@ open class RootController(private val rootControllerType: RootControllerType = R
     private fun launchMultiStackScreen(
         animationType: AnimationType,
         multiStackBuilderModel: MultiStackBuilderModel,
-        bottomNavModel: BottomNavModel
+        bottomNavModel: BottomNavModel,
+        launchFlag: LaunchFlag?
     ) {
         if (rootControllerType == RootControllerType.Flow || rootControllerType == RootControllerType.MultiStack)
             throw IllegalStateException("Don't use flow inside flow, call findRootController instead")
 
+        when (launchFlag) {
+            LaunchFlag.SingleNewTask -> _backstack.clear()
+        }
+
+        val parentRootController = this
         val configurations = multiStackBuilderModel.tabItems.map {
             val rootController = RootController(RootControllerType.Tab)
-            rootController.parentRootController = this
+            rootController.parentRootController = parentRootController
+            rootController.debugName = it.tabItem.name
             rootController.updateScreenMap(it.screenMap)
             rootController.setNavigationGraph(it.allowedDestination)
             TabNavigationModel(tabInfo = it, rootController = rootController)
         }
+
         val rootController = MultiStackRootController(
+            rootControllerType = RootControllerType.MultiStack,
             bottomNavModel = bottomNavModel,
             tabItems = configurations
         )
+
+        _childrenRootController.add(rootController)
+
         val screen = Screen(
             key = multiStackKey,
             realKey = multiStackKey,

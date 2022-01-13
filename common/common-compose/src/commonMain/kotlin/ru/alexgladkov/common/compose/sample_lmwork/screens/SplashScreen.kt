@@ -19,7 +19,6 @@ fun SplashScreen() {
     }
 
     LaunchedEffect(Unit) {
-        println("Present Auth")
-//        rootController.present(screen = NavigationTree.Root.Auth.name)
+        rootController.present(screen = NavigationTree.Root.Auth.name)
     }
 }

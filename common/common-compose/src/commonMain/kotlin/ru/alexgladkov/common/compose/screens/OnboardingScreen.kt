@@ -50,7 +50,7 @@ fun OnboardingScreen(count: Int) {
 
             Button(modifier = Modifier.padding(16.dp).fillMaxWidth()
                 .align(Alignment.BottomCenter), onClick = {
-                rootController.push(screen = "onboarding", params = count + 1)
+                rootController.push(screen = "onboarding_start", params = count + 1)
             }) {
                 Text("Show next")
             }
