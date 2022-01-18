@@ -3,8 +3,8 @@ package ru.alexgladkov.odyssey.compose.controllers
 import kotlinx.coroutines.flow.MutableStateFlow
 import ru.alexgladkov.odyssey.compose.RootController
 import ru.alexgladkov.odyssey.compose.RootControllerType
-import ru.alexgladkov.odyssey.compose.navigation.bottom.TabInfo
-import ru.alexgladkov.odyssey.compose.navigation.bottom.BottomNavModel
+import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.TabInfo
+import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.BottomNavModel
 import ru.alexgladkov.odyssey.core.extensions.CFlow
 import ru.alexgladkov.odyssey.core.extensions.wrap
 

@@ -1,11 +1,11 @@
 package ru.alexgladkov.odyssey.compose.extensions
 
-import ru.alexgladkov.odyssey.compose.Render
+import ru.alexgladkov.odyssey.compose.RenderWithParams
 import ru.alexgladkov.odyssey.compose.helpers.*
-import ru.alexgladkov.odyssey.compose.navigation.bottom.BottomNavModel
+import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.BottomNavModel
 import ru.alexgladkov.odyssey.compose.navigation.RootComposeBuilder
-import ru.alexgladkov.odyssey.compose.navigation.bottom.MultiStackBuilder
-import ru.alexgladkov.odyssey.compose.navigation.bottom.TabItem
+import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.MultiStackBuilder
+import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.TabItem
 
 /**
  * Adds screen to navigation graph
@@ -14,7 +14,7 @@ import ru.alexgladkov.odyssey.compose.navigation.bottom.TabItem
  */
 fun RootComposeBuilder.screen(
     name: String,
-    content: Render<Any?>
+    content: RenderWithParams<Any?>
 ) {
     addScreen(
         key = name,
@@ -38,11 +38,26 @@ fun RootComposeBuilder.flow(
 }
 
 /**
+ * Adds modal bottom sheet to navigation graph
+ * @param name - name in graph
+ * @param content - composable content
+ */
+fun RootComposeBuilder.modalSheet(
+    name: String,
+    content: RenderWithParams<Any?>
+) {
+    addModalBottomSheet(
+        key = name,
+        screenMap = hashMapOf(name to content)
+    )
+}
+
+/**
  * Adds screen to flow builder
  * @param name - name in navigation graph
  * @param content - composable content
  */
-fun FlowBuilder.screen(name: String, content: Render<Any?>) {
+fun FlowBuilder.screen(name: String, content: RenderWithParams<Any?>) {
     addScreen(name = name, content = content)
 }
 

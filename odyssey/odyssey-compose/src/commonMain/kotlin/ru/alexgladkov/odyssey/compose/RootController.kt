@@ -10,8 +10,8 @@ import ru.alexgladkov.odyssey.compose.controllers.TabNavigationModel
 import ru.alexgladkov.odyssey.compose.extensions.createUniqueKey
 import ru.alexgladkov.odyssey.compose.helpers.*
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
-import ru.alexgladkov.odyssey.compose.navigation.bottom.BottomNavModel
-import ru.alexgladkov.odyssey.compose.navigation.bottom.MultiStackBuilderModel
+import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.BottomNavModel
+import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.MultiStackBuilderModel
 import ru.alexgladkov.odyssey.core.LaunchFlag
 import ru.alexgladkov.odyssey.core.NavConfiguration
 import ru.alexgladkov.odyssey.core.animations.AnimationType
@@ -25,7 +25,8 @@ import ru.alexgladkov.odyssey.core.screen.Screen
 import ru.alexgladkov.odyssey.core.wrap
 import kotlin.collections.HashMap
 
-typealias Render<T> = @Composable (T) -> Unit
+typealias RenderWithParams<T> = @Composable (T) -> Unit
+typealias Render = @Composable () -> Unit
 
 sealed class ScreenType {
     object Simple : ScreenType()
@@ -45,7 +46,7 @@ open class RootController(private val rootControllerType: RootControllerType = R
     private val _backstack = mutableListOf<Screen>()
     private val _currentScreen: MutableStateFlow<NavConfiguration> = MutableStateFlow(Screen().wrap())
     private var _childrenRootController: MutableList<RootController> = mutableListOf()
-    private val _screenMap = mutableMapOf<String, Render<Any?>>()
+    private val _screenMap = mutableMapOf<String, RenderWithParams<Any?>>()
     private var _onBackPressedDispatcher: OnBackPressedDispatcher? = null
 
     var parentRootController: RootController? = null
@@ -69,7 +70,7 @@ open class RootController(private val rootControllerType: RootControllerType = R
      * Update root controller screen map to find composables
      * @param screenMap - generated screen map
      */
-    fun updateScreenMap(screenMap: HashMap<String, Render<Any?>>) {
+    fun updateScreenMap(screenMap: HashMap<String, RenderWithParams<Any?>>) {
         _screenMap.putAll(screenMap)
     }
 
@@ -145,7 +146,7 @@ open class RootController(private val rootControllerType: RootControllerType = R
                 screenType.flowBuilderModel,
                 launchFlag
             )
-            is ScreenType.BottomSheet -> TODO("Add bottom sheet implementation")
+            is ScreenType.BottomSheet -> launchBottomSheetScreen(screen, launchFlag)
             is ScreenType.Simple -> launchSimpleScreen(screen, params, animationType, launchFlag)
             is ScreenType.MultiStack -> launchMultiStackScreen(
                 animationType,
@@ -164,27 +165,6 @@ open class RootController(private val rootControllerType: RootControllerType = R
             flowKey -> removeTopScreen(_childrenRootController.last())
             multiStackKey -> _childrenRootController.last().popBackStack()
             else -> removeTopScreen(this)
-        }
-    }
-
-    private fun removeTopScreen(rootController: RootController?) {
-        rootController?.let {
-            val isLastScreen = it._backstack.size <= 1
-            if (isLastScreen) {
-                if (it.debugName == "Root") {
-                    it.onApplicationFinish?.invoke()
-                } else {
-                    removeTopScreen(it.parentRootController)
-                    it.parentRootController?._childrenRootController?.removeLast()
-                }
-            } else {
-                val last = it._backstack.removeLast()
-                val current = it._backstack.last()
-
-                it._currentScreen.value = current
-                    .copy(animationType = last.animationType, isForward = false)
-                    .wrap(with = last.key)
-            }
         }
     }
 
@@ -209,6 +189,27 @@ open class RootController(private val rootControllerType: RootControllerType = R
         }
     }
 
+    private fun removeTopScreen(rootController: RootController?) {
+        rootController?.let {
+            val isLastScreen = it._backstack.size <= 1
+            if (isLastScreen) {
+                if (it.debugName == "Root") {
+                    it.onApplicationFinish?.invoke()
+                } else {
+                    removeTopScreen(it.parentRootController)
+                    it.parentRootController?._childrenRootController?.removeLast()
+                }
+            } else {
+                val last = it._backstack.removeLast()
+                val current = it._backstack.last()
+
+                it._currentScreen.value = current
+                    .copy(animationType = last.animationType, isForward = false)
+                    .wrap(with = last.key)
+            }
+        }
+    }
+
     private fun launchSimpleScreen(key: String, params: Any?, animationType: AnimationType, launchFlag: LaunchFlag?) {
         val screen = if (_backstack.isEmpty() && launchFlag == null) {
             Screen(key = randomizeKey(key), realKey = key, params = params)
@@ -219,6 +220,25 @@ open class RootController(private val rootControllerType: RootControllerType = R
         when (launchFlag) {
             LaunchFlag.SingleNewTask -> _backstack.clear()
         }
+
+        _backstack.add(screen)
+        _currentScreen.value = screen.wrap()
+    }
+
+    private fun launchBottomSheetScreen(key: String, launchFlag: LaunchFlag?) {
+        when (launchFlag) {
+            LaunchFlag.SingleNewTask -> _backstack.clear()
+        }
+
+        val screen = Screen(
+            key = randomizeKey(key),
+            realKey = key,
+            animationType = defaultPresentationAnimation(),
+            params = BottomSheetBundle(
+                currentKey = _backstack.last().key,
+                key = key
+            )
+        )
 
         _backstack.add(screen)
         _currentScreen.value = screen.wrap()
@@ -312,7 +332,7 @@ open class RootController(private val rootControllerType: RootControllerType = R
                 CompositionLocalProvider(
                     LocalRootController provides bundle.rootController
                 ) {
-                    Navigator(bundle.key, bundle.params)
+                    Navigator(bundle.params)
                 }
             }
 
@@ -331,6 +351,7 @@ open class RootController(private val rootControllerType: RootControllerType = R
 
     companion object {
         private const val flowKey = "odyssey_flow_reserved_type"
+        private const val modalSheet = "odyssey_modal_sheet_reserved_type"
         private const val multiStackKey = "odyssey_multi_stack_reserved_type"
     }
 }

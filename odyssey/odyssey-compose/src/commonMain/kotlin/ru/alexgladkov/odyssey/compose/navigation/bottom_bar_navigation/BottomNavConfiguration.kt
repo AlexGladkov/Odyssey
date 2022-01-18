@@ -1,4 +1,4 @@
-package ru.alexgladkov.odyssey.compose.navigation.bottom
+package ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color

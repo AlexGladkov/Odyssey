@@ -12,3 +12,9 @@ data class FlowBundle(
 data class MultiStackBundle(
     val rootController: MultiStackRootController
 )
+
+data class BottomSheetBundle(
+    val key: String,
+    val currentKey: String,
+    val params: Any? = null
+)

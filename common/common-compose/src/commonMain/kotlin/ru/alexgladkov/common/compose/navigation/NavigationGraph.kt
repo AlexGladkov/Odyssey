@@ -5,10 +5,7 @@ import ru.alexgladkov.common.compose.tabs.BottomConfiguration
 import ru.alexgladkov.common.compose.tabs.CartTab
 import ru.alexgladkov.common.compose.tabs.FeedTab
 import ru.alexgladkov.common.compose.tabs.SearchTab
-import ru.alexgladkov.odyssey.compose.extensions.flow
-import ru.alexgladkov.odyssey.compose.extensions.bottomNavigation
-import ru.alexgladkov.odyssey.compose.extensions.screen
-import ru.alexgladkov.odyssey.compose.extensions.tab
+import ru.alexgladkov.odyssey.compose.extensions.*
 import ru.alexgladkov.odyssey.compose.navigation.RootComposeBuilder
 
 fun RootComposeBuilder.generateGraph() {

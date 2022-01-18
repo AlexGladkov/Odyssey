@@ -1,8 +1,7 @@
-package ru.alexgladkov.odyssey.compose.navigation.bottom
+package ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation
 
 import ru.alexgladkov.odyssey.compose.AllowedDestination
-import ru.alexgladkov.odyssey.compose.Render
-import ru.alexgladkov.odyssey.compose.helpers.FlowBuilder
+import ru.alexgladkov.odyssey.compose.RenderWithParams
 import ru.alexgladkov.odyssey.compose.helpers.FlowBuilderModel
 
 /**
@@ -18,7 +17,7 @@ data class MultiStackBuilderModel(
  */
 data class TabInfo(
     val tabItem: TabItem,
-    val screenMap: HashMap<String, Render<Any?>>,
+    val screenMap: HashMap<String, RenderWithParams<Any?>>,
     val allowedDestination: List<AllowedDestination>
 )
 
