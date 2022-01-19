@@ -31,7 +31,7 @@ fun ModalSheetNavigator(
         content.invoke()
 
         modalStack.forEach {
-            Screamer { modalSheetController.removeTopScreen() }
+            Screamer(it.alpha) { modalSheetController.removeTopScreen() }
             Card(
                 modifier = Modifier.align(Alignment.BottomStart).fillMaxWidth()
                     .height(it.peekHeight.dp),
@@ -56,12 +56,8 @@ fun ModalSheetNavigator(
 }
 
 @Composable
-private fun Screamer(onCloseClick: () -> Unit) {
+private fun Screamer(alpha: Float, onCloseClick: () -> Unit) {
     Box(modifier = Modifier
         .noRippleClickable { onCloseClick.invoke() }
-        .fillMaxSize().background(Color.Black.copy(alpha = 0.2f)))
-}
-
-@Composable
-fun EmptyComposable() {
+        .fillMaxSize().background(Color.Black.copy(alpha = alpha)))
 }

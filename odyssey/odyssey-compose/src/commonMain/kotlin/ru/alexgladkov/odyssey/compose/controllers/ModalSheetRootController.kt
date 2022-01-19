@@ -3,22 +3,29 @@ package ru.alexgladkov.odyssey.compose.controllers
 import kotlinx.coroutines.flow.MutableStateFlow
 import ru.alexgladkov.odyssey.compose.Render
 import ru.alexgladkov.odyssey.compose.RenderWithParams
+import ru.alexgladkov.odyssey.compose.navigation.bottom_sheet_navigation.ModalSheetConfiguration
 import ru.alexgladkov.odyssey.core.extensions.CFlow
 import ru.alexgladkov.odyssey.core.extensions.wrap
 
+/**
+ * Class helper to use with compose
+ * @param peekHeight - height in dp
+ * @param cornerRadius - card corner radius in dp
+ * @param alpha - scrimer alpha
+ * @param closeOnBackdropClick - true if you want to close on backdrop click
+ * @param content - composable content
+ */
 data class ModalSheetBundle(
     val peekHeight: Int,
     val closeOnBackdropClick: Boolean,
+    val alpha: Float,
     val cornerRadius: Int,
     val content: Render
 )
 
-data class ModalSheetConfiguration(
-    val peekHeight: Int,
-    val cornerRadius: Int = 0,
-    val closeOnBackdropClick: Boolean = true,
-)
-
+/**
+ * Class controller for bottom modal sheet
+ */
 class ModalSheetController {
     private var _backStack = mutableListOf<ModalSheetBundle>()
     private val _currentStack: MutableStateFlow<List<ModalSheetBundle>> = MutableStateFlow(emptyList())
