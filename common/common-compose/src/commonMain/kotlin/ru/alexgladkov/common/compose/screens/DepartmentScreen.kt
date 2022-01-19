@@ -12,11 +12,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import ru.alexgladkov.odyssey.compose.local.LocalModalSheetController
+import ru.alexgladkov.odyssey.compose.local.LocalRootController
 
 @Composable
 fun DepartmentScreen(storeId: Int) {
-    val modalSheetController = LocalModalSheetController.current
+    val modalSheetController = LocalRootController.current.findModalSheetController()
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         Text("Departments for $storeId store", fontSize = 20.sp, color = Color.Black)

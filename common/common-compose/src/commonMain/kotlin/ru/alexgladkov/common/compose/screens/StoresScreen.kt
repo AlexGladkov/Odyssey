@@ -10,11 +10,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.alexgladkov.odyssey.compose.controllers.ModalSheetConfiguration
-import ru.alexgladkov.odyssey.compose.local.LocalModalSheetController
+import ru.alexgladkov.odyssey.compose.local.LocalRootController
 
 @Composable
 fun StoresScreen(username: String) {
-    val modalSheetController = LocalModalSheetController.current
+    val modalSheetController = LocalRootController.current.findModalSheetController()
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         Row(modifier = Modifier.fillMaxWidth()) {

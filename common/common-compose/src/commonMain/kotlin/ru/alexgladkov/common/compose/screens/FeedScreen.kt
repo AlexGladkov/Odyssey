@@ -11,12 +11,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.alexgladkov.odyssey.compose.controllers.ModalSheetConfiguration
-import ru.alexgladkov.odyssey.compose.local.LocalModalSheetController
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
 
 @Composable
 fun FeedScreen() {
-    val modalSheetController = LocalModalSheetController.current
+    val modalSheetController = LocalRootController.current.findModalSheetController()
 
     Box(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         Column {

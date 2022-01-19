@@ -35,6 +35,8 @@ class ModalSheetController {
         redrawStack()
     }
 
+    fun isEmpty() = _backStack.isEmpty()
+
     private fun redrawStack() {
         val newStack = ArrayList<ModalSheetBundle>().apply {
             addAll(_backStack)

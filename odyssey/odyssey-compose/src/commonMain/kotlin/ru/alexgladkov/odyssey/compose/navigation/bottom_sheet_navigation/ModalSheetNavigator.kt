@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import ru.alexgladkov.odyssey.compose.controllers.ModalSheetBundle
 import ru.alexgladkov.odyssey.compose.controllers.ModalSheetController
 import ru.alexgladkov.odyssey.compose.helpers.noRippleClickable
-import ru.alexgladkov.odyssey.compose.local.LocalModalSheetController
+import ru.alexgladkov.odyssey.compose.local.LocalRootController
 import ru.alexgladkov.odyssey.core.extensions.Closeable
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -22,24 +22,22 @@ fun ModalSheetNavigator(
     content: @Composable () -> Unit
 ) {
     val modalSheetController = remember { ModalSheetController() }
+    val rootController = LocalRootController.current
     var modalStack: List<ModalSheetBundle> by remember { mutableStateOf(emptyList()) }
     var closeable: Closeable? = null
 
-    CompositionLocalProvider(
-        LocalModalSheetController provides modalSheetController
-    ) {
-        BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
-            content.invoke()
+    rootController.attachModalSheet(modalSheetController)
+    BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+        content.invoke()
 
-            modalStack.forEach {
-                Screamer { modalSheetController.removeTopScreen() }
-                Card(
-                    modifier = Modifier.align(Alignment.BottomStart).fillMaxWidth()
-                        .height(it.peekHeight.dp),
-                    shape = RoundedCornerShape(topStart = it.cornerRadius.dp, topEnd = it.cornerRadius.dp)
-                ) {
-                    it.content.invoke()
-                }
+        modalStack.forEach {
+            Screamer { modalSheetController.removeTopScreen() }
+            Card(
+                modifier = Modifier.align(Alignment.BottomStart).fillMaxWidth()
+                    .height(it.peekHeight.dp),
+                shape = RoundedCornerShape(topStart = it.cornerRadius.dp, topEnd = it.cornerRadius.dp)
+            ) {
+                it.content.invoke()
             }
         }
     }

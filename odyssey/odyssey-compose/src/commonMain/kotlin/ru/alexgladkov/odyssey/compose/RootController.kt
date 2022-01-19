@@ -5,6 +5,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import kotlinx.coroutines.flow.MutableStateFlow
 import ru.alexgladkov.odyssey.compose.base.BottomBarNavigator
 import ru.alexgladkov.odyssey.compose.base.Navigator
+import ru.alexgladkov.odyssey.compose.controllers.ModalSheetController
 import ru.alexgladkov.odyssey.compose.controllers.MultiStackRootController
 import ru.alexgladkov.odyssey.compose.controllers.TabNavigationModel
 import ru.alexgladkov.odyssey.compose.extensions.createUniqueKey
@@ -48,6 +49,7 @@ open class RootController(private val rootControllerType: RootControllerType = R
     private var _childrenRootController: MutableList<RootController> = mutableListOf()
     private val _screenMap = mutableMapOf<String, RenderWithParams<Any?>>()
     private var _onBackPressedDispatcher: OnBackPressedDispatcher? = null
+    private var _modalSheetController: ModalSheetController? = null
 
     var parentRootController: RootController? = null
     var onApplicationFinish: (() -> Unit)? = null
@@ -161,6 +163,11 @@ open class RootController(private val rootControllerType: RootControllerType = R
      * Returns to previous screen
      */
     open fun popBackStack() {
+        if (_modalSheetController?.isEmpty() == false) {
+            _modalSheetController?.removeTopScreen()
+            return
+        }
+
         when (_backstack.last().key) {
             flowKey -> removeTopScreen(_childrenRootController.last())
             multiStackKey -> _childrenRootController.last().popBackStack()
@@ -178,6 +185,18 @@ open class RootController(private val rootControllerType: RootControllerType = R
         }
 
         return currentRootController
+    }
+
+    fun findModalSheetController(): ModalSheetController {
+        return if (_modalSheetController == null) {
+            findRootController()._modalSheetController!!
+        } else {
+            _modalSheetController!!
+        }
+    }
+
+    fun attachModalSheet(modalSheetController: ModalSheetController) {
+        this._modalSheetController = modalSheetController
     }
 
     fun drawCurrentScreen(startParams: Any? = null) {
