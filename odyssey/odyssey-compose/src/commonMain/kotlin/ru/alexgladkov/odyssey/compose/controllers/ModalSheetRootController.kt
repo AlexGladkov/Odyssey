@@ -56,5 +56,6 @@ internal fun ModalSheetConfiguration.wrap(with: Render): ModalSheetBundle = Moda
     peekHeight = peekHeight,
     closeOnBackdropClick = closeOnBackdropClick,
     cornerRadius = cornerRadius,
+    alpha = alpha,
     content = with
 )
