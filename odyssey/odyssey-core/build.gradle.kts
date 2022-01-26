@@ -8,7 +8,7 @@ plugins {
 }
 
 group = Dependencies.odysseyPackage
-version = Dependencies.odyssey
+version = Dependencies.odysseyNativeUI
 
 kotlin {
     android {
