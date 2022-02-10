@@ -1,5 +1,8 @@
 object Dependencies {
 
+    val odyssey = "0.3.1"
+    val odysseyPackage = "io.github.alexgladkov"
+
     object DI {
         const val kodein = "org.kodein.di:kodein-di:7.1.0"
     }
@@ -55,6 +58,10 @@ object Dependencies {
                 const val gradlePlugin = "com.android.tools.build:gradle:4.1.0"
             }
         }
+    }
+
+    object Utils {
+        const val UUID = "com.benasher44:uuid:0.3.1"
     }
 
     object AndroidX {

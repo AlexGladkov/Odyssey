@@ -1,47 +1,64 @@
 package ru.alexgladkov.odyssey.compose.navigation
 
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
-import ru.alexgladkov.odyssey.compose.helpers.BottomNavigationHost
-import ru.alexgladkov.odyssey.compose.helpers.MutableScreenMap
-import ru.alexgladkov.odyssey.compose.helpers.ScreenBundle
-import ru.alexgladkov.odyssey.compose.helpers.ScreenMap
-import ru.alexgladkov.odyssey.core.RootController
-import ru.alexgladkov.odyssey.core.ScreenHost
-import ru.alexgladkov.odyssey.core.animations.AnimationType
-import ru.alexgladkov.odyssey.core.destination.Destination
-import ru.alexgladkov.odyssey.core.destination.DestinationFlow
+import ru.alexgladkov.odyssey.compose.AllowedDestination
+import ru.alexgladkov.odyssey.compose.RootController
+import ru.alexgladkov.odyssey.compose.RenderWithParams
+import ru.alexgladkov.odyssey.compose.ScreenType
+import ru.alexgladkov.odyssey.compose.helpers.FlowBuilderModel
+import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.MultiStackBuilderModel
+import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.BottomNavModel
 
 /**
  * Base builder, declarative helper for navigation graph builder
  * @see RootController
- * @property screenHost - canvas to draw UI
  */
-class RootComposeBuilder(
-    private val screenHost: ScreenHost
-) {
+class RootComposeBuilder {
+    private val _screens: MutableList<AllowedDestination> = mutableListOf()
+    private val _screenMap: HashMap<String, RenderWithParams<Any?>> = hashMapOf()
 
-    private val _destinations: MutableList<Destination> = mutableListOf()
-    private val _screenMap: MutableScreenMap = hashMapOf()
-
-    val screenMap: ScreenMap = _screenMap
-
-    fun addDestination(
-        screenMap: ScreenMap,
-        destination: Destination
+    fun addScreen(
+        key: String,
+        screenMap: Map<String, RenderWithParams<Any?>>,
     ) {
-        _destinations.add(destination)
+        _screens.add(AllowedDestination(key = key, screenType = ScreenType.Simple))
         _screenMap.putAll(screenMap)
     }
 
-    fun addScreenValue(
-        name: String,
-        content: @Composable ScreenBundle.() -> Unit
+    fun addModalBottomSheet(
+        key: String,
+        screenMap: Map<String, RenderWithParams<Any?>>
     ) {
-        _screenMap[name] = content
+        _screens.add(AllowedDestination(key = key, screenType = ScreenType.BottomSheet))
+        _screenMap.putAll(screenMap)
     }
 
-    fun build(): RootController = RootController(screenHost).apply {
-        setNavigationGraph(_destinations)
+    fun addFlow(
+        key: String,
+        flowBuilderModel: FlowBuilderModel
+    ) {
+        _screens.add(
+            AllowedDestination(
+                key = key,
+                screenType = ScreenType.Flow(flowBuilderModel = flowBuilderModel)
+            )
+        )
+    }
+
+    fun addMultiStack(
+        key: String,
+        bottomNavModel: BottomNavModel,
+        multiStackBuilderModel: MultiStackBuilderModel
+    ) {
+        _screens.add(
+            AllowedDestination(
+                key = key,
+                screenType = ScreenType.MultiStack(multiStackBuilderModel, bottomNavModel)
+            )
+        )
+    }
+
+    fun build(): RootController = RootController().apply {
+        updateScreenMap(_screenMap)
+        setNavigationGraph(_screens)
     }
 }

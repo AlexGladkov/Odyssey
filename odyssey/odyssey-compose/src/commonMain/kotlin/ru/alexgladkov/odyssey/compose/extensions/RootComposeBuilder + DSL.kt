@@ -1,78 +1,90 @@
 package ru.alexgladkov.odyssey.compose.extensions
 
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
-import ru.alexgladkov.odyssey.compose.helpers.BottomItemModel
-import ru.alexgladkov.odyssey.compose.helpers.BottomNavigationColors
-import ru.alexgladkov.odyssey.compose.helpers.BottomNavigationHost
-import ru.alexgladkov.odyssey.compose.helpers.ScreenBundle
-import ru.alexgladkov.odyssey.compose.navigation.ComposeFlowBuilder
-import ru.alexgladkov.odyssey.compose.navigation.ComposeMultiStackBuilder
+import ru.alexgladkov.odyssey.compose.RenderWithParams
+import ru.alexgladkov.odyssey.compose.helpers.*
+import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.BottomNavModel
 import ru.alexgladkov.odyssey.compose.navigation.RootComposeBuilder
-import ru.alexgladkov.odyssey.core.animations.AnimationType
-import ru.alexgladkov.odyssey.core.destination.DestinationScreen
+import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.MultiStackBuilder
+import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.TabItem
 
+/**
+ * Adds screen to navigation graph
+ * @param name - name in graph
+ * @param content - composable content
+ */
 fun RootComposeBuilder.screen(
     name: String,
-    content: @Composable ScreenBundle.() -> Unit
+    content: RenderWithParams<Any?>
 ) {
-    addDestination(
-        destination = DestinationScreen(name),
+    addScreen(
+        key = name,
         screenMap = hashMapOf(name to content)
     )
 }
 
+/**
+ * Adds flow of screens to navigation graph
+ * @param name - name in graph
+ * @param builder - dsl for flow building
+ */
 fun RootComposeBuilder.flow(
     name: String,
-    block: ComposeFlowBuilder.() -> Unit
+    builder: FlowBuilder.() -> Unit
 ) {
-    val builder = ComposeFlowBuilder(name)
-    val destinationFlow = builder.apply(block).build()
-
-    addDestination(
-        screenMap = builder.screenMap,
-        destination = destinationFlow
+    addFlow(
+        key = name,
+        flowBuilderModel = FlowBuilder(name).apply(builder).build()
     )
 }
 
-fun RootComposeBuilder.multistack(
+/**
+ * Adds modal bottom sheet to navigation graph
+ * @param name - name in graph
+ * @param content - composable content
+ */
+fun RootComposeBuilder.modalSheet(
     name: String,
-    host: @Composable ScreenBundle.() -> Unit,
-    block: ComposeMultiStackBuilder.() -> Unit
+    content: RenderWithParams<Any?>
 ) {
-    val builder = ComposeMultiStackBuilder(name)
-    val destinationMultiFlow = builder.apply(block).build()
-
-    addScreenValue(name = name, content = host)
-    addDestination(
-        screenMap = builder.screenMap,
-        destination = destinationMultiFlow
+    addModalBottomSheet(
+        key = name,
+        screenMap = hashMapOf(name to content)
     )
 }
 
+/**
+ * Adds screen to flow builder
+ * @param name - name in navigation graph
+ * @param content - composable content
+ */
+fun FlowBuilder.screen(name: String, content: RenderWithParams<Any?>) {
+    addScreen(name = name, content = content)
+}
+
+/**
+ * Adds bottom bar navigation to navigation graph
+ * @param name - name in graph
+ * @param bottomNavModel - UI configuration for bottom navigation
+ * @param builder - dsl for bottom nav bar building
+ */
 fun RootComposeBuilder.bottomNavigation(
     name: String,
-    selectedColor: Color = Color.Black,
-    unselectedColor: Color = Color.DarkGray,
-    backgroundColor: Color = Color.White,
-    bottomItemModels: List<BottomItemModel>,
-    block: ComposeMultiStackBuilder.() -> Unit
+    bottomNavModel: BottomNavModel,
+    builder: MultiStackBuilder.() -> Unit
 ) {
-    val builder = ComposeMultiStackBuilder(name)
-    val destinationMultiFlow = builder.apply(block).build()
+    addMultiStack(
+        key = name,
+        bottomNavModel = bottomNavModel,
+        multiStackBuilderModel = MultiStackBuilder(name).apply(builder).build()
+    )
+}
 
-    addScreenValue(name = name, content = {
-        BottomNavigationHost(
-            screenBundle = this,
-            bottomNavigationColors = BottomNavigationColors(
-                selectedColor = selectedColor,
-                unselectedColor = unselectedColor,
-                backgroundColor = backgroundColor
-            ),
-            bottomItemModels = bottomItemModels
-        )
-    })
-    addDestination(
-        screenMap = builder.screenMap,
-        destination = destinationMultiFlow)
+/**
+ * Adds tab to bottom nav bar building
+ * @param tabItem - tab UI configuration
+ * @param builder - dsl buidler for flow in tab
+ */
+fun MultiStackBuilder.tab(tabItem: TabItem, builder: FlowBuilder.() -> Unit) {
+    val flow = FlowBuilder(tabItem.name).apply(builder).build()
+    addTab(tabItem, flow)
 }

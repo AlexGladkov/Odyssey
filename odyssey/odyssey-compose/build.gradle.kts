@@ -7,8 +7,11 @@ plugins {
     id("convention.publication")
 }
 
-group = "io.github.alexgladkov"
-version = "0.2.1"
+group = Dependencies.odysseyPackage
+version = Dependencies.odyssey
+dependencies {
+    implementation("androidx.compose.ui:ui-unit:1.0.5")
+}
 
 kotlin {
     android {
@@ -19,6 +22,7 @@ kotlin {
         named("commonMain") {
             dependencies {
                 implementation(project(":odyssey:odyssey-core"))
+                implementation(Dependencies.Utils.UUID)
             }
         }
         named("commonTest")

@@ -1,7 +1,5 @@
 package ru.alexgladkov.odyssey.core.animations
 
-import ru.alexgladkov.odyssey.core.animations.AnimationType
-
-fun defaultPresentationAnimation() = AnimationType.Present(500)
-fun defaultPushAnimation() = AnimationType.Push(500)
-fun defaultFadeAnimation() = AnimationType.Fade(500)
+fun defaultPresentationAnimation() = AnimationType.Present(300)
+fun defaultPushAnimation() = AnimationType.Push(300)
+fun defaultFadeAnimation() = AnimationType.Fade(300)

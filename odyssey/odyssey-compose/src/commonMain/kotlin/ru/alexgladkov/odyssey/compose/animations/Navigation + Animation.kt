@@ -21,7 +21,7 @@ fun <T> AnimatedTransition(
     animation: AnimationType,
     isForwardDirection: Boolean,
     onAnimationEnd: (() -> Unit)? = null,
-    content: @Composable T.() -> Unit
+    content: @Composable (T) -> Unit
 ) {
     AnimatedNavigation(
         targetState = targetState,
@@ -42,7 +42,7 @@ fun <T> AnimatedNavigation(
     targetState: T,
     transitionSpec: AnimatedContentScope<T>.() -> ContentTransform,
     onAnimationEnd: (() -> Unit)? = null,
-    content: @Composable T.() -> Unit
+    content: @Composable (T) -> Unit
 ) {
     AnimatedContentWithCallback(
         targetState = targetState,
