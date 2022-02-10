@@ -10,8 +10,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import ru.alexgladkov.odyssey.compose.controllers.ModalSheetConfiguration
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
+import ru.alexgladkov.odyssey.compose.navigation.bottom_sheet_navigation.ModalSheetConfiguration
 
 @Composable
 fun FeedScreen() {
@@ -21,7 +21,7 @@ fun FeedScreen() {
         Column {
             Text("Feed Screen", fontSize = 24.sp)
             Text(modifier = Modifier.clickable {
-                val modalSheetConfiguration = ModalSheetConfiguration(peekHeight = 700, cornerRadius = 16)
+                val modalSheetConfiguration = ModalSheetConfiguration(maxHeight = 0.7f, cornerRadius = 16)
                 modalSheetController.presentNew(modalSheetConfiguration) {
                     StoresScreen(username = "Alex Gladkov")
                 }
