@@ -15,23 +15,39 @@ First add dependency to gradle
 ```kotlin
 named("commonMain") {
     dependencies {
-        implementation("io.github.alexgladkov:odyssey-core:0.2.0") // For core classes
-        implementation("io.github.alexgladkov:odyssey-compose:0.2.0") // For compose extensions
+        implementation("io.github.alexgladkov:odyssey-core:0.3.2") // For core classes
+        implementation("io.github.alexgladkov:odyssey-compose:0.3.2") // For compose extensions
     }
 }
 ```
 
+### Start
+This library contains two basic entities for work - RootController and NavigationGraph.
+
+RootController needs to make navigation and works like single action
+
+NavigationGraph describes your destinations and connections between them
+
+To create navigation graph just create this extension
+
+```kotlin 
+fun RootComposeBuilder.generateGraph() {}
+```
+
+Then you can add screens inside this navigation graph and connect it to platforms. For now you can use 
+this types of navigation
+
+[1. Simple Screen](documentation/SIMPLE_SCREEN.md)
+[2. Flow](documentation/FLOW_SCREEn.md)
+[3. Bottom Navigation](documentation/BOTTOM_NAVIGATION.md)
+[4. Bottom Sheet Navigation](documentation/BOTTOM_SHEET.md)
+
 #### Navigation
+[1. How to connect Android](documentation/ANDROID.md)
+[2. How to connect Desktop](documentation/DESKTOP.md)
+[3. How to connect iOS](documentation/IOS.md)
 
-[1. Common preparations](documentation/COMMON.md)
-
-[2. How to start with Android](documentation/ANDROID.md)
-
-[3. How to start with Desktop](documentation/DESKTOP.md)
-
-[4. How to start with iOS](documentation/IOS.md)
-
-[5. Animations](documentation/ANIMATIONS.md)
+[4. Animations](documentation/ANIMATIONS.md)
 
 #### Parameters
 
