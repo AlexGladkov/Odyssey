@@ -1,6 +1,6 @@
 object Dependencies {
 
-    val odyssey = "0.3.1"
+    val odyssey = "0.3.2"
     val odysseyPackage = "io.github.alexgladkov"
 
     object DI {
