@@ -7,8 +7,8 @@ plugins {
     id("convention.publication")
 }
 
-group = "io.github.alexgladkov"
-version = "0.2.0"
+group = Dependencies.odysseyPackage
+version = Dependencies.odyssey
 
 kotlin {
     android {
