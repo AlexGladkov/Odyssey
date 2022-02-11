@@ -6,8 +6,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import ru.alexgladkov.odyssey.compose.controllers.ModalSheetBundle
@@ -34,7 +34,7 @@ fun ModalSheetNavigator(
             Screamer(it.alpha) { modalSheetController.removeTopScreen() }
             Card(
                 modifier = Modifier.align(Alignment.BottomStart).fillMaxWidth()
-                    .height(it.peekHeight.dp),
+                    .fillMaxHeight(it.maxHeight),
                 shape = RoundedCornerShape(topStart = it.cornerRadius.dp, topEnd = it.cornerRadius.dp)
             ) {
                 it.content.invoke()
