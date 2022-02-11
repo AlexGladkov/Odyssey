@@ -1,48 +1,57 @@
 ### How to use it with android
 
-For working with Android I've created helper class AndroidScreenHost and now to setup Activity you just need to use this 
-in your `onCreate` function
+To setup Android you need to setup hardware backpress handler and launch first screen from graph
+For that I've made default function which works in default ComposeActivity
 
 ```kotlin
-AndroidScreenHost(this)
-    .setupActivityWithRootController(
-        startScreen = NavigationTree.Root.Splash.toString(),
-        block = buildComposeNavigationGraph()
-    )
-```
-
-If you need to customize parameters of your ScreenHost you can create your own ScreenHost class like this
-
-```kotlin
-class AndroidScreenHost constructor(
-    val composeActivity: ComponentActivity,
-    // add your params here
-) : ComposableScreenHost() {
-
-    override fun prepareFowDrawing() {
-        // Below function setup drawing, you can extend it 
-        // by adding CompositionLocalProviders or something else
-        composeActivity.setContent {
-            val destinationState = destinationObserver.wrap().observeAsState()
-            destinationState.value?.let {
-                launchScreen(it)
-            }
-        }
-    }
+setupNavigation("start") {
+    generateGraph()
 }
 ```
 
-And you need to create your own extension to setup back press callback
+```"start"``` using for start screen and ```generateGraph()``` is you navigation graph
+
+With compose you often need to set some `LocalProviders` for compose. For this you can provide
+providers inside `setupNavigation` function
 
 ```kotlin
-fun AndroidScreenHost.setupActivityWithRootController(startScreen: String, block: RootComposeBuilder.() -> Unit) {
-    prepareFowDrawing()
+val providers = arrayOf(
+    LocalPlatformConfiguration provides platformConfiguration,
+    LocalAnalyticsTracker provides analyticsTracker,
+    LocalPerformanceTracker provides FirebasePerformance(),
+    LocalCrashTracker provides FirebaseCrashTracker(),
+    LocalLifecycleOwner provides LifecycleOwner(owner = this),
+    LocalKamelConfig provides kamelConfig
+)
 
-    val builder = RootComposeBuilder(screenHost = this)
-    val rootController = builder.apply(block).build()
-    rootController.setupWithActivity(composeActivity)
+setupNavigation(
+    startScreen = "start",
+    providers = providers
+) {
+    generateGraph()
+}
+```
 
-    setScreenMap(builder.screenMap)
-    rootController.launch(screen = startScreen)
+Sometimes you need to add compose wrapper for your navigator for this you can write your own function like this
+```kotlin
+fun ComponentActivity.setupThemedNavigation(
+    startScreen: String,
+    vararg providers: ProvidedValue<*>,
+    navigationGraph: RootComposeBuilder.() -> Unit
+) {
+    val rootController = RootComposeBuilder().apply(navigationGraph).build()
+    rootController.setupWithActivity(this)
+
+    setContent {
+        CompositionLocalProvider(
+            *providers,
+            LocalRootController provides rootController
+        ) {
+            // Here you can provide your own composables
+            ModalSheetNavigator {
+                Navigator(startScreen) 
+            }
+        }
+    }
 }
 ```
