@@ -5,8 +5,11 @@ import ru.alexgladkov.common.compose.tabs.BottomConfiguration
 import ru.alexgladkov.common.compose.tabs.CartTab
 import ru.alexgladkov.common.compose.tabs.FeedTab
 import ru.alexgladkov.common.compose.tabs.SearchTab
-import ru.alexgladkov.odyssey.compose.extensions.*
-import ru.alexgladkov.odyssey.compose.navigation.RootComposeBuilder
+import ru.alexgladkov.odyssey.core.extensions.bottomNavigation
+import ru.alexgladkov.odyssey.core.extensions.flow
+import ru.alexgladkov.odyssey.core.extensions.screen
+import ru.alexgladkov.odyssey.core.extensions.tab
+import ru.alexgladkov.odyssey.core.navigation.RootComposeBuilder
 
 fun RootComposeBuilder.generateGraph() {
     screen(name = "start") {

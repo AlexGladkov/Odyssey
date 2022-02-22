@@ -11,8 +11,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import ru.alexgladkov.odyssey.compose.local.LocalRootController
 import ru.alexgladkov.odyssey.core.LaunchFlag
+import ru.alexgladkov.odyssey.core.local.LocalRootController
 
 @Composable
 fun OnboardingScreen(count: Int) {

@@ -9,8 +9,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import ru.alexgladkov.odyssey.compose.local.LocalRootController
-import ru.alexgladkov.odyssey.compose.navigation.bottom_sheet_navigation.ModalSheetConfiguration
+import ru.alexgladkov.odyssey.core.local.LocalRootController
+import ru.alexgladkov.odyssey.core.navigation.bottom_sheet_navigation.ModalSheetConfiguration
 
 @Composable
 fun StoresScreen(username: String) {

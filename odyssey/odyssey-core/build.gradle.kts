@@ -19,6 +19,7 @@ kotlin {
         named("commonMain") {
             dependencies {
                 implementation(Dependencies.JetBrains.Kotlin.coroutines)
+                implementation(Dependencies.Utils.UUID)
             }
         }
         named("commonTest")

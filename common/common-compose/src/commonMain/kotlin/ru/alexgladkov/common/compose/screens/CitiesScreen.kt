@@ -15,8 +15,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.runtime.getValue
 import ru.alexgladkov.common.compose.helpers.generateCities
-import ru.alexgladkov.odyssey.compose.local.LocalRootController
 import ru.alexgladkov.odyssey.core.LaunchFlag
+import ru.alexgladkov.odyssey.core.local.LocalRootController
 
 @Composable
 fun CitiesScreen() {

@@ -5,10 +5,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import ru.alexgladkov.odyssey.core.RootController
-import ru.alexgladkov.odyssey.compose.helpers.BottomSheetBundle
-import ru.alexgladkov.odyssey.compose.local.LocalRootController
 import ru.alexgladkov.odyssey.core.NavConfiguration
 import ru.alexgladkov.odyssey.core.extensions.Closeable
+import ru.alexgladkov.odyssey.core.helpers.BottomSheetBundle
+import ru.alexgladkov.odyssey.core.local.LocalRootController
 import ru.alexgladkov.odyssey.core.screen.ScreenBundle
 import ru.alexgladkov.odyssey.core.screen.ScreenInteractor
 
@@ -55,19 +55,5 @@ private fun NavigatorAnimated(
         val render = rootController.screenMap[currentScreen.realKey]
         render?.invoke(currentScreen.params)
             ?: throw IllegalStateException("Screen $currentScreen not found in screenMap")
-    }
-}
-
-@Composable
-fun NavigatorModalSheet(
-    bundle: BottomSheetBundle,
-    rootController: RootController
-) {
-    val presentedScreen = rootController.screenMap[bundle.currentKey]
-    val modalSheet = rootController.screenMap[bundle.key]
-
-    Box(modifier = Modifier.fillMaxSize()) {
-        presentedScreen?.invoke(null)
-        modalSheet?.invoke(null)
     }
 }

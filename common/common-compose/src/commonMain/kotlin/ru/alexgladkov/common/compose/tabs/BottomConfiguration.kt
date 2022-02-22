@@ -2,8 +2,8 @@ package ru.alexgladkov.common.compose.tabs
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.BottomNavConfiguration
-import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.BottomNavModel
+import ru.alexgladkov.odyssey.core.navigation.bottom_bar_navigation.BottomNavConfiguration
+import ru.alexgladkov.odyssey.core.navigation.bottom_bar_navigation.BottomNavModel
 
 class BottomConfiguration : BottomNavModel() {
 

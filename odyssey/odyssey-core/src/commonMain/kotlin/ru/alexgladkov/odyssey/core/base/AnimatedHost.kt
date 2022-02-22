@@ -1,5 +1,4 @@
 package ru.alexgladkov.odyssey.core.base
-
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable

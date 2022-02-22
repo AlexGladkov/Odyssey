@@ -8,7 +8,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import ru.alexgladkov.common.compose.sample_lmwork.NavigationTree
-import ru.alexgladkov.odyssey.compose.local.LocalRootController
+import ru.alexgladkov.odyssey.core.local.LocalRootController
 
 @Composable
 fun SplashScreen() {

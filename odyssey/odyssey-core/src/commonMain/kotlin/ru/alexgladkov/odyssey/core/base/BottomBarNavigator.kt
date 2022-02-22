@@ -5,11 +5,11 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.ui.Modifier
-import ru.alexgladkov.odyssey.compose.controllers.MultiStackRootController
-import ru.alexgladkov.odyssey.compose.controllers.TabNavigationModel
-import ru.alexgladkov.odyssey.compose.local.LocalRootController
 import ru.alexgladkov.odyssey.core.NavConfiguration
+import ru.alexgladkov.odyssey.core.controllers.MultiStackRootController
+import ru.alexgladkov.odyssey.core.controllers.TabNavigationModel
 import ru.alexgladkov.odyssey.core.extensions.Closeable
+import ru.alexgladkov.odyssey.core.local.LocalRootController
 import ru.alexgladkov.odyssey.core.screen.ScreenBundle
 
 @Composable
