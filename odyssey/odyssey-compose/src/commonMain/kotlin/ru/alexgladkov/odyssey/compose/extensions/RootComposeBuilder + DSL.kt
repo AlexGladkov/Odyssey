@@ -1,6 +1,6 @@
 package ru.alexgladkov.odyssey.compose.extensions
 
-import ru.alexgladkov.odyssey.compose.RenderWithParams
+import ru.alexgladkov.odyssey.core.RenderWithParams
 import ru.alexgladkov.odyssey.compose.helpers.*
 import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.BottomNavModel
 import ru.alexgladkov.odyssey.compose.navigation.RootComposeBuilder

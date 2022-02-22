@@ -1,7 +1,7 @@
 package ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation
 
-import ru.alexgladkov.odyssey.compose.AllowedDestination
-import ru.alexgladkov.odyssey.compose.RenderWithParams
+import ru.alexgladkov.odyssey.core.AllowedDestination
+import ru.alexgladkov.odyssey.core.RenderWithParams
 import ru.alexgladkov.odyssey.compose.helpers.FlowBuilderModel
 
 /**

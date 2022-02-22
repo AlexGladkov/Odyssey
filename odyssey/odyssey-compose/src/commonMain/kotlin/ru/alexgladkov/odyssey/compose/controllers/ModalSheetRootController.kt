@@ -1,7 +1,7 @@
 package ru.alexgladkov.odyssey.compose.controllers
 
 import kotlinx.coroutines.flow.MutableStateFlow
-import ru.alexgladkov.odyssey.compose.Render
+import ru.alexgladkov.odyssey.core.Render
 import ru.alexgladkov.odyssey.compose.navigation.bottom_sheet_navigation.ModalSheetConfiguration
 import ru.alexgladkov.odyssey.core.extensions.CFlow
 import ru.alexgladkov.odyssey.core.extensions.wrap
@@ -31,7 +31,8 @@ class ModalSheetController {
     val currentStack: CFlow<List<ModalSheetBundle>> = _currentStack.wrap()
 
     fun presentNew(modalSheetConfiguration: ModalSheetConfiguration,
-                   content: Render) {
+                   content: Render
+    ) {
         _backStack.add(modalSheetConfiguration.wrap(content))
         redrawStack()
     }

@@ -1,4 +1,4 @@
-package ru.alexgladkov.odyssey.compose
+package ru.alexgladkov.odyssey.core
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -13,8 +13,6 @@ import ru.alexgladkov.odyssey.compose.helpers.*
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
 import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.BottomNavModel
 import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.MultiStackBuilderModel
-import ru.alexgladkov.odyssey.core.LaunchFlag
-import ru.alexgladkov.odyssey.core.NavConfiguration
 import ru.alexgladkov.odyssey.core.animations.AnimationType
 import ru.alexgladkov.odyssey.core.animations.defaultPresentationAnimation
 import ru.alexgladkov.odyssey.core.animations.defaultPushAnimation
@@ -23,7 +21,6 @@ import ru.alexgladkov.odyssey.core.backpress.OnBackPressedDispatcher
 import ru.alexgladkov.odyssey.core.extensions.CFlow
 import ru.alexgladkov.odyssey.core.extensions.wrap
 import ru.alexgladkov.odyssey.core.screen.Screen
-import ru.alexgladkov.odyssey.core.wrap
 import kotlin.collections.HashMap
 
 typealias RenderWithParams<T> = @Composable (T) -> Unit

@@ -1,4 +1,4 @@
-package ru.alexgladkov.odyssey.compose.animations
+package ru.alexgladkov.odyssey.core.animations.compose
 
 import androidx.compose.animation.*
 import androidx.compose.animation.core.updateTransition

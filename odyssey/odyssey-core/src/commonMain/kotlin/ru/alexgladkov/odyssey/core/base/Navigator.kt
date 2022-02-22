@@ -1,4 +1,4 @@
-package ru.alexgladkov.odyssey.compose.base
+package ru.alexgladkov.odyssey.core.base
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize

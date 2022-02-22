@@ -1,6 +1,6 @@
 object Dependencies {
 
-    val odyssey = "0.3.2"
+    val odyssey = "0.3.4-native-ui"
     val odysseyPackage = "io.github.alexgladkov"
 
     object DI {
@@ -35,7 +35,7 @@ object Dependencies {
 
         object Compose {
             // __LATEST_COMPOSE_RELEASE_VERSION__
-            private const val VERSION = "1.0.1-rc2"
+            private const val VERSION = "1.2.0-alpha01-dev620"
             const val gradlePlugin = "org.jetbrains.compose:compose-gradle-plugin:$VERSION"
         }
 

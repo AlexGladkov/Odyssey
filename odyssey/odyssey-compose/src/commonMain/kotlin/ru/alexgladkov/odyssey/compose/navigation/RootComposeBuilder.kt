@@ -1,9 +1,9 @@
 package ru.alexgladkov.odyssey.compose.navigation
 
-import ru.alexgladkov.odyssey.compose.AllowedDestination
-import ru.alexgladkov.odyssey.compose.RootController
-import ru.alexgladkov.odyssey.compose.RenderWithParams
-import ru.alexgladkov.odyssey.compose.ScreenType
+import ru.alexgladkov.odyssey.core.AllowedDestination
+import ru.alexgladkov.odyssey.core.RootController
+import ru.alexgladkov.odyssey.core.RenderWithParams
+import ru.alexgladkov.odyssey.core.ScreenType
 import ru.alexgladkov.odyssey.compose.helpers.FlowBuilderModel
 import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.MultiStackBuilderModel
 import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.BottomNavModel

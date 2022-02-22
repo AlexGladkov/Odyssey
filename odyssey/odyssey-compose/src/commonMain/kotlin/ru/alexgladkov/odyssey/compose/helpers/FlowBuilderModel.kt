@@ -1,8 +1,8 @@
 package ru.alexgladkov.odyssey.compose.helpers
 
-import ru.alexgladkov.odyssey.compose.AllowedDestination
-import ru.alexgladkov.odyssey.compose.RenderWithParams
-import ru.alexgladkov.odyssey.compose.ScreenType
+import ru.alexgladkov.odyssey.core.AllowedDestination
+import ru.alexgladkov.odyssey.core.RenderWithParams
+import ru.alexgladkov.odyssey.core.ScreenType
 
 data class FlowBuilderModel(
     val key: String,
