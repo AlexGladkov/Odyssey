@@ -15,8 +15,7 @@ First add dependency to gradle
 ```kotlin
 named("commonMain") {
     dependencies {
-        implementation("io.github.alexgladkov:odyssey-core:0.3.2") // For core classes
-        implementation("io.github.alexgladkov:odyssey-compose:0.3.2") // For compose extensions
+        implementation("io.github.alexgladkov:odyssey-core:0.3.4")
     }
 }
 ```
@@ -38,13 +37,18 @@ Then you can add screens inside this navigation graph and connect it to platform
 this types of navigation
 
 [1. Simple Screen](documentation/SIMPLE_SCREEN.md)
+
 [2. Flow](documentation/FLOW_SCREEn.md)
+
 [3. Bottom Navigation](documentation/BOTTOM_NAVIGATION.md)
+
 [4. Bottom Sheet Navigation](documentation/BOTTOM_SHEET.md)
 
 #### Navigation
 [1. How to connect Android](documentation/ANDROID.md)
+
 [2. How to connect Desktop](documentation/DESKTOP.md)
+
 [3. How to connect iOS](documentation/IOS.md)
 
 [4. Animations](documentation/ANIMATIONS.md)

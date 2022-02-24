@@ -1,13 +1,11 @@
 package ru.alexgladkov.odyssey.core.base
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import ru.alexgladkov.odyssey.core.RootController
 import ru.alexgladkov.odyssey.core.NavConfiguration
 import ru.alexgladkov.odyssey.core.extensions.Closeable
-import ru.alexgladkov.odyssey.core.helpers.BottomSheetBundle
 import ru.alexgladkov.odyssey.core.local.LocalRootController
 import ru.alexgladkov.odyssey.core.screen.ScreenBundle
 import ru.alexgladkov.odyssey.core.screen.ScreenInteractor

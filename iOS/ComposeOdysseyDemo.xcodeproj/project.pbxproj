@@ -1,0 +1,528 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 51;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0EF687057C0C6108D8C681E1 /* CartTab.kt in Resources */ = {isa = PBXBuildFile; fileRef = C7520EE7F07977D57C5B6D4E /* CartTab.kt */; };
+		10B9E7D0431626142731CEBB /* StartScreen.kt in Resources */ = {isa = PBXBuildFile; fileRef = E1D4E0A86BEED9369A9208F5 /* StartScreen.kt */; };
+		2544BA6517CBA51BA5B8A7F6 /* BottomConfiguration.kt in Resources */ = {isa = PBXBuildFile; fileRef = 2B2768A88B2A2A90C7DB5B46 /* BottomConfiguration.kt */; };
+		38450D83B7073E5972F3B554 /* DepartmentScreen.kt in Resources */ = {isa = PBXBuildFile; fileRef = 1E1A0D1FC992423E4D459B4F /* DepartmentScreen.kt */; };
+		4173615E09F251839F4EB388 /* main.uikit.kt in Resources */ = {isa = PBXBuildFile; fileRef = 3388BA8B8909D828C1E909F1 /* main.uikit.kt */; };
+		441D4C240BFD8D130CF857E1 /* FeedTab.kt in Resources */ = {isa = PBXBuildFile; fileRef = 4FBE88B33B3CBC2D3DC2FA03 /* FeedTab.kt */; };
+		4CFB29BE87836DEBBD4EFA00 /* AndroidManifest.xml in Resources */ = {isa = PBXBuildFile; fileRef = 1A74B020AC3C79B27812C1FE /* AndroidManifest.xml */; };
+		4ED6AC9AD077BD3A52C9AF69 /* OnboardingScreen.kt in Resources */ = {isa = PBXBuildFile; fileRef = 590E44D5837F3FA8CE6525E6 /* OnboardingScreen.kt */; };
+		5A0CA42A7537E2D1F5EB1EC7 /* CheckoutScreen.kt in Resources */ = {isa = PBXBuildFile; fileRef = 5C83525A33F5E8080BD50699 /* CheckoutScreen.kt */; };
+		606C4F87101ACCC0F3FD3575 /* FeedScreen.kt in Resources */ = {isa = PBXBuildFile; fileRef = 8FCA96FA66BC3D02AE6286E2 /* FeedScreen.kt */; };
+		6238F8970D5752A026A9816B /* SearchTab.kt in Resources */ = {isa = PBXBuildFile; fileRef = 40AAC7FEAF8AE42EB95E5EE0 /* SearchTab.kt */; };
+		820A0A6EC128221C27E00922 /* CartScreen.kt in Resources */ = {isa = PBXBuildFile; fileRef = D19CC08CAE6063DE844D3BB9 /* CartScreen.kt */; };
+		85137624103F0639BEBED427 /* StoresScreen.kt in Resources */ = {isa = PBXBuildFile; fileRef = A5C1EBEB26B5193C0B0485C4 /* StoresScreen.kt */; };
+		868EBAA02E6E19E00422E527 /* NavigationGraph.kt in Resources */ = {isa = PBXBuildFile; fileRef = 5AA71400332837B6DCF4F870 /* NavigationGraph.kt */; };
+		93D7ACCBA0F205DBB16E2B86 /* ModelsGenerator.kt in Resources */ = {isa = PBXBuildFile; fileRef = 4C33D1FA90875659B912A575 /* ModelsGenerator.kt */; };
+		BE526E6599B61CEF6DBE07C1 /* MainScreen.kt in Resources */ = {isa = PBXBuildFile; fileRef = 2E4E2FED19441DBCDDC3D310 /* MainScreen.kt */; };
+		D42DBE332C669EA317A601A7 /* ProductScreen.kt in Resources */ = {isa = PBXBuildFile; fileRef = B1613B87B9BFE224CAC01950 /* ProductScreen.kt */; };
+		DBE5835F3A132D5392B520A6 /* SearchScreen.kt in Resources */ = {isa = PBXBuildFile; fileRef = AF3CAE81133F1BBC9AEE00AB /* SearchScreen.kt */; };
+		EAB24EF44EFEFE048AA89E46 /* CitiesScreen.kt in Resources */ = {isa = PBXBuildFile; fileRef = DBDEA0B7D4B885C7E67CB278 /* CitiesScreen.kt */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		1A74B020AC3C79B27812C1FE /* AndroidManifest.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = AndroidManifest.xml; sourceTree = "<group>"; };
+		1E1A0D1FC992423E4D459B4F /* DepartmentScreen.kt */ = {isa = PBXFileReference; path = DepartmentScreen.kt; sourceTree = "<group>"; };
+		2904208586E9F168502693EA /* ComposeOdysseyDemo.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = ComposeOdysseyDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2B2768A88B2A2A90C7DB5B46 /* BottomConfiguration.kt */ = {isa = PBXFileReference; path = BottomConfiguration.kt; sourceTree = "<group>"; };
+		2E4E2FED19441DBCDDC3D310 /* MainScreen.kt */ = {isa = PBXFileReference; path = MainScreen.kt; sourceTree = "<group>"; };
+		3388BA8B8909D828C1E909F1 /* main.uikit.kt */ = {isa = PBXFileReference; path = main.uikit.kt; sourceTree = "<group>"; };
+		40AAC7FEAF8AE42EB95E5EE0 /* SearchTab.kt */ = {isa = PBXFileReference; path = SearchTab.kt; sourceTree = "<group>"; };
+		4C33D1FA90875659B912A575 /* ModelsGenerator.kt */ = {isa = PBXFileReference; path = ModelsGenerator.kt; sourceTree = "<group>"; };
+		4FBE88B33B3CBC2D3DC2FA03 /* FeedTab.kt */ = {isa = PBXFileReference; path = FeedTab.kt; sourceTree = "<group>"; };
+		590E44D5837F3FA8CE6525E6 /* OnboardingScreen.kt */ = {isa = PBXFileReference; path = OnboardingScreen.kt; sourceTree = "<group>"; };
+		5AA71400332837B6DCF4F870 /* NavigationGraph.kt */ = {isa = PBXFileReference; path = NavigationGraph.kt; sourceTree = "<group>"; };
+		5C83525A33F5E8080BD50699 /* CheckoutScreen.kt */ = {isa = PBXFileReference; path = CheckoutScreen.kt; sourceTree = "<group>"; };
+		8FCA96FA66BC3D02AE6286E2 /* FeedScreen.kt */ = {isa = PBXFileReference; path = FeedScreen.kt; sourceTree = "<group>"; };
+		A5C1EBEB26B5193C0B0485C4 /* StoresScreen.kt */ = {isa = PBXFileReference; path = StoresScreen.kt; sourceTree = "<group>"; };
+		AF3CAE81133F1BBC9AEE00AB /* SearchScreen.kt */ = {isa = PBXFileReference; path = SearchScreen.kt; sourceTree = "<group>"; };
+		B1613B87B9BFE224CAC01950 /* ProductScreen.kt */ = {isa = PBXFileReference; path = ProductScreen.kt; sourceTree = "<group>"; };
+		C7520EE7F07977D57C5B6D4E /* CartTab.kt */ = {isa = PBXFileReference; path = CartTab.kt; sourceTree = "<group>"; };
+		D19CC08CAE6063DE844D3BB9 /* CartScreen.kt */ = {isa = PBXFileReference; path = CartScreen.kt; sourceTree = "<group>"; };
+		DBDEA0B7D4B885C7E67CB278 /* CitiesScreen.kt */ = {isa = PBXFileReference; path = CitiesScreen.kt; sourceTree = "<group>"; };
+		E1D4E0A86BEED9369A9208F5 /* StartScreen.kt */ = {isa = PBXFileReference; path = StartScreen.kt; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		0E6C0B2AE25B768E1580BCDA /* screens */ = {
+			isa = PBXGroup;
+			children = (
+				D19CC08CAE6063DE844D3BB9 /* CartScreen.kt */,
+				5C83525A33F5E8080BD50699 /* CheckoutScreen.kt */,
+				DBDEA0B7D4B885C7E67CB278 /* CitiesScreen.kt */,
+				1E1A0D1FC992423E4D459B4F /* DepartmentScreen.kt */,
+				8FCA96FA66BC3D02AE6286E2 /* FeedScreen.kt */,
+				2E4E2FED19441DBCDDC3D310 /* MainScreen.kt */,
+				590E44D5837F3FA8CE6525E6 /* OnboardingScreen.kt */,
+				B1613B87B9BFE224CAC01950 /* ProductScreen.kt */,
+				AF3CAE81133F1BBC9AEE00AB /* SearchScreen.kt */,
+				E1D4E0A86BEED9369A9208F5 /* StartScreen.kt */,
+				A5C1EBEB26B5193C0B0485C4 /* StoresScreen.kt */,
+			);
+			path = screens;
+			sourceTree = "<group>";
+		};
+		342444EF98FA200B503205DA /* androidMain */ = {
+			isa = PBXGroup;
+			children = (
+				1A74B020AC3C79B27812C1FE /* AndroidManifest.xml */,
+			);
+			path = androidMain;
+			sourceTree = "<group>";
+		};
+		42C5ED177A2C6CD9A061B3E8 /* uikitMain */ = {
+			isa = PBXGroup;
+			children = (
+				EF8E067229E56500E40B6761 /* kotlin */,
+			);
+			path = uikitMain;
+			sourceTree = "<group>";
+		};
+		47861C988A8C88451BD2C416 /* navigation */ = {
+			isa = PBXGroup;
+			children = (
+				5AA71400332837B6DCF4F870 /* NavigationGraph.kt */,
+			);
+			path = navigation;
+			sourceTree = "<group>";
+		};
+		54E02F20AD6D474398C04EDC /* tabs */ = {
+			isa = PBXGroup;
+			children = (
+				2B2768A88B2A2A90C7DB5B46 /* BottomConfiguration.kt */,
+				C7520EE7F07977D57C5B6D4E /* CartTab.kt */,
+				4FBE88B33B3CBC2D3DC2FA03 /* FeedTab.kt */,
+				40AAC7FEAF8AE42EB95E5EE0 /* SearchTab.kt */,
+			);
+			path = tabs;
+			sourceTree = "<group>";
+		};
+		68B631EE108425C5B8F416BC /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2904208586E9F168502693EA /* ComposeOdysseyDemo.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		7EC47C58B4C906F3A88FD22F /* ru */ = {
+			isa = PBXGroup;
+			children = (
+				D39BE9C1DD025B782F671359 /* alexgladkov */,
+			);
+			path = ru;
+			sourceTree = "<group>";
+		};
+		85F7AB64AC2B47F1174B4096 /* kotlin */ = {
+			isa = PBXGroup;
+			children = (
+				7EC47C58B4C906F3A88FD22F /* ru */,
+			);
+			path = kotlin;
+			sourceTree = "<group>";
+		};
+		8ADDF5C227C9E25EAE7482B0 /* root */ = {
+			isa = PBXGroup;
+			children = (
+				D2A57E173B93665F55C65AC4 /* helpers */,
+				47861C988A8C88451BD2C416 /* navigation */,
+				0E6C0B2AE25B768E1580BCDA /* screens */,
+				54E02F20AD6D474398C04EDC /* tabs */,
+			);
+			path = root;
+			sourceTree = "<group>";
+		};
+		9F6199DEA737684ABD469707 /* common */ = {
+			isa = PBXGroup;
+			children = (
+				8ADDF5C227C9E25EAE7482B0 /* root */,
+			);
+			path = common;
+			sourceTree = "<group>";
+		};
+		B62FBB13A7FD542018D3E432 /* commonMain */ = {
+			isa = PBXGroup;
+			children = (
+				85F7AB64AC2B47F1174B4096 /* kotlin */,
+			);
+			path = commonMain;
+			sourceTree = "<group>";
+		};
+		CC217623973C7C36B7176EFD /* src */ = {
+			isa = PBXGroup;
+			children = (
+				342444EF98FA200B503205DA /* androidMain */,
+				B62FBB13A7FD542018D3E432 /* commonMain */,
+				42C5ED177A2C6CD9A061B3E8 /* uikitMain */,
+			);
+			name = src;
+			path = "../common/common-root/src";
+			sourceTree = "<group>";
+		};
+		D2A57E173B93665F55C65AC4 /* helpers */ = {
+			isa = PBXGroup;
+			children = (
+				4C33D1FA90875659B912A575 /* ModelsGenerator.kt */,
+			);
+			path = helpers;
+			sourceTree = "<group>";
+		};
+		D39BE9C1DD025B782F671359 /* alexgladkov */ = {
+			isa = PBXGroup;
+			children = (
+				9F6199DEA737684ABD469707 /* common */,
+			);
+			path = alexgladkov;
+			sourceTree = "<group>";
+		};
+		E4AEDF90B78C6E4C20E20FB4 = {
+			isa = PBXGroup;
+			children = (
+				CC217623973C7C36B7176EFD /* src */,
+				68B631EE108425C5B8F416BC /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		EF8E067229E56500E40B6761 /* kotlin */ = {
+			isa = PBXGroup;
+			children = (
+				3388BA8B8909D828C1E909F1 /* main.uikit.kt */,
+			);
+			path = kotlin;
+			sourceTree = "<group>";
+		};
+		"TEMP_18BF80CB-D214-4AC5-9C19-4F2C1FB03E9F" /* ru */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ru;
+			sourceTree = "<group>";
+		};
+		"TEMP_AB1F82DA-9F7D-4FA6-9B49-F0D1A8AA45F4" /* alexgladkov */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = alexgladkov;
+			sourceTree = "<group>";
+		};
+		"TEMP_B163D685-658B-430F-9295-35D2008AC7AD" /* common */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = common;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		6903378B7A5EAA1D68A976C5 /* ComposeOdysseyDemo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8D5A3F894D121E9D6D1F7DEF /* Build configuration list for PBXNativeTarget "ComposeOdysseyDemo" */;
+			buildPhases = (
+				1F09F9B1DC65EC8EC0A0B359 /* GradleCompile */,
+				0A359C3E252537041DC1DB2D /* Sources */,
+				CF7DBBC05F9CC8AE7E7B730C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ComposeOdysseyDemo;
+			productName = ComposeOdysseyDemo;
+			productReference = 2904208586E9F168502693EA /* ComposeOdysseyDemo.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F0DD7A362E77042E2593B0EC /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1200;
+				TargetAttributes = {
+					6903378B7A5EAA1D68A976C5 = {
+						DevelopmentTeam = 8KLS9QG6WN;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 676FF833F81870A5F892FC7B /* Build configuration list for PBXProject "ComposeOdysseyDemo" */;
+			compatibilityVersion = "Xcode 10.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = E4AEDF90B78C6E4C20E20FB4;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				6903378B7A5EAA1D68A976C5 /* ComposeOdysseyDemo */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		CF7DBBC05F9CC8AE7E7B730C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4CFB29BE87836DEBBD4EFA00 /* AndroidManifest.xml in Resources */,
+				2544BA6517CBA51BA5B8A7F6 /* BottomConfiguration.kt in Resources */,
+				820A0A6EC128221C27E00922 /* CartScreen.kt in Resources */,
+				0EF687057C0C6108D8C681E1 /* CartTab.kt in Resources */,
+				5A0CA42A7537E2D1F5EB1EC7 /* CheckoutScreen.kt in Resources */,
+				EAB24EF44EFEFE048AA89E46 /* CitiesScreen.kt in Resources */,
+				38450D83B7073E5972F3B554 /* DepartmentScreen.kt in Resources */,
+				606C4F87101ACCC0F3FD3575 /* FeedScreen.kt in Resources */,
+				441D4C240BFD8D130CF857E1 /* FeedTab.kt in Resources */,
+				BE526E6599B61CEF6DBE07C1 /* MainScreen.kt in Resources */,
+				93D7ACCBA0F205DBB16E2B86 /* ModelsGenerator.kt in Resources */,
+				868EBAA02E6E19E00422E527 /* NavigationGraph.kt in Resources */,
+				4ED6AC9AD077BD3A52C9AF69 /* OnboardingScreen.kt in Resources */,
+				D42DBE332C669EA317A601A7 /* ProductScreen.kt in Resources */,
+				DBE5835F3A132D5392B520A6 /* SearchScreen.kt in Resources */,
+				6238F8970D5752A026A9816B /* SearchTab.kt in Resources */,
+				10B9E7D0431626142731CEBB /* StartScreen.kt in Resources */,
+				85137624103F0639BEBED427 /* StoresScreen.kt in Resources */,
+				4173615E09F251839F4EB388 /* main.uikit.kt in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		1F09F9B1DC65EC8EC0A0B359 /* GradleCompile */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = GradleCompile;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cd \"$SRCROOT\" && cd .. && ./gradlew -i -p . packForXCode";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		0A359C3E252537041DC1DB2D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1BEE6B45120C01BC850F0FE5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_BITCODE = YES;
+				INFOPLIST_FILE = plists/Ios/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.alexgladkov.ComposeOdysseyDemo;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = arm64;
+			};
+			name = Release;
+		};
+		2B2673A4BA6C482D216789DD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_BITCODE = YES;
+				INFOPLIST_FILE = plists/Ios/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.alexgladkov.ComposeOdysseyDemo;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = arm64;
+			};
+			name = Debug;
+		};
+		63EAAFBF0A488965B6A02924 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 4;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 8KLS9QG6WN;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		9DC235F7CD883A556BF49C30 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 4;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 8KLS9QG6WN;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		676FF833F81870A5F892FC7B /* Build configuration list for PBXProject "ComposeOdysseyDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9DC235F7CD883A556BF49C30 /* Debug */,
+				63EAAFBF0A488965B6A02924 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		8D5A3F894D121E9D6D1F7DEF /* Build configuration list for PBXNativeTarget "ComposeOdysseyDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2B2673A4BA6C482D216789DD /* Debug */,
+				1BEE6B45120C01BC850F0FE5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = F0DD7A362E77042E2593B0EC /* Project object */;
+}

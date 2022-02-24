@@ -26,7 +26,7 @@ object Dependencies {
             const val serialization = "org.jetbrains.kotlinx:kotlinx-serialization-core:1.3.1"
             const val serializationPlugin = "org.jetbrains.kotlin:kotlin-serialization:1.5.31"
 
-            private const val coroutinesVersion = "1.5.1-native-mt"
+            const val coroutinesVersion = "1.5.1-native-mt"
             const val coroutines =
                 "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
             const val coroutinesCommon =

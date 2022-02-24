@@ -30,7 +30,6 @@ android {
 dependencies {
     implementation(project(":common:common-root"))
     implementation(project(":odyssey:odyssey-core"))
-    implementation(project(":common:common-compose"))
     implementation(compose.material)
 
     implementation(Dependencies.AndroidX.AppCompat.appCompat)

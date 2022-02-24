@@ -1,8 +1,5 @@
 include(
     ":common:common-root",
-
-    ":common:common-compose",
-
     ":odyssey:odyssey-core",
 
     ":android",
