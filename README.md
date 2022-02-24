@@ -15,7 +15,7 @@ First add dependency to gradle
 ```kotlin
 named("commonMain") {
     dependencies {
-        implementation("io.github.alexgladkov:odyssey-core:0.3.4")
+        implementation("io.github.alexgladkov:odyssey-core:0.3.4-native-ui")
     }
 }
 ```
