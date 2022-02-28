@@ -11,6 +11,7 @@ import ru.alexgladkov.odyssey.compose.local.LocalRootController
 import ru.alexgladkov.odyssey.core.NavConfiguration
 import ru.alexgladkov.odyssey.core.extensions.Closeable
 import ru.alexgladkov.odyssey.core.screen.ScreenBundle
+import ru.alexgladkov.odyssey.core.toScreenBundle
 
 @Composable
 fun ColumnScope.TabNavigator(currentTab: TabNavigationModel) {
@@ -32,8 +33,9 @@ fun ColumnScope.TabNavigator(currentTab: TabNavigationModel) {
                     AnimatedHost(
                         currentScreen = screenBundle,
                         animationType = navConfig.screen.animationType,
-                        removeScreen = navConfig.removeScreen,
-                        isForward = navConfig.screen.isForward
+                        screenToRemove = navConfig.screenToRemove?.toScreenBundle(),
+                        isForward = navConfig.screen.isForward,
+                        onScreenRemove = currentTab.rootController.onScreenRemove
                     ) {
                         val rootController = currentTab.rootController
                         rootController.screenMap[it.realKey]?.invoke(it.params)

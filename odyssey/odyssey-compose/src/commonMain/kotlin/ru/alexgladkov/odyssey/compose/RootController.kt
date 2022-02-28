@@ -23,6 +23,7 @@ import ru.alexgladkov.odyssey.core.backpress.OnBackPressedDispatcher
 import ru.alexgladkov.odyssey.core.extensions.CFlow
 import ru.alexgladkov.odyssey.core.extensions.wrap
 import ru.alexgladkov.odyssey.core.screen.Screen
+import ru.alexgladkov.odyssey.core.screen.ScreenBundle
 import ru.alexgladkov.odyssey.core.wrap
 import kotlin.collections.HashMap
 
@@ -53,6 +54,7 @@ open class RootController(private val rootControllerType: RootControllerType = R
 
     var parentRootController: RootController? = null
     var onApplicationFinish: (() -> Unit)? = null
+    var onScreenRemove: (ScreenBundle) -> Unit = { parentRootController?.onScreenRemove?.invoke(it) }
 
     var currentScreen: CFlow<NavConfiguration> = _currentScreen.wrap()
     val screenMap = _screenMap
@@ -224,7 +226,7 @@ open class RootController(private val rootControllerType: RootControllerType = R
 
                 it._currentScreen.value = current
                     .copy(animationType = last.animationType, isForward = false)
-                    .wrap(with = last.key)
+                    .wrap(with = last)
             }
         }
     }
