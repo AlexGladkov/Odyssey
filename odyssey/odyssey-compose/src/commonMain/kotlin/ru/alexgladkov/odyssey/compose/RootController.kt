@@ -3,6 +3,8 @@ package ru.alexgladkov.odyssey.compose
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import ru.alexgladkov.odyssey.compose.base.BottomBarNavigator
 import ru.alexgladkov.odyssey.compose.base.Navigator
 import ru.alexgladkov.odyssey.compose.controllers.ModalSheetController
@@ -20,8 +22,6 @@ import ru.alexgladkov.odyssey.core.animations.defaultPresentationAnimation
 import ru.alexgladkov.odyssey.core.animations.defaultPushAnimation
 import ru.alexgladkov.odyssey.core.backpress.BackPressedCallback
 import ru.alexgladkov.odyssey.core.backpress.OnBackPressedDispatcher
-import ru.alexgladkov.odyssey.core.extensions.CFlow
-import ru.alexgladkov.odyssey.core.extensions.wrap
 import ru.alexgladkov.odyssey.core.screen.Screen
 import ru.alexgladkov.odyssey.core.screen.ScreenBundle
 import ru.alexgladkov.odyssey.core.wrap
@@ -56,7 +56,7 @@ open class RootController(private val rootControllerType: RootControllerType = R
     var onApplicationFinish: (() -> Unit)? = null
     var onScreenRemove: (ScreenBundle) -> Unit = { parentRootController?.onScreenRemove?.invoke(it) }
 
-    var currentScreen: CFlow<NavConfiguration> = _currentScreen.wrap()
+    var currentScreen: StateFlow<NavConfiguration> = _currentScreen.asStateFlow()
     val screenMap = _screenMap
 
     /**

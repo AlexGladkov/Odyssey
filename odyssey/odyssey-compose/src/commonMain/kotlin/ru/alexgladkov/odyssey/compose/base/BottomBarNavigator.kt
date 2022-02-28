@@ -8,14 +8,11 @@ import androidx.compose.ui.Modifier
 import ru.alexgladkov.odyssey.compose.controllers.MultiStackRootController
 import ru.alexgladkov.odyssey.compose.controllers.TabNavigationModel
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
-import ru.alexgladkov.odyssey.core.NavConfiguration
-import ru.alexgladkov.odyssey.core.extensions.Closeable
-import ru.alexgladkov.odyssey.core.screen.ScreenBundle
 import ru.alexgladkov.odyssey.core.toScreenBundle
 
 @Composable
 fun ColumnScope.TabNavigator(currentTab: TabNavigationModel) {
-    var configuration: NavConfiguration? by remember { mutableStateOf(null) }
+    val configuration = currentTab.rootController.currentScreen.collectAsState()
     val saveableStateHolder = rememberSaveableStateHolder()
 
     saveableStateHolder.SaveableStateProvider(currentTab.tabInfo.tabItem.name) {
@@ -23,15 +20,9 @@ fun ColumnScope.TabNavigator(currentTab: TabNavigationModel) {
             CompositionLocalProvider(
                 LocalRootController provides currentTab.rootController
             ) {
-                configuration?.let { navConfig ->
-                    val screenBundle = ScreenBundle(
-                        key = navConfig.screen.key,
-                        realKey = navConfig.screen.realKey,
-                        params = navConfig.screen.params
-                    )
-
+                configuration.value.let { navConfig ->
                     AnimatedHost(
-                        currentScreen = screenBundle,
+                        currentScreen = navConfig.screen.toScreenBundle(),
                         animationType = navConfig.screen.animationType,
                         screenToRemove = navConfig.screenToRemove?.toScreenBundle(),
                         isForward = navConfig.screen.isForward,
@@ -47,28 +38,24 @@ fun ColumnScope.TabNavigator(currentTab: TabNavigationModel) {
 
     LaunchedEffect(currentTab) {
         currentTab.rootController.drawCurrentScreen()
-        currentTab.rootController.currentScreen.watch {
-            configuration = it
-        }
     }
 }
 
 @Composable
 fun BottomBarNavigator() {
     val rootController = LocalRootController.current as MultiStackRootController
-    var tabItem: TabNavigationModel by remember { mutableStateOf(rootController.tabItems.first()) }
-    var stackCloseable: Closeable? = null
+    val tabItem = rootController.stackChangeObserver.collectAsState()
     val bottomNavConfiguration = rootController.bottomNavModel.bottomNavConfiguration
 
     Column(modifier = Modifier.fillMaxSize()) {
-        TabNavigator(tabItem)
+        TabNavigator(tabItem.value)
 
         BottomNavigation(
             backgroundColor = bottomNavConfiguration.backgroundColor
         ) {
             rootController.tabItems.forEach { currentItem ->
                 val configuration = currentItem.tabInfo.tabItem.configuration
-                val isSelected = tabItem == currentItem
+                val isSelected = tabItem.value == currentItem
 
                 BottomNavigationItem(
                     selected = isSelected,
@@ -108,15 +95,4 @@ fun BottomBarNavigator() {
     }
 
     rootController.bottomNavModel.launchedEffect.invoke()
-    LaunchedEffect(Unit) {
-        stackCloseable = rootController.stackChangeObserver.watch {
-            tabItem = it
-        }
-    }
-
-    DisposableEffect(Unit) {
-        onDispose {
-            stackCloseable?.close()
-        }
-    }
 }

@@ -15,27 +15,14 @@ import ru.alexgladkov.odyssey.core.toScreenBundle
 @Composable
 fun Navigator(startParams: Any? = null) {
     val rootController = LocalRootController.current
-    var navConfiguration: NavConfiguration? by remember { mutableStateOf(null) }
-    var closeable: Closeable? = null
+    val navConfiguration = rootController.currentScreen.collectAsState()
 
-    navConfiguration?.let { config ->
-        val screen = config.screen
-
-        NavigatorAnimated(screen, config, rootController)
+    navConfiguration.value.let { config ->
+        NavigatorAnimated(config.screen, config, rootController)
     }
 
     LaunchedEffect(Unit) {
-        closeable = rootController.currentScreen.watch {
-            navConfiguration = it
-        }
-
         rootController.drawCurrentScreen(startParams)
-    }
-
-    DisposableEffect(Unit) {
-        onDispose {
-            closeable?.close()
-        }
     }
 }
 
