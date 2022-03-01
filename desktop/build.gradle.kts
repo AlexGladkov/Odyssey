@@ -13,18 +13,14 @@ kotlin {
     sourceSets {
         named("commonMain") {
             dependencies {
-                implementation(project(":common:common-compose"))
+                implementation(project(":common:common-root"))
                 implementation(project(":odyssey:odyssey-core"))
-                implementation(project(":odyssey:odyssey-compose"))
             }
         }
 
         named("jvmMain") {
             dependencies {
                 implementation(compose.desktop.currentOs)
-                implementation(project(":common:common-root"))
-                implementation(project(":common:common-compose"))
-
                 implementation(Dependencies.JetBrains.Ktor.okHttp)
             }
         }

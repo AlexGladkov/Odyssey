@@ -1,44 +1,74 @@
-### How to use it with desktop
+### How to use it with Desktop
 
-For working with Android I've created helper class DesktopScreenHost and now to setup Application you just need to use this
-in your `main()` function
+To setup Desktop you need to launch first screen from graph For that I've made default function which works in default
+JFrame
 
 ```kotlin
-fun main() = SwingUtilities.invokeLater {
-        val window = JFrame()
-        window.title = "Odyssey Demo"
-        window.setSize(800, 600)
+val window = JFrame()
+window.title = "Odyssey Demo"
+window.setSize(800, 600)
 
-        DesktopScreenHost(window)
-            .setupWithRootController(
-                startScreen = NavigationTree.Root.Splash.toString(),
-                block = buildComposeNavigationGraph()
-            )
-    }
+window.setupNavigation("start") {
+    generateGraph()
+}
 ```
 
-If you need to customize parameters of your ScreenHost you can create your own ScreenHost class like this
+```"start"``` using for start screen and ```generateGraph()``` is you navigation graph
+
+With compose you often need to set some `LocalProviders` for compose. For this you can provide providers
+inside `setupNavigation` function
 
 ```kotlin
-class DesktopScreenHost constructor(
-    private val window: JFrame,
-    // add your params here
-) : ComposableScreenHost() {
+val providers = arrayOf(
+    LocalPlatformConfiguration provides platformConfiguration,
+    LocalAnalyticsTracker provides analyticsTracker,
+    LocalPerformanceTracker provides FirebasePerformance(),
+    LocalCrashTracker provides FirebaseCrashTracker(),
+    LocalLifecycleOwner provides LifecycleOwner(owner = this),
+    LocalKamelConfig provides kamelConfig
+)
 
-    override fun prepareFowDrawing() {
-        val composePanel = ComposePanel()
+val window = JFrame()
+window.title = "Odyssey Demo"
+window.setSize(800, 600)
 
-        composePanel.setContent {
-            val destinationState = destinationObserver.wrap().observeAsState()
-            destinationState.value?.let {
-                launchScreen(it)
+window.setupNavigation(
+    startScreen = "start",
+    providers = providers
+) {
+    generateGraph()
+}
+```
+
+Sometimes you need to add compose wrapper for your navigator for this you can write your own function like this
+
+```kotlin
+fun JFrame.setupThemedNavigation(
+    startScreen: String,
+    vararg providers: ProvidedValue<*>,
+    navigationGraph: RootComposeBuilder.() -> Unit
+) {
+    val rootController = RootComposeBuilder().apply(navigationGraph).build()
+
+    defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
+    title = "OdysseyDemo"
+
+    val composePanel = ComposePanel()
+    composePanel.setContent {
+        CompositionLocalProvider(
+            *providers,
+            LocalRootController provides rootController
+        ) {
+            // Here you can provide your own composables
+            ModalSheetNavigator {
+                Navigator(startScreen)
             }
         }
-
-        window.defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-        window.contentPane.add(composePanel, BorderLayout.CENTER)
-        window.setLocationRelativeTo(null)
-        window.isVisible = true
     }
+
+    contentPane.add(composePanel, BorderLayout.CENTER)
+    setSize(800, 600)
+    setLocationRelativeTo(null)
+    isVisible = true
 }
 ```
