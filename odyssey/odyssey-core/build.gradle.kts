@@ -1,7 +1,7 @@
 import org.jetbrains.compose.compose
 
 plugins {
-    id("multiplatform-setup")
+    id("multiplatform-compose-setup")
     id("android-setup")
     id("maven-publish")
     id("convention.publication")
@@ -19,6 +19,7 @@ kotlin {
         named("commonMain") {
             dependencies {
                 implementation(Dependencies.JetBrains.Kotlin.coroutines)
+                implementation(Dependencies.Utils.UUID)
             }
         }
         named("commonTest")

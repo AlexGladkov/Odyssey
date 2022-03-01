@@ -1,7 +1,7 @@
 package ru.alexgladkov.`odyssey-demo`
 
-import ru.alexgladkov.common.compose.navigation.generateGraph
-import ru.alexgladkov.odyssey.compose.setupNavigation
+import ru.alexgladkov.common.root.navigation.generateGraph
+import ru.alexgladkov.odyssey.core.extensions.setupNavigation
 import javax.swing.JFrame
 import javax.swing.SwingUtilities
 
