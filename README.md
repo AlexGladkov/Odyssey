@@ -37,14 +37,19 @@ fun RootComposeBuilder.generateGraph() {}
 Then you can add screens inside this navigation graph and connect it to platforms. For now you can use 
 this types of navigation
 
-[1. Simple Screen](documentation/SIMPLE_SCREEN.md)
-[2. Flow](documentation/FLOW_SCREEn.md)
+[1. Simple Screen](documentation/SINGLE_SCREEN.md)
+
+[2. Flow](documentation/FLOW_SCREEN.md)
+
 [3. Bottom Navigation](documentation/BOTTOM_NAVIGATION.md)
+
 [4. Bottom Sheet Navigation](documentation/BOTTOM_SHEET.md)
 
 #### Navigation
 [1. How to connect Android](documentation/ANDROID.md)
+
 [2. How to connect Desktop](documentation/DESKTOP.md)
+
 [3. How to connect iOS](documentation/IOS.md)
 
 [4. Animations](documentation/ANIMATIONS.md)
