@@ -201,9 +201,12 @@ open class RootController(private val rootControllerType: RootControllerType = R
         this._modalSheetController = modalSheetController
     }
 
-    fun drawCurrentScreen(startParams: Any? = null) {
+    fun drawCurrentScreen(startScreen: String? = null, startParams: Any? = null) {
         if (_backstack.isEmpty()) {
-            launch(screen = _allowedDestinations.first().key, params = startParams)
+            launch(
+                screen = startScreen ?: _allowedDestinations.first().key,
+                params = startParams
+            )
         } else {
             val current = _backstack.last()
             _currentScreen.value = current.copy(animationType = AnimationType.None).wrap()
@@ -353,7 +356,7 @@ open class RootController(private val rootControllerType: RootControllerType = R
                 CompositionLocalProvider(
                     LocalRootController provides bundle.rootController
                 ) {
-                    Navigator(bundle.params)
+                    Navigator(startParams = bundle.params)
                 }
             }
 

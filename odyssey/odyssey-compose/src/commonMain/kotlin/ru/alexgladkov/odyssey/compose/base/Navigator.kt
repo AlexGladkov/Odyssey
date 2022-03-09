@@ -13,7 +13,7 @@ import ru.alexgladkov.odyssey.core.screen.ScreenInteractor
 import ru.alexgladkov.odyssey.core.toScreenBundle
 
 @Composable
-fun Navigator(startParams: Any? = null) {
+fun Navigator(startScreen: String? = null, startParams: Any? = null) {
     val rootController = LocalRootController.current
     val navConfiguration = rootController.currentScreen.collectAsState()
 
@@ -22,7 +22,7 @@ fun Navigator(startParams: Any? = null) {
     }
 
     LaunchedEffect(Unit) {
-        rootController.drawCurrentScreen(startParams)
+        rootController.drawCurrentScreen(startScreen = startScreen, startParams = startParams)
     }
 }
 
