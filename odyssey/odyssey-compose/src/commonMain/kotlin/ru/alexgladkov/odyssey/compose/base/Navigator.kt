@@ -18,7 +18,7 @@ import ru.alexgladkov.odyssey.core.screen.ScreenBundle
 import ru.alexgladkov.odyssey.core.screen.ScreenInteractor
 
 @Composable
-fun Navigator(startParams: Any? = null) {
+fun Navigator(startScreen: String? = null, startParams: Any? = null) {
     val rootController = LocalRootController.current
     var navConfiguration: NavConfiguration? by remember { mutableStateOf(null) }
     var closeable: Closeable? = null
@@ -34,7 +34,7 @@ fun Navigator(startParams: Any? = null) {
             navConfiguration = it
         }
 
-        rootController.drawCurrentScreen(startParams)
+        rootController.drawCurrentScreen(startScreen = startScreen, startParams = startParams)
     }
 
     DisposableEffect(Unit) {
