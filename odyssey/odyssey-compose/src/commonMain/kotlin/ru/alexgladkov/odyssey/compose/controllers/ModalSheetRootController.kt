@@ -8,14 +8,14 @@ import ru.alexgladkov.odyssey.core.extensions.wrap
 
 /**
  * Class helper to use with compose
- * @param maxHeight - maxHeight in Float
+ * @param maxHeight - maxHeight in Float. use null for wrap by content
  * @param cornerRadius - card corner radius in dp
  * @param alpha - scrimer alpha
  * @param closeOnBackdropClick - true if you want to close on backdrop click
  * @param content - composable content
  */
 data class ModalSheetBundle(
-    val maxHeight: Float,
+    val maxHeight: Float?,
     val closeOnBackdropClick: Boolean,
     val alpha: Float,
     val cornerRadius: Int,

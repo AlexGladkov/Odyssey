@@ -18,11 +18,11 @@ import ru.alexgladkov.odyssey.compose.local.LocalRootController
 fun DepartmentScreen(storeId: Int) {
     val modalSheetController = LocalRootController.current.findModalSheetController()
 
-    Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+    Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
         Text("Departments for $storeId store", fontSize = 20.sp, color = Color.Black)
 
-        LazyColumn(modifier = Modifier.fillMaxSize()) {
-            for (i in 0..20) {
+        LazyColumn(modifier = Modifier.fillMaxWidth()) {
+            for (i in 0..5) {
                 item {
                     Text(modifier = Modifier.clickable {
                         modalSheetController.removeTopScreen()
