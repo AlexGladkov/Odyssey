@@ -18,21 +18,18 @@ import ru.alexgladkov.odyssey.core.LaunchFlag
 @Composable
 fun StartScreen() {
     val rootController = LocalRootController.current
+    Box(modifier = Modifier.fillMaxSize()) {
+        Text(
+            modifier = Modifier.padding(16.dp),
+            text = "Welcome to our app",
+            fontSize = 24.sp, fontWeight = FontWeight.Medium
+        )
 
-//    Box(modifier = Modifier.fillMaxSize()) {
-//        Text(
-//            modifier = Modifier.padding(16.dp),
-//            text = "Welcome to our app",
-//            fontSize = 24.sp, fontWeight = FontWeight.Medium
-//        )
-//
-//        Button(modifier = Modifier.padding(16.dp).fillMaxWidth()
-//            .align(Alignment.BottomCenter), onClick = {
-//            rootController.push("cities")
-//        }) {
-//            Text("Choose your regions")
-//        }
-//    }
-
-    rootController.present("main", launchFlag = LaunchFlag.SingleNewTask)
+        Button(modifier = Modifier.padding(16.dp).fillMaxWidth()
+            .align(Alignment.BottomCenter), onClick = {
+            rootController.push("cities")
+        }) {
+            Text("Choose your regions")
+        }
+    }
 }

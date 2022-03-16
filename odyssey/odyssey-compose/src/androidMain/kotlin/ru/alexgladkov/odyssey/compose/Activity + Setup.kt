@@ -2,6 +2,7 @@ package ru.alexgladkov.odyssey.compose
 
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ProvidedValue
 import ru.alexgladkov.odyssey.compose.base.Navigator

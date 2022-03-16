@@ -54,5 +54,9 @@ fun RootComposeBuilder.onboardingFlow() {
         screen(name = "onboarding_start") {
             OnboardingScreen(count = it as Int)
         }
+
+        screen(name = "onboarding_second") {
+            OnboardingSecondScreen()
+        }
     }
 }

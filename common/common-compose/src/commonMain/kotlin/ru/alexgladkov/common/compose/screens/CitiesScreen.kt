@@ -34,9 +34,15 @@ fun CitiesScreen() {
             cities.forEach {
                 item {
                     Text(modifier = Modifier.clickable {
+//                        rootController.present(
+//                            screen = "onboarding",
+//                            startScreen = "onboarding_second",
+//                            params = 1,
+//                            launchFlag = LaunchFlag.SingleNewTask
+//                        )
+
                         rootController.present(
-                            screen = "onboarding", params = 1,
-                            launchFlag = LaunchFlag.SingleNewTask
+                            screen = "main",
                         )
                     }.fillMaxWidth().padding(16.dp), text = it.title)
                 }

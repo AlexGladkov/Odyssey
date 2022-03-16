@@ -33,7 +33,6 @@ typealias Render = @Composable () -> Unit
 sealed class ScreenType {
     object Simple : ScreenType()
     data class Flow(val flowBuilderModel: FlowBuilderModel) : ScreenType()
-    object BottomSheet : ScreenType()
     data class MultiStack(val multiStackBuilderModel: MultiStackBuilderModel, val bottomNavModel: BottomNavModel) :
         ScreenType()
 }
@@ -51,6 +50,7 @@ open class RootController(private val rootControllerType: RootControllerType = R
     private val _screenMap = mutableMapOf<String, RenderWithParams<Any?>>()
     private var _onBackPressedDispatcher: OnBackPressedDispatcher? = null
     private var _modalSheetController: ModalSheetController? = null
+    private var _deepLinkUri: String? = null
 
     var parentRootController: RootController? = null
     var onApplicationFinish: (() -> Unit)? = null
@@ -106,11 +106,12 @@ open class RootController(private val rootControllerType: RootControllerType = R
      * Helper function to draw screen with presentation (aka modal) style
      * @param screen - screen code, for example "splash". Must be included
      * in navigation graph or will cause an error
+     * @param startScreen - screen code to star
      * @param params - any bunch of params you need for the screen
      * @param launchFlag - flag if you want to change default behavior @see LaunchFlag
      */
-    fun present(screen: String, params: Any? = null, launchFlag: LaunchFlag? = null) {
-        launch(screen, params, defaultPresentationAnimation(), launchFlag)
+    fun present(screen: String, startScreen: String? = null, params: Any? = null, launchFlag: LaunchFlag? = null) {
+        launch(screen, startScreen, params, defaultPresentationAnimation(), launchFlag)
     }
 
     /**
@@ -121,7 +122,7 @@ open class RootController(private val rootControllerType: RootControllerType = R
      * @param launchFlag - flag if you want to change default behavior @see LaunchFlag
      */
     fun push(screen: String, params: Any? = null, launchFlag: LaunchFlag? = null) {
-        launch(screen, params, defaultPushAnimation(), launchFlag)
+        launch(screen, null, params, defaultPushAnimation(), launchFlag)
     }
 
     /**
@@ -130,27 +131,32 @@ open class RootController(private val rootControllerType: RootControllerType = R
      * flow or multistack flow
      * @param screen - screen code, for example "splash". Must be included
      * in navigation graph or will cause an error
+     * @param startScreen - start screen for flow/multistack
      * @param params - any bunch of params you need for the screen
      * @param animationType - preferred animationType
      * @param launchFlag - flag if you want to change default behavior @see LaunchFlag
      */
     fun launch(
-        screen: String, params: Any? = null,
+        screen: String,
+        startScreen: String? = null,
+        params: Any? = null,
         animationType: AnimationType = AnimationType.None,
         launchFlag: LaunchFlag? = null
     ) {
         val screenType = _allowedDestinations.find { it.key == screen }?.screenType
             ?: throw IllegalStateException("Can't find screen in destination. Did you provide this screen?")
 
+        println("DEBUG $screenType")
         when (screenType) {
             is ScreenType.Flow -> launchFlowScreen(
                 screen,
+                startScreen,
                 params,
                 animationType,
                 screenType.flowBuilderModel,
                 launchFlag
             )
-            is ScreenType.BottomSheet -> launchBottomSheetScreen(screen, launchFlag)
+
             is ScreenType.Simple -> launchSimpleScreen(screen, params, animationType, launchFlag)
             is ScreenType.MultiStack -> launchMultiStackScreen(
                 animationType,
@@ -189,6 +195,9 @@ open class RootController(private val rootControllerType: RootControllerType = R
         return currentRootController
     }
 
+    /**
+     * Returns controller to show modal sheets
+     */
     fun findModalSheetController(): ModalSheetController {
         return if (_modalSheetController == null) {
             findRootController()._modalSheetController!!
@@ -202,6 +211,11 @@ open class RootController(private val rootControllerType: RootControllerType = R
     }
 
     fun drawCurrentScreen(startScreen: String? = null, startParams: Any? = null) {
+        if (_deepLinkUri != null) {
+            obtainDeepLinkNavigation()
+            return
+        }
+
         if (_backstack.isEmpty()) {
             launch(
                 screen = startScreen ?: _allowedDestinations.first().key,
@@ -211,6 +225,23 @@ open class RootController(private val rootControllerType: RootControllerType = R
             val current = _backstack.last()
             _currentScreen.value = current.copy(animationType = AnimationType.None).wrap()
         }
+    }
+
+    /**
+     * @param path - uri path
+     *  Set information about deeplink
+     */
+    fun setDeepLinkUri(path: String?) {
+        this._deepLinkUri = path
+    }
+
+    /**
+     * Returns deeplink destination
+     */
+    fun extractDeepLinkDestination(): String? {
+        if (_deepLinkUri == null) return null
+
+        return "_deepLinkUri"
     }
 
     private fun removeTopScreen(rootController: RootController?) {
@@ -249,28 +280,11 @@ open class RootController(private val rootControllerType: RootControllerType = R
         _currentScreen.value = screen.wrap()
     }
 
-    private fun launchBottomSheetScreen(key: String, launchFlag: LaunchFlag?) {
-        when (launchFlag) {
-            LaunchFlag.SingleNewTask -> _backstack.clear()
-        }
-
-        val screen = Screen(
-            key = randomizeKey(key),
-            realKey = key,
-            animationType = defaultPresentationAnimation(),
-            params = BottomSheetBundle(
-                currentKey = _backstack.last().key,
-                key = key
-            )
-        )
-
-        _backstack.add(screen)
-        _currentScreen.value = screen.wrap()
-    }
-
     private fun launchFlowScreen(
         key: String,
-        params: Any?, animationType: AnimationType,
+        startScreen: String?,
+        params: Any?,
+        animationType: AnimationType,
         flowBuilderModel: FlowBuilderModel,
         launchFlag: LaunchFlag?
     ) {
@@ -281,23 +295,31 @@ open class RootController(private val rootControllerType: RootControllerType = R
         }
 
         val rootController = RootController(RootControllerType.Flow)
+
         rootController.debugName = key
         rootController.parentRootController = this
         rootController.onApplicationFinish = {
             rootController.parentRootController?.popBackStack()
         }
 
+        rootController.setDeepLinkUri(_deepLinkUri)
         rootController.updateScreenMap(flowBuilderModel.screenMap)
         rootController.setNavigationGraph(flowBuilderModel.allowedDestination)
         _childrenRootController.add(rootController)
 
+        println("DEBUG ${flowBuilderModel.allowedDestination}")
+        val targetScreen = flowBuilderModel.allowedDestination.firstOrNull { startScreen == it.key }?.key
+            ?: flowBuilderModel.allowedDestination.first().key
+        println("DEBUG $targetScreen")
         val screen = Screen(
             key = flowKey,
             realKey = flowKey,
             animationType = animationType,
             params = FlowBundle(
-                key = flowBuilderModel.allowedDestination.first().key,
-                params = params, rootController = rootController
+                key = targetScreen,
+                startScreen = targetScreen,
+                params = params,
+                rootController = rootController
             )
         )
 
@@ -323,6 +345,7 @@ open class RootController(private val rootControllerType: RootControllerType = R
             val rootController = RootController(RootControllerType.Tab)
             rootController.parentRootController = parentRootController
             rootController.debugName = it.tabItem.name
+            rootController.setDeepLinkUri(_deepLinkUri)
             rootController.updateScreenMap(it.screenMap)
             rootController.setNavigationGraph(it.allowedDestination)
             TabNavigationModel(tabInfo = it, rootController = rootController)
@@ -334,6 +357,7 @@ open class RootController(private val rootControllerType: RootControllerType = R
             tabItems = configurations
         )
 
+        rootController.setDeepLinkUri(_deepLinkUri)
         _childrenRootController.add(rootController)
 
         val screen = Screen(
@@ -356,7 +380,7 @@ open class RootController(private val rootControllerType: RootControllerType = R
                 CompositionLocalProvider(
                     LocalRootController provides bundle.rootController
                 ) {
-                    Navigator(startParams = bundle.params)
+                    Navigator(startScreen = bundle.startScreen, startParams = bundle.params)
                 }
             }
 
@@ -372,6 +396,39 @@ open class RootController(private val rootControllerType: RootControllerType = R
     }
 
     private fun randomizeKey(key: String): String = createUniqueKey(key)
+
+    private fun obtainDeepLinkNavigation() {
+        val screenUrl = _deepLinkUri?.split("/")?.get(1)
+        val targetScreen = _allowedDestinations.firstOrNull { it.key == screenUrl }
+
+        if (targetScreen == null) {
+            val deepScreens = _allowedDestinations.filter { it.screenType != ScreenType.Simple }
+            deepScreens.forEach {
+                if (deepLinkLaunch(destination = it, screenUrl = screenUrl)) return@forEach
+            }
+        } else {
+            launch(
+                screen = targetScreen.key,
+                params = null
+            )
+        }
+    }
+
+    private fun deepLinkLaunch(destination: AllowedDestination, screenUrl: String?): Boolean {
+        when (val screen = destination.screenType) {
+            is ScreenType.Flow -> {
+                val targetScreen = screen.flowBuilderModel.allowedDestination.firstOrNull { it.key == screenUrl }
+                if (targetScreen != null) {
+                    return true
+                }
+            }
+
+            is ScreenType.MultiStack -> screen.multiStackBuilderModel
+            else -> throw IllegalStateException("This ${destination.screenType} not supported")
+        }
+
+        return false
+    }
 
     companion object {
         private const val flowKey = "odyssey_flow_reserved_type"

@@ -57,3 +57,8 @@ fun OnboardingScreen(count: Int) {
         }
     }
 }
+
+@Composable
+fun OnboardingSecondScreen() {
+    Text("OnBoarding Second")
+}

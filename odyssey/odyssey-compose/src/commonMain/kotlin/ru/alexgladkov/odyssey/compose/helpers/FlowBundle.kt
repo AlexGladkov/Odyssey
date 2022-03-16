@@ -6,6 +6,7 @@ import ru.alexgladkov.odyssey.compose.controllers.MultiStackRootController
 data class FlowBundle(
     val key: String = "",
     val params: Any? = null,
+    val startScreen: String,
     val rootController: RootController
 )
 
