@@ -30,14 +30,19 @@ fun ModalSheetNavigator(
     BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
         content.invoke()
 
-        modalStack.forEach {
-            Screamer(it.alpha) { modalSheetController.removeTopScreen() }
+        modalStack.forEach { bundle ->
+            val modifier = Modifier.align(Alignment.BottomStart).fillMaxWidth()
+            if (bundle.maxHeight != null)
+                modifier.fillMaxHeight(bundle.maxHeight)
+            Screamer(bundle.alpha) { modalSheetController.removeTopScreen() }
             Card(
-                modifier = Modifier.align(Alignment.BottomStart).fillMaxWidth()
-                    .fillMaxHeight(it.maxHeight),
-                shape = RoundedCornerShape(topStart = it.cornerRadius.dp, topEnd = it.cornerRadius.dp)
+                modifier = modifier,
+                shape = RoundedCornerShape(
+                    topStart = bundle.cornerRadius.dp,
+                    topEnd = bundle.cornerRadius.dp
+                )
             ) {
-                it.content.invoke()
+                bundle.content.invoke()
             }
         }
     }

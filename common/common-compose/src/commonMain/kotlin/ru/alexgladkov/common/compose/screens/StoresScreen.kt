@@ -32,7 +32,7 @@ fun StoresScreen(username: String) {
             for (i in 0..20) {
                 item {
                     Text(modifier = Modifier.clickable {
-                        val modalSheetConfiguration = ModalSheetConfiguration(maxHeight = 0.3f, cornerRadius = 16)
+                        val modalSheetConfiguration = ModalSheetConfiguration(maxHeight = null, cornerRadius = 16)
                         modalSheetController.presentNew(modalSheetConfiguration) {
                             DepartmentScreen(storeId = i)
                         }
