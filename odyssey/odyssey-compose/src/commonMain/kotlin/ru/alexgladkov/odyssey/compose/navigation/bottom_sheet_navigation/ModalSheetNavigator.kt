@@ -31,9 +31,9 @@ fun ModalSheetNavigator(
         content.invoke()
 
         modalStack.forEach { bundle ->
-            val modifier = Modifier.align(Alignment.BottomStart).fillMaxWidth()
+            var modifier = Modifier.align(Alignment.BottomStart).fillMaxWidth()
             if (bundle.maxHeight != null)
-                modifier.fillMaxHeight(bundle.maxHeight)
+                modifier = modifier.fillMaxHeight(bundle.maxHeight)
             Screamer(bundle.alpha) { modalSheetController.removeTopScreen() }
             Card(
                 modifier = modifier,
