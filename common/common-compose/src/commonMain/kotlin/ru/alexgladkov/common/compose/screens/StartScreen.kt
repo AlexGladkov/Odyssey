@@ -12,6 +12,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ru.alexgladkov.odyssey.compose.extensions.deepLink
+import ru.alexgladkov.odyssey.compose.extensions.present
+import ru.alexgladkov.odyssey.compose.extensions.presentDeepLink
+import ru.alexgladkov.odyssey.compose.extensions.push
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
 import ru.alexgladkov.odyssey.core.LaunchFlag
 
@@ -27,7 +31,11 @@ fun StartScreen() {
 
         Button(modifier = Modifier.padding(16.dp).fillMaxWidth()
             .align(Alignment.BottomCenter), onClick = {
-            rootController.push("cities")
+//            // Go To Auth
+//            rootController.present("auth")
+
+//             Go To DeepLink
+            rootController.presentDeepLink("cities")
         }) {
             Text("Choose your regions")
         }

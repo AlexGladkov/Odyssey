@@ -11,6 +11,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ru.alexgladkov.odyssey.compose.extensions.present
+import ru.alexgladkov.odyssey.compose.extensions.push
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
 import ru.alexgladkov.odyssey.core.LaunchFlag
 
@@ -29,8 +31,7 @@ fun OnboardingScreen(count: Int) {
 
             Button(modifier = Modifier.padding(16.dp).fillMaxWidth()
                 .align(Alignment.BottomCenter), onClick = {
-                rootController.findRootController()
-                    .present(screen = "main", launchFlag = LaunchFlag.SingleNewTask)
+                rootController.findRootController().present(screen = "main", launchFlag = LaunchFlag.SingleNewTask)
             }) {
                 Text("Open App")
             }

@@ -11,7 +11,7 @@ import ru.alexgladkov.odyssey.compose.local.LocalRootController
 import ru.alexgladkov.odyssey.core.toScreenBundle
 
 @Composable
-fun ColumnScope.TabNavigator(currentTab: TabNavigationModel) {
+fun ColumnScope.TabNavigator(startScreen: String?, currentTab: TabNavigationModel) {
     val configuration = currentTab.rootController.currentScreen.collectAsState()
     val saveableStateHolder = rememberSaveableStateHolder()
 
@@ -37,18 +37,18 @@ fun ColumnScope.TabNavigator(currentTab: TabNavigationModel) {
     }
 
     LaunchedEffect(currentTab) {
-        currentTab.rootController.drawCurrentScreen()
+        currentTab.rootController.drawCurrentScreen(startScreen = startScreen)
     }
 }
 
 @Composable
-fun BottomBarNavigator() {
+fun BottomBarNavigator(startScreen: String?) {
     val rootController = LocalRootController.current as MultiStackRootController
     val tabItem = rootController.stackChangeObserver.collectAsState()
     val bottomNavConfiguration = rootController.bottomNavModel.bottomNavConfiguration
 
     Column(modifier = Modifier.fillMaxSize()) {
-        TabNavigator(tabItem.value)
+        TabNavigator(startScreen, tabItem.value)
 
         BottomNavigation(
             backgroundColor = bottomNavConfiguration.backgroundColor

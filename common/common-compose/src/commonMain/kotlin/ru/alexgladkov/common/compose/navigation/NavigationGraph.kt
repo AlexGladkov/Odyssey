@@ -1,5 +1,6 @@
 package ru.alexgladkov.common.compose.navigation
 
+import ru.alexgladkov.common.compose.sample_lmwork.screens.AuthScreen
 import ru.alexgladkov.common.compose.screens.*
 import ru.alexgladkov.common.compose.tabs.BottomConfiguration
 import ru.alexgladkov.common.compose.tabs.CartTab
@@ -11,6 +12,10 @@ import ru.alexgladkov.odyssey.compose.navigation.RootComposeBuilder
 fun RootComposeBuilder.generateGraph() {
     screen(name = "start") {
         StartScreen()
+    }
+
+    screen(name = "auth") {
+        AuthScreen()
     }
 
     screen(name = "cities") {

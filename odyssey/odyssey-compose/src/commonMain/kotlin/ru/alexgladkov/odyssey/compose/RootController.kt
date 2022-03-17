@@ -103,35 +103,13 @@ open class RootController(private val rootControllerType: RootControllerType = R
     }
 
     /**
-     * Helper function to draw screen with presentation (aka modal) style
-     * @param screen - screen code, for example "splash". Must be included
-     * in navigation graph or will cause an error
-     * @param startScreen - screen code to star
-     * @param params - any bunch of params you need for the screen
-     * @param launchFlag - flag if you want to change default behavior @see LaunchFlag
-     */
-    fun present(screen: String, startScreen: String? = null, params: Any? = null, launchFlag: LaunchFlag? = null) {
-        launch(screen, startScreen, params, defaultPresentationAnimation(), launchFlag)
-    }
-
-    /**
-     * Helper function to draw screen with push style (inner navigation)
-     * @param screen - screen code, for example "splash". Must be included
-     * in navigation graph or will cause an error
-     * @param params - any bunch of params you need for the screen
-     * @param launchFlag - flag if you want to change default behavior @see LaunchFlag
-     */
-    fun push(screen: String, params: Any? = null, launchFlag: LaunchFlag? = null) {
-        launch(screen, null, params, defaultPushAnimation(), launchFlag)
-    }
-
-    /**
      * Send command to controller to launch new scenario
      * Under the hood library check navigation graph and create simple screen,
      * flow or multistack flow
      * @param screen - screen code, for example "splash". Must be included
      * in navigation graph or will cause an error
      * @param startScreen - start screen for flow/multistack
+     * @param startTabPosition - start tab position for multistack
      * @param params - any bunch of params you need for the screen
      * @param animationType - preferred animationType
      * @param launchFlag - flag if you want to change default behavior @see LaunchFlag
@@ -139,10 +117,17 @@ open class RootController(private val rootControllerType: RootControllerType = R
     fun launch(
         screen: String,
         startScreen: String? = null,
+        startTabPosition: Int = 0,
         params: Any? = null,
         animationType: AnimationType = AnimationType.None,
-        launchFlag: LaunchFlag? = null
+        launchFlag: LaunchFlag? = null,
+        deepLink: Boolean = false
     ) {
+        if (deepLink && _deepLinkUri?.isNotBlank() == true) {
+            proceedDeepLink(animationType = animationType, params = params, launchFlag = launchFlag)
+            return
+        }
+
         val screenType = _allowedDestinations.find { it.key == screen }?.screenType
             ?: throw IllegalStateException("Can't find screen in destination. Did you provide this screen?")
 
@@ -159,10 +144,12 @@ open class RootController(private val rootControllerType: RootControllerType = R
 
             is ScreenType.Simple -> launchSimpleScreen(screen, params, animationType, launchFlag)
             is ScreenType.MultiStack -> launchMultiStackScreen(
-                animationType,
-                screenType.multiStackBuilderModel,
-                screenType.bottomNavModel,
-                launchFlag
+                animationType = animationType,
+                multiStackBuilderModel = screenType.multiStackBuilderModel,
+                bottomNavModel = screenType.bottomNavModel,
+                launchFlag = launchFlag,
+                startScreen = startScreen,
+                startTabPosition = startTabPosition
             )
         }
     }
@@ -211,11 +198,6 @@ open class RootController(private val rootControllerType: RootControllerType = R
     }
 
     fun drawCurrentScreen(startScreen: String? = null, startParams: Any? = null) {
-        if (_deepLinkUri != null) {
-            obtainDeepLinkNavigation()
-            return
-        }
-
         if (_backstack.isEmpty()) {
             launch(
                 screen = startScreen ?: _allowedDestinations.first().key,
@@ -235,13 +217,31 @@ open class RootController(private val rootControllerType: RootControllerType = R
         this._deepLinkUri = path
     }
 
-    /**
-     * Returns deeplink destination
-     */
-    fun extractDeepLinkDestination(): String? {
-        if (_deepLinkUri == null) return null
+    private fun proceedDeepLink(animationType: AnimationType, params: Any?, launchFlag: LaunchFlag?) {
+        val searchKey = _deepLinkUri?.replace("/", "")
+        val startTabPosition = 0
 
-        return "_deepLinkUri"
+        searchKey?.let {
+            val destination = _allowedDestinations.firstOrNull { destination ->
+                when (val screen = destination.screenType) {
+                    ScreenType.Simple -> searchKey == destination.key
+                    is ScreenType.Flow -> screen.flowBuilderModel.allowedDestination.firstOrNull { it.key == searchKey } != null
+                    is ScreenType.MultiStack -> false
+                }
+            }
+
+            destination?.let {
+                launch(
+                    screen = destination.key,
+                    startScreen = searchKey,
+                    startTabPosition = startTabPosition,
+                    params = params,
+                    animationType = animationType,
+                    launchFlag = launchFlag,
+                    deepLink = false
+                )
+            } ?: throw IllegalStateException("Can't launch $_deepLinkUri to unknown screen")
+        } ?: throw IllegalStateException("Can't launch $_deepLinkUri to unknown screen")
     }
 
     private fun removeTopScreen(rootController: RootController?) {
@@ -331,6 +331,8 @@ open class RootController(private val rootControllerType: RootControllerType = R
         animationType: AnimationType,
         multiStackBuilderModel: MultiStackBuilderModel,
         bottomNavModel: BottomNavModel,
+        startScreen: String? = null,
+        startTabPosition: Int = 0,
         launchFlag: LaunchFlag?
     ) {
         if (rootControllerType == RootControllerType.Flow || rootControllerType == RootControllerType.MultiStack)
@@ -354,7 +356,8 @@ open class RootController(private val rootControllerType: RootControllerType = R
         val rootController = MultiStackRootController(
             rootControllerType = RootControllerType.MultiStack,
             bottomNavModel = bottomNavModel,
-            tabItems = configurations
+            tabItems = configurations,
+            startTabPosition = startTabPosition
         )
 
         rootController.setDeepLinkUri(_deepLinkUri)
@@ -365,7 +368,8 @@ open class RootController(private val rootControllerType: RootControllerType = R
             realKey = multiStackKey,
             animationType = animationType,
             params = MultiStackBundle(
-                rootController = rootController
+                rootController = rootController,
+                startScreen = startScreen
             )
         )
 
@@ -389,7 +393,9 @@ open class RootController(private val rootControllerType: RootControllerType = R
                 CompositionLocalProvider(
                     LocalRootController provides bundle.rootController
                 ) {
-                    BottomBarNavigator()
+                    BottomBarNavigator(
+                        startScreen = bundle.startScreen
+                    )
                 }
             }
         }

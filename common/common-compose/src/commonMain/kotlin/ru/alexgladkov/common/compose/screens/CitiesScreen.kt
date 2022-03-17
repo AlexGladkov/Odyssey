@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.runtime.getValue
 import ru.alexgladkov.common.compose.helpers.generateCities
+import ru.alexgladkov.odyssey.compose.extensions.present
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
 import ru.alexgladkov.odyssey.core.LaunchFlag
 
@@ -34,15 +35,10 @@ fun CitiesScreen() {
             cities.forEach {
                 item {
                     Text(modifier = Modifier.clickable {
-//                        rootController.present(
-//                            screen = "onboarding",
-//                            startScreen = "onboarding_second",
-//                            params = 1,
-//                            launchFlag = LaunchFlag.SingleNewTask
-//                        )
-
                         rootController.present(
                             screen = "main",
+                            startTabPosition = 1,
+                            startScreen = "product"
                         )
                     }.fillMaxWidth().padding(16.dp), text = it.title)
                 }

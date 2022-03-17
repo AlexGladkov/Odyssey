@@ -1,6 +1,7 @@
 package ru.alexgladkov.odyssey.compose.helpers
 
 import ru.alexgladkov.odyssey.compose.RootController
+import ru.alexgladkov.odyssey.compose.ScreenType
 import ru.alexgladkov.odyssey.compose.controllers.MultiStackRootController
 
 data class FlowBundle(
@@ -11,7 +12,14 @@ data class FlowBundle(
 )
 
 data class MultiStackBundle(
+    val startScreen: String?,
     val rootController: MultiStackRootController
+)
+
+data class DeepLinkBundle(
+    val screen: String,
+    val startScreen: String,
+    val type: ScreenType
 )
 
 data class BottomSheetBundle(
