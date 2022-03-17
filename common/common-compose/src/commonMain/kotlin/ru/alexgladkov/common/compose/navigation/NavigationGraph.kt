@@ -61,7 +61,7 @@ fun RootComposeBuilder.onboardingFlow() {
         }
 
         screen(name = "onboarding_second") {
-            OnboardingSecondScreen()
+            OnboardingSecondScreen(it as String)
         }
     }
 }

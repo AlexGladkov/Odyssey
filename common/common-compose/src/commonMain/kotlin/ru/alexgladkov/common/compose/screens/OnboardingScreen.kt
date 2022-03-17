@@ -60,6 +60,6 @@ fun OnboardingScreen(count: Int) {
 }
 
 @Composable
-fun OnboardingSecondScreen() {
-    Text("OnBoarding Second")
+fun OnboardingSecondScreen(param: String) {
+    Text("OnBoarding Second $param")
 }

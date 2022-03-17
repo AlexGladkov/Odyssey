@@ -123,8 +123,9 @@ open class RootController(private val rootControllerType: RootControllerType = R
         launchFlag: LaunchFlag? = null,
         deepLink: Boolean = false
     ) {
+        println("DEBUG launch $_deepLinkUri")
         if (deepLink && _deepLinkUri?.isNotBlank() == true) {
-            proceedDeepLink(animationType = animationType, params = params, launchFlag = launchFlag)
+            proceedDeepLink(animationType = animationType, launchFlag = launchFlag)
             return
         }
 
@@ -217,19 +218,40 @@ open class RootController(private val rootControllerType: RootControllerType = R
         this._deepLinkUri = path
     }
 
-    private fun proceedDeepLink(animationType: AnimationType, params: Any?, launchFlag: LaunchFlag?) {
-        val searchKey = _deepLinkUri?.replace("/", "")
-        val startTabPosition = 0
+    private fun proceedDeepLink(animationType: AnimationType, launchFlag: LaunchFlag?) {
+        val splitDeepLink = _deepLinkUri?.split("/")
+        if ((splitDeepLink?.size ?: 0) < 2) {
+            throw IllegalStateException("Deeplink $_deepLinkUri has illegal format")
+        }
 
+        val searchKey = splitDeepLink?.get(1)
+        val params = if ((splitDeepLink?.size ?: 0) > 2) splitDeepLink?.get(2) else null
+        var startTabPosition = 0
+
+        println("DEBUG search key $searchKey")
         searchKey?.let {
             val destination = _allowedDestinations.firstOrNull { destination ->
                 when (val screen = destination.screenType) {
                     ScreenType.Simple -> searchKey == destination.key
                     is ScreenType.Flow -> screen.flowBuilderModel.allowedDestination.firstOrNull { it.key == searchKey } != null
-                    is ScreenType.MultiStack -> false
+                    is ScreenType.MultiStack -> {
+                        var containsScreen = false
+                        run loop@ {
+                            screen.multiStackBuilderModel.tabItems.forEachIndexed { index, info ->
+                                containsScreen = info.allowedDestination.firstOrNull { it.key == searchKey } != null
+                                if (containsScreen) {
+                                    startTabPosition = index
+                                    return@loop
+                                }
+                            }
+                        }
+
+                        containsScreen
+                    }
                 }
             }
 
+            println("DEBUG destination $destination, $searchKey")
             destination?.let {
                 launch(
                     screen = destination.key,
