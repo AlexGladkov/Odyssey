@@ -14,6 +14,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.unit.dp
 import ru.alexgladkov.common.compose.helpers.DataModel
 import ru.alexgladkov.common.compose.helpers.generateProducts
+import ru.alexgladkov.odyssey.compose.extensions.push
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
 
 @Composable

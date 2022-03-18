@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ru.alexgladkov.common.compose.sample_lmwork.NavigationTree
+import ru.alexgladkov.odyssey.compose.extensions.push
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
 
 @Composable
@@ -21,7 +22,7 @@ fun AuthScreen() {
         Button(
             modifier = Modifier.fillMaxWidth().align(Alignment.Center).padding(16.dp),
             onClick = {
-                rootController.push(NavigationTree.Auth.LoginWeb.name)
+
             }) {
             Text("Login")
         }

@@ -12,27 +12,32 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ru.alexgladkov.odyssey.compose.extensions.deepLink
+import ru.alexgladkov.odyssey.compose.extensions.present
+import ru.alexgladkov.odyssey.compose.extensions.presentDeepLink
+import ru.alexgladkov.odyssey.compose.extensions.push
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
 import ru.alexgladkov.odyssey.core.LaunchFlag
 
 @Composable
 fun StartScreen() {
     val rootController = LocalRootController.current
+    Box(modifier = Modifier.fillMaxSize()) {
+        Text(
+            modifier = Modifier.padding(16.dp),
+            text = "Welcome to our app",
+            fontSize = 24.sp, fontWeight = FontWeight.Medium
+        )
 
-//    Box(modifier = Modifier.fillMaxSize()) {
-//        Text(
-//            modifier = Modifier.padding(16.dp),
-//            text = "Welcome to our app",
-//            fontSize = 24.sp, fontWeight = FontWeight.Medium
-//        )
-//
-//        Button(modifier = Modifier.padding(16.dp).fillMaxWidth()
-//            .align(Alignment.BottomCenter), onClick = {
-//            rootController.push("cities")
-//        }) {
-//            Text("Choose your regions")
-//        }
-//    }
+        Button(modifier = Modifier.padding(16.dp).fillMaxWidth()
+            .align(Alignment.BottomCenter), onClick = {
+//            // Go To Auth
+//            rootController.present("auth")
 
-    rootController.present("main", launchFlag = LaunchFlag.SingleNewTask)
+//             Go To DeepLink
+            rootController.presentDeepLink("cities")
+        }) {
+            Text("Choose your regions")
+        }
+    }
 }

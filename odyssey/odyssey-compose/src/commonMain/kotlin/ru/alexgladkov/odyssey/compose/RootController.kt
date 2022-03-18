@@ -33,7 +33,6 @@ typealias Render = @Composable () -> Unit
 sealed class ScreenType {
     object Simple : ScreenType()
     data class Flow(val flowBuilderModel: FlowBuilderModel) : ScreenType()
-    object BottomSheet : ScreenType()
     data class MultiStack(val multiStackBuilderModel: MultiStackBuilderModel, val bottomNavModel: BottomNavModel) :
         ScreenType()
 }
@@ -51,6 +50,7 @@ open class RootController(private val rootControllerType: RootControllerType = R
     private val _screenMap = mutableMapOf<String, RenderWithParams<Any?>>()
     private var _onBackPressedDispatcher: OnBackPressedDispatcher? = null
     private var _modalSheetController: ModalSheetController? = null
+    private var _deepLinkUri: String? = null
 
     var parentRootController: RootController? = null
     var onApplicationFinish: (() -> Unit)? = null
@@ -117,60 +117,52 @@ open class RootController(private val rootControllerType: RootControllerType = R
     }
 
     /**
-     * Helper function to draw screen with presentation (aka modal) style
-     * @param screen - screen code, for example "splash". Must be included
-     * in navigation graph or will cause an error
-     * @param params - any bunch of params you need for the screen
-     * @param launchFlag - flag if you want to change default behavior @see LaunchFlag
-     */
-    fun present(screen: String, params: Any? = null, launchFlag: LaunchFlag? = null) {
-        launch(screen, params, defaultPresentationAnimation(), launchFlag)
-    }
-
-    /**
-     * Helper function to draw screen with push style (inner navigation)
-     * @param screen - screen code, for example "splash". Must be included
-     * in navigation graph or will cause an error
-     * @param params - any bunch of params you need for the screen
-     * @param launchFlag - flag if you want to change default behavior @see LaunchFlag
-     */
-    fun push(screen: String, params: Any? = null, launchFlag: LaunchFlag? = null) {
-        launch(screen, params, defaultPushAnimation(), launchFlag)
-    }
-
-    /**
      * Send command to controller to launch new scenario
      * Under the hood library check navigation graph and create simple screen,
      * flow or multistack flow
      * @param screen - screen code, for example "splash". Must be included
      * in navigation graph or will cause an error
+     * @param startScreen - start screen for flow/multistack
+     * @param startTabPosition - start tab position for multistack
      * @param params - any bunch of params you need for the screen
      * @param animationType - preferred animationType
      * @param launchFlag - flag if you want to change default behavior @see LaunchFlag
      */
     fun launch(
-        screen: String, params: Any? = null,
+        screen: String,
+        startScreen: String? = null,
+        startTabPosition: Int = 0,
+        params: Any? = null,
         animationType: AnimationType = AnimationType.None,
-        launchFlag: LaunchFlag? = null
+        launchFlag: LaunchFlag? = null,
+        deepLink: Boolean = false
     ) {
+        if (deepLink && _deepLinkUri?.isNotBlank() == true) {
+            proceedDeepLink(animationType = animationType, launchFlag = launchFlag)
+            return
+        }
+
         val screenType = _allowedDestinations.find { it.key == screen }?.screenType
             ?: throw IllegalStateException("Can't find screen in destination. Did you provide this screen?")
 
         when (screenType) {
             is ScreenType.Flow -> launchFlowScreen(
                 screen,
+                startScreen,
                 params,
                 animationType,
                 screenType.flowBuilderModel,
                 launchFlag
             )
-            is ScreenType.BottomSheet -> launchBottomSheetScreen(screen, launchFlag)
+
             is ScreenType.Simple -> launchSimpleScreen(screen, params, animationType, launchFlag)
             is ScreenType.MultiStack -> launchMultiStackScreen(
-                animationType,
-                screenType.multiStackBuilderModel,
-                screenType.bottomNavModel,
-                launchFlag
+                animationType = animationType,
+                multiStackBuilderModel = screenType.multiStackBuilderModel,
+                bottomNavModel = screenType.bottomNavModel,
+                launchFlag = launchFlag,
+                startScreen = startScreen,
+                startTabPosition = startTabPosition
             )
         }
     }
@@ -203,6 +195,9 @@ open class RootController(private val rootControllerType: RootControllerType = R
         return currentRootController
     }
 
+    /**
+     * Returns controller to show modal sheets
+     */
     fun findModalSheetController(): ModalSheetController {
         return if (_modalSheetController == null) {
             findRootController()._modalSheetController!!
@@ -225,6 +220,60 @@ open class RootController(private val rootControllerType: RootControllerType = R
             val current = _backstack.last()
             _currentScreen.value = current.copy(animationType = AnimationType.None).wrap()
         }
+    }
+
+    /**
+     * @param path - uri path
+     *  Set information about deeplink
+     */
+    fun setDeepLinkUri(path: String?) {
+        this._deepLinkUri = path
+    }
+
+    private fun proceedDeepLink(animationType: AnimationType, launchFlag: LaunchFlag?) {
+        val splitDeepLink = _deepLinkUri?.split("/") ?: emptyList()
+        if (splitDeepLink.size < 2) {
+            throw IllegalStateException("Deeplink $_deepLinkUri has illegal format")
+        }
+
+        val searchKey = splitDeepLink[1]
+        val params = if (splitDeepLink.size > 2) splitDeepLink[2] else null
+        var startTabPosition = 0
+
+        val destination = _allowedDestinations.firstOrNull { destination ->
+            when (val screen = destination.screenType) {
+                ScreenType.Simple -> searchKey == destination.key
+                is ScreenType.Flow -> screen.flowBuilderModel.allowedDestination.firstOrNull { it.key == searchKey } != null
+                is ScreenType.MultiStack -> {
+                    var containsScreen = false
+                    run loop@{
+                        screen.multiStackBuilderModel.tabItems.forEachIndexed { index, info ->
+                            containsScreen = info.allowedDestination.firstOrNull { it.key == searchKey } != null
+                            if (containsScreen) {
+                                startTabPosition = index
+                                return@loop
+                            }
+                        }
+                    }
+
+                    containsScreen
+                }
+            }
+        }
+
+        destination?.let {
+            launch(
+                screen = destination.key,
+                startScreen = searchKey,
+                startTabPosition = startTabPosition,
+                params = params,
+                animationType = animationType,
+                launchFlag = launchFlag,
+                deepLink = false
+            )
+        } ?: throw IllegalStateException("Can't launch $_deepLinkUri to unknown screen")
+
+        _deepLinkUri = null
     }
 
     private fun removeTopScreen(rootController: RootController?) {
@@ -263,28 +312,11 @@ open class RootController(private val rootControllerType: RootControllerType = R
         _currentScreen.value = screen.wrap()
     }
 
-    private fun launchBottomSheetScreen(key: String, launchFlag: LaunchFlag?) {
-        when (launchFlag) {
-            LaunchFlag.SingleNewTask -> _backstack.clear()
-        }
-
-        val screen = Screen(
-            key = randomizeKey(key),
-            realKey = key,
-            animationType = defaultPresentationAnimation(),
-            params = BottomSheetBundle(
-                currentKey = _backstack.last().key,
-                key = key
-            )
-        )
-
-        _backstack.add(screen)
-        _currentScreen.value = screen.wrap()
-    }
-
     private fun launchFlowScreen(
         key: String,
-        params: Any?, animationType: AnimationType,
+        startScreen: String?,
+        params: Any?,
+        animationType: AnimationType,
         flowBuilderModel: FlowBuilderModel,
         launchFlag: LaunchFlag?
     ) {
@@ -295,23 +327,30 @@ open class RootController(private val rootControllerType: RootControllerType = R
         }
 
         val rootController = RootController(RootControllerType.Flow)
+
         rootController.debugName = key
         rootController.parentRootController = this
         rootController.onApplicationFinish = {
             rootController.parentRootController?.popBackStack()
         }
 
+        rootController.setDeepLinkUri(_deepLinkUri)
         rootController.updateScreenMap(flowBuilderModel.screenMap)
         rootController.setNavigationGraph(flowBuilderModel.allowedDestination)
         _childrenRootController.add(rootController)
+
+        val targetScreen = flowBuilderModel.allowedDestination.firstOrNull { startScreen == it.key }?.key
+            ?: flowBuilderModel.allowedDestination.first().key
 
         val screen = Screen(
             key = flowKey,
             realKey = flowKey,
             animationType = animationType,
             params = FlowBundle(
-                key = flowBuilderModel.allowedDestination.first().key,
-                params = params, rootController = rootController
+                key = targetScreen,
+                startScreen = targetScreen,
+                params = params,
+                rootController = rootController
             )
         )
 
@@ -323,6 +362,8 @@ open class RootController(private val rootControllerType: RootControllerType = R
         animationType: AnimationType,
         multiStackBuilderModel: MultiStackBuilderModel,
         bottomNavModel: BottomNavModel,
+        startScreen: String? = null,
+        startTabPosition: Int = 0,
         launchFlag: LaunchFlag?
     ) {
         if (rootControllerType == RootControllerType.Flow || rootControllerType == RootControllerType.MultiStack)
@@ -337,6 +378,7 @@ open class RootController(private val rootControllerType: RootControllerType = R
             val rootController = RootController(RootControllerType.Tab)
             rootController.parentRootController = parentRootController
             rootController.debugName = it.tabItem.name
+            rootController.setDeepLinkUri(_deepLinkUri)
             rootController.updateScreenMap(it.screenMap)
             rootController.setNavigationGraph(it.allowedDestination)
             TabNavigationModel(tabInfo = it, rootController = rootController)
@@ -345,9 +387,11 @@ open class RootController(private val rootControllerType: RootControllerType = R
         val rootController = MultiStackRootController(
             rootControllerType = RootControllerType.MultiStack,
             bottomNavModel = bottomNavModel,
-            tabItems = configurations
+            tabItems = configurations,
+            startTabPosition = startTabPosition
         )
 
+        rootController.setDeepLinkUri(_deepLinkUri)
         _childrenRootController.add(rootController)
 
         val screen = Screen(
@@ -355,7 +399,8 @@ open class RootController(private val rootControllerType: RootControllerType = R
             realKey = multiStackKey,
             animationType = animationType,
             params = MultiStackBundle(
-                rootController = rootController
+                rootController = rootController,
+                startScreen = startScreen
             )
         )
 
@@ -370,7 +415,7 @@ open class RootController(private val rootControllerType: RootControllerType = R
                 CompositionLocalProvider(
                     LocalRootController provides bundle.rootController
                 ) {
-                    Navigator(startParams = bundle.params)
+                    Navigator(startScreen = bundle.startScreen, startParams = bundle.params)
                 }
             }
 
@@ -379,7 +424,9 @@ open class RootController(private val rootControllerType: RootControllerType = R
                 CompositionLocalProvider(
                     LocalRootController provides bundle.rootController
                 ) {
-                    BottomBarNavigator()
+                    BottomBarNavigator(
+                        startScreen = bundle.startScreen
+                    )
                 }
             }
         }

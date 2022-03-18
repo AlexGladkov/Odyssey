@@ -38,21 +38,6 @@ fun RootComposeBuilder.flow(
 }
 
 /**
- * Adds modal bottom sheet to navigation graph
- * @param name - name in graph
- * @param content - composable content
- */
-fun RootComposeBuilder.modalSheet(
-    name: String,
-    content: RenderWithParams<Any?>
-) {
-    addModalBottomSheet(
-        key = name,
-        screenMap = hashMapOf(name to content)
-    )
-}
-
-/**
  * Adds screen to flow builder
  * @param name - name in navigation graph
  * @param content - composable content

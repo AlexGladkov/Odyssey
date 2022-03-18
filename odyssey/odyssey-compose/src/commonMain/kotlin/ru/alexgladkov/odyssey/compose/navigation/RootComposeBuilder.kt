@@ -24,14 +24,6 @@ class RootComposeBuilder {
         _screenMap.putAll(screenMap)
     }
 
-    fun addModalBottomSheet(
-        key: String,
-        screenMap: Map<String, RenderWithParams<Any?>>
-    ) {
-        _screens.add(AllowedDestination(key = key, screenType = ScreenType.BottomSheet))
-        _screenMap.putAll(screenMap)
-    }
-
     fun addFlow(
         key: String,
         flowBuilderModel: FlowBuilderModel
