@@ -34,10 +34,7 @@ sealed class ScreenType {
     object Simple : ScreenType()
     data class Flow(val flowBuilderModel: FlowBuilderModel) : ScreenType()
     object BottomSheet : ScreenType()
-    data class MultiStack(
-        val multiStackBuilderModel: MultiStackBuilderModel,
-        val bottomNavModel: BottomNavModel
-    ) :
+    data class MultiStack(val multiStackBuilderModel: MultiStackBuilderModel, val bottomNavModel: BottomNavModel) :
         ScreenType()
 }
 
@@ -49,8 +46,7 @@ data class AllowedDestination(
 open class RootController(private val rootControllerType: RootControllerType = RootControllerType.Root) {
     private val _allowedDestinations: MutableList<AllowedDestination> = mutableListOf()
     private val _backstack = mutableListOf<Screen>()
-    private val _currentScreen: MutableStateFlow<NavConfiguration> =
-        MutableStateFlow(Screen().wrap())
+    private val _currentScreen: MutableStateFlow<NavConfiguration> = MutableStateFlow(Screen().wrap())
     private var _childrenRootController: MutableList<RootController> = mutableListOf()
     private val _screenMap = mutableMapOf<String, RenderWithParams<Any?>>()
     private var _onBackPressedDispatcher: OnBackPressedDispatcher? = null
@@ -58,11 +54,9 @@ open class RootController(private val rootControllerType: RootControllerType = R
 
     var parentRootController: RootController? = null
     var onApplicationFinish: (() -> Unit)? = null
-    var onScreenRemove: (ScreenBundle) -> Unit =
-        { parentRootController?.onScreenRemove?.invoke(it) }
+    var onScreenRemove: (ScreenBundle) -> Unit = { parentRootController?.onScreenRemove?.invoke(it) }
 
     var currentScreen: StateFlow<NavConfiguration> = _currentScreen.asStateFlow()
-
 
     /**
      * Debug name need to debug :) if you like console debugging
@@ -254,21 +248,11 @@ open class RootController(private val rootControllerType: RootControllerType = R
         }
     }
 
-    private fun launchSimpleScreen(
-        key: String,
-        params: Any?,
-        animationType: AnimationType,
-        launchFlag: LaunchFlag?
-    ) {
+    private fun launchSimpleScreen(key: String, params: Any?, animationType: AnimationType, launchFlag: LaunchFlag?) {
         val screen = if (_backstack.isEmpty() && launchFlag == null) {
             Screen(key = randomizeKey(key), realKey = key, params = params)
         } else {
-            Screen(
-                key = randomizeKey(key),
-                realKey = key,
-                params = params,
-                animationType = animationType
-            )
+            Screen(key = randomizeKey(key), realKey = key, params = params, animationType = animationType)
         }
 
         when (launchFlag) {
