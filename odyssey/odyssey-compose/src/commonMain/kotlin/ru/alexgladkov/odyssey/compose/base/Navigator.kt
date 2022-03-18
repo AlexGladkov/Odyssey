@@ -8,7 +8,6 @@ import ru.alexgladkov.odyssey.compose.RootController
 import ru.alexgladkov.odyssey.compose.helpers.BottomSheetBundle
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
 import ru.alexgladkov.odyssey.core.NavConfiguration
-import ru.alexgladkov.odyssey.core.extensions.Closeable
 import ru.alexgladkov.odyssey.core.screen.ScreenInteractor
 import ru.alexgladkov.odyssey.core.toScreenBundle
 
@@ -40,7 +39,7 @@ private fun NavigatorAnimated(
         modifier = Modifier.fillMaxSize(),
         onScreenRemove = rootController.onScreenRemove
     ) { currentScreen ->
-        val render = rootController.screenMap[currentScreen.realKey]
+        val render = rootController.getScreenRender(currentScreen.realKey)
         render?.invoke(currentScreen.params)
             ?: throw IllegalStateException("Screen $currentScreen not found in screenMap")
     }
@@ -51,8 +50,8 @@ fun NavigatorModalSheet(
     bundle: BottomSheetBundle,
     rootController: RootController
 ) {
-    val presentedScreen = rootController.screenMap[bundle.currentKey]
-    val modalSheet = rootController.screenMap[bundle.key]
+    val presentedScreen = rootController.getScreenRender(bundle.currentKey)
+    val modalSheet = rootController.getScreenRender(bundle.key)
 
     Box(modifier = Modifier.fillMaxSize()) {
         presentedScreen?.invoke(null)

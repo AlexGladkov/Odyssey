@@ -57,7 +57,6 @@ open class RootController(private val rootControllerType: RootControllerType = R
     var onScreenRemove: (ScreenBundle) -> Unit = { parentRootController?.onScreenRemove?.invoke(it) }
 
     var currentScreen: StateFlow<NavConfiguration> = _currentScreen.asStateFlow()
-    val screenMap = _screenMap
 
     /**
      * Debug name need to debug :) if you like console debugging
@@ -68,6 +67,21 @@ open class RootController(private val rootControllerType: RootControllerType = R
 
     init {
         initServiceScreens()
+    }
+
+    /**
+     * Get screen render compose function
+     */
+    fun getScreenRender(screenName: String?): RenderWithParams<Any?>? {
+        return _screenMap[screenName]
+    }
+
+    /**
+     * Render screen with params
+     */
+    @Composable
+    fun RenderScreen(screenName: String?, params: Any?) {
+        _screenMap[screenName]?.invoke(params)
     }
 
     /**
