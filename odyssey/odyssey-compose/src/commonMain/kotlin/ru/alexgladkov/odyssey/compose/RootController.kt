@@ -123,7 +123,6 @@ open class RootController(private val rootControllerType: RootControllerType = R
         launchFlag: LaunchFlag? = null,
         deepLink: Boolean = false
     ) {
-        println("DEBUG launch $_deepLinkUri")
         if (deepLink && _deepLinkUri?.isNotBlank() == true) {
             proceedDeepLink(animationType = animationType, launchFlag = launchFlag)
             return
@@ -132,7 +131,6 @@ open class RootController(private val rootControllerType: RootControllerType = R
         val screenType = _allowedDestinations.find { it.key == screen }?.screenType
             ?: throw IllegalStateException("Can't find screen in destination. Did you provide this screen?")
 
-        println("DEBUG $screenType")
         when (screenType) {
             is ScreenType.Flow -> launchFlowScreen(
                 screen,
@@ -219,51 +217,49 @@ open class RootController(private val rootControllerType: RootControllerType = R
     }
 
     private fun proceedDeepLink(animationType: AnimationType, launchFlag: LaunchFlag?) {
-        val splitDeepLink = _deepLinkUri?.split("/")
-        if ((splitDeepLink?.size ?: 0) < 2) {
+        val splitDeepLink = _deepLinkUri?.split("/") ?: emptyList()
+        if (splitDeepLink.size < 2) {
             throw IllegalStateException("Deeplink $_deepLinkUri has illegal format")
         }
 
-        val searchKey = splitDeepLink?.get(1)
-        val params = if ((splitDeepLink?.size ?: 0) > 2) splitDeepLink?.get(2) else null
+        val searchKey = splitDeepLink[1]
+        val params = if (splitDeepLink.size > 2) splitDeepLink[2] else null
         var startTabPosition = 0
 
-        println("DEBUG search key $searchKey")
-        searchKey?.let {
-            val destination = _allowedDestinations.firstOrNull { destination ->
-                when (val screen = destination.screenType) {
-                    ScreenType.Simple -> searchKey == destination.key
-                    is ScreenType.Flow -> screen.flowBuilderModel.allowedDestination.firstOrNull { it.key == searchKey } != null
-                    is ScreenType.MultiStack -> {
-                        var containsScreen = false
-                        run loop@ {
-                            screen.multiStackBuilderModel.tabItems.forEachIndexed { index, info ->
-                                containsScreen = info.allowedDestination.firstOrNull { it.key == searchKey } != null
-                                if (containsScreen) {
-                                    startTabPosition = index
-                                    return@loop
-                                }
+        val destination = _allowedDestinations.firstOrNull { destination ->
+            when (val screen = destination.screenType) {
+                ScreenType.Simple -> searchKey == destination.key
+                is ScreenType.Flow -> screen.flowBuilderModel.allowedDestination.firstOrNull { it.key == searchKey } != null
+                is ScreenType.MultiStack -> {
+                    var containsScreen = false
+                    run loop@{
+                        screen.multiStackBuilderModel.tabItems.forEachIndexed { index, info ->
+                            containsScreen = info.allowedDestination.firstOrNull { it.key == searchKey } != null
+                            if (containsScreen) {
+                                startTabPosition = index
+                                return@loop
                             }
                         }
-
-                        containsScreen
                     }
+
+                    containsScreen
                 }
             }
+        }
 
-            println("DEBUG destination $destination, $searchKey")
-            destination?.let {
-                launch(
-                    screen = destination.key,
-                    startScreen = searchKey,
-                    startTabPosition = startTabPosition,
-                    params = params,
-                    animationType = animationType,
-                    launchFlag = launchFlag,
-                    deepLink = false
-                )
-            } ?: throw IllegalStateException("Can't launch $_deepLinkUri to unknown screen")
+        destination?.let {
+            launch(
+                screen = destination.key,
+                startScreen = searchKey,
+                startTabPosition = startTabPosition,
+                params = params,
+                animationType = animationType,
+                launchFlag = launchFlag,
+                deepLink = false
+            )
         } ?: throw IllegalStateException("Can't launch $_deepLinkUri to unknown screen")
+
+        _deepLinkUri = null
     }
 
     private fun removeTopScreen(rootController: RootController?) {
@@ -329,10 +325,9 @@ open class RootController(private val rootControllerType: RootControllerType = R
         rootController.setNavigationGraph(flowBuilderModel.allowedDestination)
         _childrenRootController.add(rootController)
 
-        println("DEBUG ${flowBuilderModel.allowedDestination}")
         val targetScreen = flowBuilderModel.allowedDestination.firstOrNull { startScreen == it.key }?.key
             ?: flowBuilderModel.allowedDestination.first().key
-        println("DEBUG $targetScreen")
+
         val screen = Screen(
             key = flowKey,
             realKey = flowKey,
@@ -424,39 +419,6 @@ open class RootController(private val rootControllerType: RootControllerType = R
     }
 
     private fun randomizeKey(key: String): String = createUniqueKey(key)
-
-    private fun obtainDeepLinkNavigation() {
-        val screenUrl = _deepLinkUri?.split("/")?.get(1)
-        val targetScreen = _allowedDestinations.firstOrNull { it.key == screenUrl }
-
-        if (targetScreen == null) {
-            val deepScreens = _allowedDestinations.filter { it.screenType != ScreenType.Simple }
-            deepScreens.forEach {
-                if (deepLinkLaunch(destination = it, screenUrl = screenUrl)) return@forEach
-            }
-        } else {
-            launch(
-                screen = targetScreen.key,
-                params = null
-            )
-        }
-    }
-
-    private fun deepLinkLaunch(destination: AllowedDestination, screenUrl: String?): Boolean {
-        when (val screen = destination.screenType) {
-            is ScreenType.Flow -> {
-                val targetScreen = screen.flowBuilderModel.allowedDestination.firstOrNull { it.key == screenUrl }
-                if (targetScreen != null) {
-                    return true
-                }
-            }
-
-            is ScreenType.MultiStack -> screen.multiStackBuilderModel
-            else -> throw IllegalStateException("This ${destination.screenType} not supported")
-        }
-
-        return false
-    }
 
     companion object {
         private const val flowKey = "odyssey_flow_reserved_type"

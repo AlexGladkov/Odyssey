@@ -18,7 +18,6 @@ fun Navigator(startScreen: String? = null, startParams: Any? = null) {
     val navConfiguration = rootController.currentScreen.collectAsState()
 
     navConfiguration.value.let { config ->
-        println("DEBUG ${config.screen.realKey}, rc -> ${rootController.debugName}")
         NavigatorAnimated(config.screen, config, rootController)
     }
 
