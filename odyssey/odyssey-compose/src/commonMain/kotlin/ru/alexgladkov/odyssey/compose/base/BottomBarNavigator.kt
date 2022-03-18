@@ -29,7 +29,7 @@ fun ColumnScope.TabNavigator(currentTab: TabNavigationModel) {
                         onScreenRemove = currentTab.rootController.onScreenRemove
                     ) {
                         val rootController = currentTab.rootController
-                        rootController.screenMap[it.realKey]?.invoke(it.params)
+                        rootController.RenderScreen(it.realKey, it.params)
                     }
                 }
             }
