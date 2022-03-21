@@ -6,11 +6,11 @@ import androidx.compose.ui.graphics.Color
 /**
  * Abstract class needed to configure bottom bar navigation
  */
-abstract class BottomNavModel {
+abstract class TabsNavModel<Cfg : TabsNavConfiguration> {
     /**
      * Contains base UI configuration for bottom bar navigation
      */
-    abstract val bottomNavConfiguration: BottomNavConfiguration
+    abstract val navConfiguration: Cfg
         @Composable get
 
     /**
@@ -30,4 +30,26 @@ data class BottomNavConfiguration(
     val backgroundColor: Color,
     val selectedColor: Color,
     val unselectedColor: Color
-)
+) : TabsNavConfiguration {
+    override val type = TabsNavType.Bottom
+}
+
+/**
+ * Base UI top bar configuration
+ * @param backgroundColor - bar background color
+ * @param selectedColor - tabs content color
+ */
+data class TopNavConfiguration(
+    val backgroundColor: Color,
+    val contentColor: Color
+) : TabsNavConfiguration {
+    override val type = TabsNavType.Top
+}
+
+enum class TabsNavType {
+    Bottom, Top
+}
+
+interface TabsNavConfiguration {
+    val type: TabsNavType
+}

@@ -8,6 +8,8 @@ import androidx.compose.ui.Modifier
 import ru.alexgladkov.odyssey.compose.controllers.MultiStackRootController
 import ru.alexgladkov.odyssey.compose.controllers.TabNavigationModel
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
+import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.BottomNavConfiguration
+import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.TopNavConfiguration
 import ru.alexgladkov.odyssey.core.toScreenBundle
 
 @Composable
@@ -49,7 +51,7 @@ fun TabNavigator(
 fun BottomBarNavigator(startScreen: String?) {
     val rootController = LocalRootController.current as MultiStackRootController
     val tabItem = rootController.stackChangeObserver.collectAsState()
-    val bottomNavConfiguration = rootController.bottomNavModel.bottomNavConfiguration
+    val bottomNavConfiguration = rootController.tabsNavModel.navConfiguration as BottomNavConfiguration
 
     Column(modifier = Modifier.fillMaxSize()) {
         TabNavigator(modifier = Modifier.weight(1f), startScreen, tabItem.value)
@@ -98,19 +100,19 @@ fun BottomBarNavigator(startScreen: String?) {
         }
     }
 
-    rootController.bottomNavModel.launchedEffect.invoke()
+    rootController.tabsNavModel.launchedEffect.invoke()
 }
 
 @Composable
-fun TabsNavigator(startScreen: String?) {
+fun TopBarNavigator(startScreen: String?) {
     val rootController = LocalRootController.current as MultiStackRootController
     val tabItem = rootController.stackChangeObserver.collectAsState()
-    val bottomNavConfiguration = rootController.bottomNavModel.bottomNavConfiguration
+    val bottomNavConfiguration = rootController.tabsNavModel.navConfiguration as TopNavConfiguration
 
     Column(modifier = Modifier.fillMaxSize()) {
         TabRow(
             backgroundColor = bottomNavConfiguration.backgroundColor,
-            contentColor = bottomNavConfiguration.selectedColor,
+            contentColor = bottomNavConfiguration.contentColor,
             selectedTabIndex = rootController.tabItems.indexOfFirst{it==tabItem.value}.coerceAtLeast(0)
         ) {
             rootController.tabItems.forEach { currentItem ->
@@ -130,5 +132,5 @@ fun TabsNavigator(startScreen: String?) {
         TabNavigator(modifier = Modifier.weight(1f),startScreen, tabItem.value)
     }
 
-    rootController.bottomNavModel.launchedEffect.invoke()
+    rootController.tabsNavModel.launchedEffect.invoke()
 }

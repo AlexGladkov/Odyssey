@@ -2,10 +2,7 @@ package ru.alexgladkov.common.compose.navigation
 
 import ru.alexgladkov.common.compose.sample_lmwork.screens.AuthScreen
 import ru.alexgladkov.common.compose.screens.*
-import ru.alexgladkov.common.compose.tabs.BottomConfiguration
-import ru.alexgladkov.common.compose.tabs.CartTab
-import ru.alexgladkov.common.compose.tabs.FeedTab
-import ru.alexgladkov.common.compose.tabs.SearchTab
+import ru.alexgladkov.common.compose.tabs.*
 import ru.alexgladkov.odyssey.compose.extensions.*
 import ru.alexgladkov.odyssey.compose.navigation.RootComposeBuilder
 
@@ -31,7 +28,7 @@ fun RootComposeBuilder.generateGraph() {
 }
 
 fun RootComposeBuilder.mainScreen() {
-    bottomNavigation(name = "main", bottomNavModel = BottomConfiguration()) {
+    bottomNavigation(name = "main", tabsNavModel = BottomConfiguration()) {
         tab(FeedTab()) {
             screen(name = "feed") {
                 FeedScreen()
