@@ -47,8 +47,9 @@ fun BottomBarNavigator(startScreen: String?) {
     val tabItem = rootController.stackChangeObserver.collectAsState()
     val bottomNavConfiguration = rootController.bottomNavModel.bottomNavConfiguration
 
+    var startScreenValue by remember { mutableStateOf(startScreen) }
     Column(modifier = Modifier.fillMaxSize()) {
-        TabNavigator(startScreen, tabItem.value)
+        TabNavigator(startScreenValue, tabItem.value)
 
         BottomNavigation(
             backgroundColor = bottomNavConfiguration.backgroundColor
@@ -88,6 +89,7 @@ fun BottomBarNavigator(startScreen: String?) {
                         )
                     },
                     onClick = {
+                        startScreenValue = null
                         rootController.switchTab(currentItem)
                     })
             }
