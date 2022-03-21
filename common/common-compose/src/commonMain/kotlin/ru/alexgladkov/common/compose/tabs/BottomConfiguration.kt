@@ -2,9 +2,8 @@ package ru.alexgladkov.common.compose.tabs
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.BottomNavConfiguration
-import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.TabsNavModel
-import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.TopNavConfiguration
+import ru.alexgladkov.odyssey.compose.navigation.RootComposeBuilder
+import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.*
 
 class BottomConfiguration : TabsNavModel<BottomNavConfiguration>() {
 
@@ -29,4 +28,28 @@ class TopConfiguration : TabsNavModel<TopNavConfiguration>() {
                 contentColor = Color.DarkGray
             )
         }
+}
+
+class CustomConfiguration(private val content: @Composable () -> Unit) :
+    TabsNavModel<CustomNavConfiguration>() {
+
+    override val navConfiguration: CustomNavConfiguration
+        @Composable
+        get() {
+            return CustomNavConfiguration(
+               content = content
+            )
+        }
+}
+
+fun RootComposeBuilder.customNavigation(
+    name: String,
+    tabsNavModel: TabsNavModel<CustomNavConfiguration>,
+    builder: MultiStackBuilder.() -> Unit
+) {
+    addMultiStack(
+        key = name,
+        tabsNavModel = tabsNavModel,
+        multiStackBuilderModel = MultiStackBuilder(name).apply(builder).build()
+    )
 }

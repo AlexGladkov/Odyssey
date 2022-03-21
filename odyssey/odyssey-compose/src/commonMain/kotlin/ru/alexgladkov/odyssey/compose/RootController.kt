@@ -14,10 +14,7 @@ import ru.alexgladkov.odyssey.compose.controllers.TabNavigationModel
 import ru.alexgladkov.odyssey.compose.extensions.createUniqueKey
 import ru.alexgladkov.odyssey.compose.helpers.*
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
-import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.TabsNavModel
-import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.MultiStackBuilderModel
-import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.TabsNavConfiguration
-import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.TabsNavType
+import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.*
 import ru.alexgladkov.odyssey.core.LaunchFlag
 import ru.alexgladkov.odyssey.core.NavConfiguration
 import ru.alexgladkov.odyssey.core.animations.AnimationType
@@ -452,6 +449,11 @@ open class RootController(private val rootControllerType: RootControllerType = R
                             TopBarNavigator(
                                 startScreen = bundle.startScreen
                             )
+                        }
+                        TabsNavType.Custom -> {
+                            val customNavConfiguration =
+                                bundle.rootController.tabsNavModel.navConfiguration as CustomNavConfiguration
+                            customNavConfiguration.content()
                         }
                     }
                 }

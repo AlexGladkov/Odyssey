@@ -24,7 +24,12 @@ fun RootComposeBuilder.generateGraph() {
     }
 
     onboardingFlow()
+
     mainScreen()
+
+    topNavScreen()
+
+    customNavScreen()
 }
 
 fun RootComposeBuilder.mainScreen() {
@@ -45,6 +50,56 @@ fun RootComposeBuilder.mainScreen() {
         }
         tab(CartTab()) {
             screen(name = "cart") {
+                CartScreen()
+            }
+        }
+    }
+}
+
+fun RootComposeBuilder.topNavScreen() {
+    topNavigation(name = "top", tabsNavModel = TopConfiguration()) {
+        tab(FeedTab()) {
+            screen(name = "top.feed") {
+                FeedScreen()
+            }
+        }
+        tab(SearchTab()) {
+            screen(name = "top.search") {
+                SearchScreen()
+            }
+
+            screen(name = "top.product") {
+                ProductScreen()
+            }
+        }
+        tab(CartTab()) {
+            screen(name = "top.cart") {
+                CartScreen()
+            }
+        }
+    }
+}
+
+fun RootComposeBuilder.customNavScreen() {
+    customNavigation(name = "custom", tabsNavModel = CustomConfiguration(
+        content = { CustomNavScreen() }
+    )) {
+        tab(FeedTab()) {
+            screen(name = "custom.feed") {
+                FeedScreen()
+            }
+        }
+        tab(SearchTab()) {
+            screen(name = "custom.search") {
+                SearchScreen()
+            }
+
+            screen(name = "custom.product") {
+                ProductScreen()
+            }
+        }
+        tab(CartTab()) {
+            screen(name = "custom.cart") {
                 CartScreen()
             }
         }

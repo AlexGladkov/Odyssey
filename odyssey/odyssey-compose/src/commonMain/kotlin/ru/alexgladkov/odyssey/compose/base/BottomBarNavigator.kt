@@ -51,7 +51,8 @@ fun TabNavigator(
 fun BottomBarNavigator(startScreen: String?) {
     val rootController = LocalRootController.current as MultiStackRootController
     val tabItem = rootController.stackChangeObserver.collectAsState()
-    val bottomNavConfiguration = rootController.tabsNavModel.navConfiguration as BottomNavConfiguration
+    val bottomNavConfiguration =
+        rootController.tabsNavModel.navConfiguration as BottomNavConfiguration
 
     Column(modifier = Modifier.fillMaxSize()) {
         TabNavigator(modifier = Modifier.weight(1f), startScreen, tabItem.value)
@@ -113,23 +114,26 @@ fun TopBarNavigator(startScreen: String?) {
         TabRow(
             backgroundColor = bottomNavConfiguration.backgroundColor,
             contentColor = bottomNavConfiguration.contentColor,
-            selectedTabIndex = rootController.tabItems.indexOfFirst{it==tabItem.value}.coerceAtLeast(0)
+            selectedTabIndex = rootController.tabItems.indexOfFirst { it == tabItem.value }
+                .coerceAtLeast(0)
         ) {
             rootController.tabItems.forEach { currentItem ->
                 val configuration = currentItem.tabInfo.tabItem.configuration
                 val isSelected = tabItem.value == currentItem
                 Tab(
                     selected = isSelected,
-                    onClick = {rootController.switchTab(currentItem) },
-                    text = { Text(
-                        text = configuration.title,
-                        style = configuration.titleStyle ?: LocalTextStyle.current
-                    ) }
+                    onClick = { rootController.switchTab(currentItem) },
+                    text = {
+                        Text(
+                            text = configuration.title,
+                            style = configuration.titleStyle ?: LocalTextStyle.current
+                        )
+                    }
                 )
             }
         }
 
-        TabNavigator(modifier = Modifier.weight(1f),startScreen, tabItem.value)
+        TabNavigator(modifier = Modifier.weight(1f), startScreen, tabItem.value)
     }
 
     rootController.tabsNavModel.launchedEffect.invoke()

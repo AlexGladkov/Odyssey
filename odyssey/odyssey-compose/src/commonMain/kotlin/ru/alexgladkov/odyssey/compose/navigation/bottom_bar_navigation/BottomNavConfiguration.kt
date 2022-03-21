@@ -46,8 +46,14 @@ data class TopNavConfiguration(
     override val type = TabsNavType.Top
 }
 
+data class CustomNavConfiguration(
+    val content: @Composable () -> Unit
+) : TabsNavConfiguration {
+    override val type = TabsNavType.Custom
+}
+
 enum class TabsNavType {
-    Bottom, Top
+    Bottom, Top, Custom
 }
 
 interface TabsNavConfiguration {
