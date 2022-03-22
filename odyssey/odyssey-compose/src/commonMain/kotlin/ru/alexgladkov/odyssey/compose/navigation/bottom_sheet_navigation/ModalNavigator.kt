@@ -16,6 +16,10 @@ import ru.alexgladkov.odyssey.compose.helpers.noRippleClickable
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
 import ru.alexgladkov.odyssey.core.extensions.Closeable
 
+@Deprecated("@see ModalNavigator", ReplaceWith("ModalNavigator(content)"))
+@Composable
+fun ModalSheetNavigator(content: @Composable () -> Unit) = ModalNavigator(content)
+
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ModalNavigator(

@@ -209,6 +209,9 @@ open class RootController(private val rootControllerType: RootControllerType = R
         }
     }
 
+    @Deprecated("@see findModalController", ReplaceWith("findModalController()"))
+    fun findModalSheetController() = findModalController()
+
     fun attachModalController(modalController: ModalController) {
         this._modalController = modalController
     }
