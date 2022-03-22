@@ -13,13 +13,15 @@ import ru.alexgladkov.odyssey.core.extensions.wrap
  * @param alpha - scrimer alpha
  * @param closeOnBackdropClick - true if you want to close on backdrop click
  * @param content - composable content
+ * @param customScreenRender - full custom render modal content
  */
 data class ModalSheetBundle(
     val maxHeight: Float?,
     val closeOnBackdropClick: Boolean,
     val alpha: Float,
     val cornerRadius: Int,
-    val content: Render
+    val content: Render,
+    val customScreenRender: Boolean
 )
 
 /**
@@ -27,11 +29,14 @@ data class ModalSheetBundle(
  */
 class ModalSheetController {
     private var _backStack = mutableListOf<ModalSheetBundle>()
-    private val _currentStack: MutableStateFlow<List<ModalSheetBundle>> = MutableStateFlow(emptyList())
+    private val _currentStack: MutableStateFlow<List<ModalSheetBundle>> =
+        MutableStateFlow(emptyList())
     val currentStack: CFlow<List<ModalSheetBundle>> = _currentStack.wrap()
 
-    fun presentNew(modalSheetConfiguration: ModalSheetConfiguration,
-                   content: Render) {
+    fun presentNew(
+        modalSheetConfiguration: ModalSheetConfiguration,
+        content: Render
+    ) {
         _backStack.add(modalSheetConfiguration.wrap(content))
         redrawStack()
     }
@@ -56,5 +61,6 @@ internal fun ModalSheetConfiguration.wrap(with: Render): ModalSheetBundle = Moda
     closeOnBackdropClick = closeOnBackdropClick,
     cornerRadius = cornerRadius,
     alpha = alpha,
-    content = with
+    content = with,
+    customScreenRender = customScreenRender
 )

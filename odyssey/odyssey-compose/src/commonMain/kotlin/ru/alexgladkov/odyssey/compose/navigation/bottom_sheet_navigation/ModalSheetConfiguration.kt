@@ -6,10 +6,12 @@ package ru.alexgladkov.odyssey.compose.navigation.bottom_sheet_navigation
  * @param cornerRadius - card corner radius in dp
  * @param alpha - scrimer alpha
  * @param closeOnBackdropClick - true if you want to close on backdrop click
+ * @param customScreenRender - full custom render modal content
  */
 data class ModalSheetConfiguration(
     val maxHeight: Float? = null,
     val cornerRadius: Int = 0,
     val alpha: Float = 0.2f,
     val closeOnBackdropClick: Boolean = true,
+    val customScreenRender: Boolean = false
 )

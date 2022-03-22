@@ -17,15 +17,25 @@ import ru.alexgladkov.odyssey.compose.navigation.bottom_sheet_navigation.ModalSh
 fun FeedScreen() {
     val modalSheetController = LocalRootController.current.findModalSheetController()
 
-    Box(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+    Box(
+        modifier = Modifier.fillMaxSize()
+            .padding(16.dp)
+    ) {
         Column {
             Text("Feed Screen", fontSize = 24.sp)
             Text(modifier = Modifier.clickable {
-                val modalSheetConfiguration = ModalSheetConfiguration(maxHeight = 0.7f, cornerRadius = 16)
+                val modalSheetConfiguration =
+                    ModalSheetConfiguration(maxHeight = 0.7f, cornerRadius = 16)
                 modalSheetController.presentNew(modalSheetConfiguration) {
                     StoresScreen(username = "Alex Gladkov")
                 }
             }.padding(top = 16.dp), text = "Change screen")
+            Text(modifier = Modifier.clickable {
+                val modalSheetConfiguration = ModalSheetConfiguration(customScreenRender = true)
+                modalSheetController.presentNew(modalSheetConfiguration) {
+                    CustomRenderModalScreen(username = "Artem")
+                }
+            }.padding(top = 16.dp), text = "Own modal render screen")
         }
     }
 }

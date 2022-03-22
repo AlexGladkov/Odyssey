@@ -31,18 +31,22 @@ fun ModalSheetNavigator(
         content.invoke()
 
         modalStack.forEach { bundle ->
-            var modifier = Modifier.align(Alignment.BottomStart).fillMaxWidth()
-            if (bundle.maxHeight != null)
-                modifier = modifier.fillMaxHeight(bundle.maxHeight)
-            Screamer(bundle.alpha) { modalSheetController.removeTopScreen() }
-            Card(
-                modifier = modifier,
-                shape = RoundedCornerShape(
-                    topStart = bundle.cornerRadius.dp,
-                    topEnd = bundle.cornerRadius.dp
-                )
-            ) {
+            if (bundle.customScreenRender) {
                 bundle.content.invoke()
+            } else {
+                var modifier = Modifier.align(Alignment.BottomStart).fillMaxWidth()
+                if (bundle.maxHeight != null)
+                    modifier = modifier.fillMaxHeight(bundle.maxHeight)
+                Screamer(bundle.alpha) { modalSheetController.removeTopScreen() }
+                Card(
+                    modifier = modifier,
+                    shape = RoundedCornerShape(
+                        topStart = bundle.cornerRadius.dp,
+                        topEnd = bundle.cornerRadius.dp
+                    )
+                ) {
+                    bundle.content.invoke()
+                }
             }
         }
     }
