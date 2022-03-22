@@ -79,7 +79,7 @@ fun CustomRenderModalScreen(username: String) {
 
 
 @Composable
-private fun Screamer(alpha: Float, onCloseClick: () -> Unit) {
+fun Screamer(alpha: Float, onCloseClick: () -> Unit) {
     Box(modifier = Modifier
         .noRippleClickable { onCloseClick.invoke() }
         .fillMaxSize().background(Color.Black.copy(alpha = alpha)))

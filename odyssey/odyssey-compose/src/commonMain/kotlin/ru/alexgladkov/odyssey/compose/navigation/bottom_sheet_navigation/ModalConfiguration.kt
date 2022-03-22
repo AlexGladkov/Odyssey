@@ -1,5 +1,7 @@
 package ru.alexgladkov.odyssey.compose.navigation.bottom_sheet_navigation
 
+import ru.alexgladkov.odyssey.compose.Render
+
 /**
  * Class configurator for modal sheet controller
  * @param maxHeight - maxHeight in Float. use null for wrap by content
@@ -11,7 +13,8 @@ data class ModalSheetConfiguration(
     val maxHeight: Float? = null,
     val cornerRadius: Int = 0,
     val alpha: Float = 0.2f,
-    val closeOnBackdropClick: Boolean = true
+    val closeOnBackdropClick: Boolean = true,
+    val backContent: Render? = null,
 ) : ModalConfiguration
 
 data class AlertConfiguration(

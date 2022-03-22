@@ -21,6 +21,7 @@ data class ModalSheetBundle(
     val closeOnBackdropClick: Boolean,
     val alpha: Float,
     val cornerRadius: Int,
+    val backContent: Render? = null,
     val content: Render
 ) : ModalBundle
 
@@ -92,6 +93,7 @@ internal fun ModalSheetConfiguration.wrap(with: Render): ModalBundle = ModalShee
     closeOnBackdropClick = closeOnBackdropClick,
     cornerRadius = cornerRadius,
     alpha = alpha,
+    backContent = backContent,
     content = with
 )
 

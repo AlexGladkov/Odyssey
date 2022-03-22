@@ -66,7 +66,11 @@ private fun BoxScope.BottomModalSheet(
     var modifier = Modifier.align(Alignment.BottomStart).fillMaxWidth()
     if (bundle.maxHeight != null)
         modifier = modifier.fillMaxHeight(bundle.maxHeight)
-    Screamer(bundle.alpha) { modalController.removeTopScreen() }
+    if (bundle.backContent != null) {
+        bundle.backContent.invoke()
+    } else {
+        Screamer(bundle.alpha) { modalController.removeTopScreen() }
+    }
     Card(
         modifier = modifier,
         shape = RoundedCornerShape(

@@ -1,13 +1,13 @@
 package ru.alexgladkov.common.compose.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
@@ -39,6 +39,32 @@ fun FeedScreen() {
                     CustomRenderModalScreen(username = "Artem")
                 }
             }.padding(top = 16.dp), text = "Custom modal render screen")
+
+            Text(modifier = Modifier.clickable {
+                val modalSheetConfiguration =
+                    ModalSheetConfiguration(maxHeight = 0.7f, cornerRadius = 16,
+                        backContent = {
+                            Box(modifier = Modifier.fillMaxSize()) {
+                                Screamer(alpha = 0.2f) {
+                                    modalController.removeTopScreen()
+                                }
+                                Box(
+                                    modifier = Modifier
+                                        .padding(10.dp)
+                                        .fillMaxWidth()
+                                        .height(50.dp)
+                                        .background(color = Color.White),
+                                    contentAlignment = Alignment.Center,
+                                ) {
+                                    Text(text = "Some message for modal")
+                                }
+                            }
+                        }
+                    )
+                modalController.presentNew(modalSheetConfiguration) {
+                    StoresScreen(username = "Artem")
+                }
+            }.padding(top = 16.dp), text = "Custom back content render screen")
 
             Text(modifier = Modifier.clickable {
                 val alertConfiguration =
