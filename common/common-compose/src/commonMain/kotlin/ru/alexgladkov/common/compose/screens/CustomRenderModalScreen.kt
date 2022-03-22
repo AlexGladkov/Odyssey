@@ -19,7 +19,7 @@ import ru.alexgladkov.odyssey.compose.navigation.bottom_sheet_navigation.ModalSh
 
 @Composable
 fun CustomRenderModalScreen(username: String) {
-    val modalSheetController = LocalRootController.current.findModalSheetController()
+    val modalSheetController = LocalRootController.current.findModalController()
 
     Box(modifier = Modifier.fillMaxSize()) {
         Screamer(0.2f) { modalSheetController.removeTopScreen() }

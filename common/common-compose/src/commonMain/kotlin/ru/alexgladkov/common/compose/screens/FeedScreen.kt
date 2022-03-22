@@ -11,11 +11,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
+import ru.alexgladkov.odyssey.compose.navigation.bottom_sheet_navigation.AlertConfiguration
+import ru.alexgladkov.odyssey.compose.navigation.bottom_sheet_navigation.CustomModalConfiguration
 import ru.alexgladkov.odyssey.compose.navigation.bottom_sheet_navigation.ModalSheetConfiguration
 
 @Composable
 fun FeedScreen() {
-    val modalSheetController = LocalRootController.current.findModalSheetController()
+    val modalController = LocalRootController.current.findModalController()
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -26,16 +28,25 @@ fun FeedScreen() {
             Text(modifier = Modifier.clickable {
                 val modalSheetConfiguration =
                     ModalSheetConfiguration(maxHeight = 0.7f, cornerRadius = 16)
-                modalSheetController.presentNew(modalSheetConfiguration) {
+                modalController.presentNew(modalSheetConfiguration) {
                     StoresScreen(username = "Alex Gladkov")
                 }
             }.padding(top = 16.dp), text = "Change screen")
+
             Text(modifier = Modifier.clickable {
-                val modalSheetConfiguration = ModalSheetConfiguration(customScreenRender = true)
-                modalSheetController.presentNew(modalSheetConfiguration) {
+                val modalSheetConfiguration = CustomModalConfiguration
+                modalController.presentNew(modalSheetConfiguration) {
                     CustomRenderModalScreen(username = "Artem")
                 }
-            }.padding(top = 16.dp), text = "Own modal render screen")
+            }.padding(top = 16.dp), text = "Custom modal render screen")
+
+            Text(modifier = Modifier.clickable {
+                val alertConfiguration =
+                    AlertConfiguration(maxHeight = 0.7f, maxWidth = 0.8f, cornerRadius = 4)
+                modalController.presentNew(alertConfiguration) {
+                    StoresScreen(username = "Artem")
+                }
+            }.padding(top = 16.dp), text = "AlertDialog render screen")
         }
     }
 }

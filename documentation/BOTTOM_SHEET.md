@@ -3,7 +3,7 @@ Root Controller class. To use bottom sheet just call this from RootController
 
 ```kotlin
 val rootController = LocalRootController.current
-val modalSheetController = rootController.findModalSheetController()
+val modalController = rootController.findModalController()
 ```
 
 Then you need to configure modal sheet controller

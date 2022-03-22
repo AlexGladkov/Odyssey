@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import ru.alexgladkov.odyssey.compose.base.BottomBarNavigator
 import ru.alexgladkov.odyssey.compose.base.Navigator
-import ru.alexgladkov.odyssey.compose.controllers.ModalSheetController
+import ru.alexgladkov.odyssey.compose.controllers.ModalController
 import ru.alexgladkov.odyssey.compose.controllers.MultiStackRootController
 import ru.alexgladkov.odyssey.compose.controllers.TabNavigationModel
 import ru.alexgladkov.odyssey.compose.extensions.createUniqueKey
@@ -18,8 +18,6 @@ import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.MultiStac
 import ru.alexgladkov.odyssey.core.LaunchFlag
 import ru.alexgladkov.odyssey.core.NavConfiguration
 import ru.alexgladkov.odyssey.core.animations.AnimationType
-import ru.alexgladkov.odyssey.core.animations.defaultPresentationAnimation
-import ru.alexgladkov.odyssey.core.animations.defaultPushAnimation
 import ru.alexgladkov.odyssey.core.backpress.BackPressedCallback
 import ru.alexgladkov.odyssey.core.backpress.OnBackPressedDispatcher
 import ru.alexgladkov.odyssey.core.screen.Screen
@@ -33,7 +31,10 @@ typealias Render = @Composable () -> Unit
 sealed class ScreenType {
     object Simple : ScreenType()
     data class Flow(val flowBuilderModel: FlowBuilderModel) : ScreenType()
-    data class MultiStack(val multiStackBuilderModel: MultiStackBuilderModel, val bottomNavModel: BottomNavModel) :
+    data class MultiStack(
+        val multiStackBuilderModel: MultiStackBuilderModel,
+        val bottomNavModel: BottomNavModel
+    ) :
         ScreenType()
 }
 
@@ -45,16 +46,18 @@ data class AllowedDestination(
 open class RootController(private val rootControllerType: RootControllerType = RootControllerType.Root) {
     private val _allowedDestinations: MutableList<AllowedDestination> = mutableListOf()
     private val _backstack = mutableListOf<Screen>()
-    private val _currentScreen: MutableStateFlow<NavConfiguration> = MutableStateFlow(Screen().wrap())
+    private val _currentScreen: MutableStateFlow<NavConfiguration> =
+        MutableStateFlow(Screen().wrap())
     private var _childrenRootController: MutableList<RootController> = mutableListOf()
     private val _screenMap = mutableMapOf<String, RenderWithParams<Any?>>()
     private var _onBackPressedDispatcher: OnBackPressedDispatcher? = null
-    private var _modalSheetController: ModalSheetController? = null
+    private var _modalController: ModalController? = null
     private var _deepLinkUri: String? = null
 
     var parentRootController: RootController? = null
     var onApplicationFinish: (() -> Unit)? = null
-    var onScreenRemove: (ScreenBundle) -> Unit = { parentRootController?.onScreenRemove?.invoke(it) }
+    var onScreenRemove: (ScreenBundle) -> Unit =
+        { parentRootController?.onScreenRemove?.invoke(it) }
 
     var currentScreen: StateFlow<NavConfiguration> = _currentScreen.asStateFlow()
 
@@ -171,8 +174,8 @@ open class RootController(private val rootControllerType: RootControllerType = R
      * Returns to previous screen
      */
     open fun popBackStack() {
-        if (_modalSheetController?.isEmpty() == false) {
-            _modalSheetController?.removeTopScreen()
+        if (_modalController?.isEmpty() == false) {
+            _modalController?.removeTopScreen()
             return
         }
 
@@ -198,22 +201,23 @@ open class RootController(private val rootControllerType: RootControllerType = R
     /**
      * Returns controller to show modal sheets
      */
-    fun findModalSheetController(): ModalSheetController {
-        return if (_modalSheetController == null) {
-            findRootController()._modalSheetController!!
+    fun findModalController(): ModalController {
+        return if (_modalController == null) {
+            findRootController()._modalController!!
         } else {
-            _modalSheetController!!
+            _modalController!!
         }
     }
 
-    fun attachModalSheet(modalSheetController: ModalSheetController) {
-        this._modalSheetController = modalSheetController
+    fun attachModalController(modalController: ModalController) {
+        this._modalController = modalController
     }
 
     fun drawCurrentScreen(startScreen: String? = null, startParams: Any? = null) {
         if (_backstack.isEmpty()) {
             launch(
-                screen = startScreen ?: _allowedDestinations.first().key,
+                screen = _allowedDestinations.firstOrNull { it.key == startScreen }?.key
+                    ?: _allowedDestinations.first().key,
                 params = startParams
             )
         } else {
@@ -248,7 +252,8 @@ open class RootController(private val rootControllerType: RootControllerType = R
                     var containsScreen = false
                     run loop@{
                         screen.multiStackBuilderModel.tabItems.forEachIndexed { index, info ->
-                            containsScreen = info.allowedDestination.firstOrNull { it.key == searchKey } != null
+                            containsScreen =
+                                info.allowedDestination.firstOrNull { it.key == searchKey } != null
                             if (containsScreen) {
                                 startTabPosition = index
                                 return@loop
@@ -297,11 +302,21 @@ open class RootController(private val rootControllerType: RootControllerType = R
         }
     }
 
-    private fun launchSimpleScreen(key: String, params: Any?, animationType: AnimationType, launchFlag: LaunchFlag?) {
+    private fun launchSimpleScreen(
+        key: String,
+        params: Any?,
+        animationType: AnimationType,
+        launchFlag: LaunchFlag?
+    ) {
         val screen = if (_backstack.isEmpty() && launchFlag == null) {
             Screen(key = randomizeKey(key), realKey = key, params = params)
         } else {
-            Screen(key = randomizeKey(key), realKey = key, params = params, animationType = animationType)
+            Screen(
+                key = randomizeKey(key),
+                realKey = key,
+                params = params,
+                animationType = animationType
+            )
         }
 
         when (launchFlag) {
@@ -339,8 +354,9 @@ open class RootController(private val rootControllerType: RootControllerType = R
         rootController.setNavigationGraph(flowBuilderModel.allowedDestination)
         _childrenRootController.add(rootController)
 
-        val targetScreen = flowBuilderModel.allowedDestination.firstOrNull { startScreen == it.key }?.key
-            ?: flowBuilderModel.allowedDestination.first().key
+        val targetScreen =
+            flowBuilderModel.allowedDestination.firstOrNull { startScreen == it.key }?.key
+                ?: flowBuilderModel.allowedDestination.first().key
 
         val screen = Screen(
             key = flowKey,
