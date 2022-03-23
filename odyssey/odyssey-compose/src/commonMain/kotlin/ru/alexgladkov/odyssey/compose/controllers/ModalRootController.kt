@@ -40,10 +40,13 @@ data class CustomModalBundle(
 
 interface ModalBundle
 
+@Deprecated("see ModalSheetController", ReplaceWith("ModalSheetController"))
+class ModalSheetController : ModalController()
+
 /**
  * Class controller for modal content
  */
-class ModalController {
+open class ModalController {
     private var _backStack = mutableListOf<ModalBundle>()
     private val _currentStack: MutableStateFlow<List<ModalBundle>> =
         MutableStateFlow(emptyList())
@@ -106,6 +109,7 @@ internal fun AlertConfiguration.wrap(with: Render): ModalBundle = AlertBundle(
     content = with
 )
 
+@Suppress("unused")
 internal fun CustomModalConfiguration.wrap(with: Render): ModalBundle = CustomModalBundle(
     content = with
 )
