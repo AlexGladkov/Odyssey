@@ -9,6 +9,7 @@ import ru.alexgladkov.odyssey.compose.base.BottomBarNavigator
 import ru.alexgladkov.odyssey.compose.base.Navigator
 import ru.alexgladkov.odyssey.compose.base.TopBarNavigator
 import ru.alexgladkov.odyssey.compose.controllers.ModalSheetController
+import ru.alexgladkov.odyssey.compose.controllers.ModalController
 import ru.alexgladkov.odyssey.compose.controllers.MultiStackRootController
 import ru.alexgladkov.odyssey.compose.controllers.TabNavigationModel
 import ru.alexgladkov.odyssey.compose.extensions.createUniqueKey
@@ -33,9 +34,7 @@ sealed class ScreenType {
     data class Flow(val flowBuilderModel: FlowBuilderModel) : ScreenType()
     data class MultiStack<Cfg : TabsNavConfiguration>(
         val multiStackBuilderModel: MultiStackBuilderModel,
-        val tabsNavModel: TabsNavModel<Cfg>
-    ) :
-        ScreenType()
+        val tabsNavModel: TabsNavModel<Cfg>): ScreenType()
 }
 
 data class AllowedDestination(
@@ -51,7 +50,7 @@ open class RootController(private val rootControllerType: RootControllerType = R
     private var _childrenRootController: MutableList<RootController> = mutableListOf()
     private val _screenMap = mutableMapOf<String, RenderWithParams<Any?>>()
     private var _onBackPressedDispatcher: OnBackPressedDispatcher? = null
-    private var _modalSheetController: ModalSheetController? = null
+    private var _modalController: ModalController? = null
     private var _deepLinkUri: String? = null
 
     var parentRootController: RootController? = null
@@ -174,8 +173,8 @@ open class RootController(private val rootControllerType: RootControllerType = R
      * Returns to previous screen
      */
     open fun popBackStack() {
-        if (_modalSheetController?.isEmpty() == false) {
-            _modalSheetController?.removeTopScreen()
+        if (_modalController?.isEmpty() == false) {
+            _modalController?.removeTopScreen()
             return
         }
 
@@ -201,22 +200,26 @@ open class RootController(private val rootControllerType: RootControllerType = R
     /**
      * Returns controller to show modal sheets
      */
-    fun findModalSheetController(): ModalSheetController {
-        return if (_modalSheetController == null) {
-            findRootController()._modalSheetController!!
+    fun findModalController(): ModalController {
+        return if (_modalController == null) {
+            findRootController()._modalController!!
         } else {
-            _modalSheetController!!
+            _modalController!!
         }
     }
 
-    fun attachModalSheet(modalSheetController: ModalSheetController) {
-        this._modalSheetController = modalSheetController
+    @Deprecated("@see findModalController", ReplaceWith("findModalController()"))
+    fun findModalSheetController() = findModalController()
+
+    fun attachModalController(modalController: ModalController) {
+        this._modalController = modalController
     }
 
     fun drawCurrentScreen(startScreen: String? = null, startParams: Any? = null) {
         if (_backstack.isEmpty()) {
             launch(
-                screen = startScreen ?: _allowedDestinations.first().key,
+                screen = _allowedDestinations.firstOrNull { it.key == startScreen }?.key
+                    ?: _allowedDestinations.first().key,
                 params = startParams
             )
         } else {
