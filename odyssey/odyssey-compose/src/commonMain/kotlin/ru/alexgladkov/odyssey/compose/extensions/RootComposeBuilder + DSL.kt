@@ -2,10 +2,8 @@ package ru.alexgladkov.odyssey.compose.extensions
 
 import ru.alexgladkov.odyssey.compose.RenderWithParams
 import ru.alexgladkov.odyssey.compose.helpers.*
-import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.BottomNavModel
 import ru.alexgladkov.odyssey.compose.navigation.RootComposeBuilder
-import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.MultiStackBuilder
-import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.TabItem
+import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.*
 
 /**
  * Adds screen to navigation graph
@@ -49,17 +47,36 @@ fun FlowBuilder.screen(name: String, content: RenderWithParams<Any?>) {
 /**
  * Adds bottom bar navigation to navigation graph
  * @param name - name in graph
- * @param bottomNavModel - UI configuration for bottom navigation
+ * @param tabsNavModel - UI configuration for bottom navigation
  * @param builder - dsl for bottom nav bar building
  */
 fun RootComposeBuilder.bottomNavigation(
     name: String,
-    bottomNavModel: BottomNavModel,
+    tabsNavModel: TabsNavModel<BottomNavConfiguration>,
     builder: MultiStackBuilder.() -> Unit
 ) {
     addMultiStack(
         key = name,
-        bottomNavModel = bottomNavModel,
+        tabsNavModel = tabsNavModel,
+        multiStackBuilderModel = MultiStackBuilder(name).apply(builder).build()
+    )
+}
+
+
+/**
+ * Adds top bar navigation to navigation graph
+ * @param name - name in graph
+ * @param tabsNavModel - UI configuration for top navigation
+ * @param builder - dsl for top nav bar building
+ */
+fun RootComposeBuilder.topNavigation(
+    name: String,
+    tabsNavModel: TabsNavModel<TopNavConfiguration>,
+    builder: MultiStackBuilder.() -> Unit
+) {
+    addMultiStack(
+        key = name,
+        tabsNavModel = tabsNavModel,
         multiStackBuilderModel = MultiStackBuilder(name).apply(builder).build()
     )
 }

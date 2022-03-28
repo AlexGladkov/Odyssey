@@ -79,9 +79,22 @@ open class ModalController {
         redrawStack()
     }
 
-    fun removeTopScreen() {
+    internal fun presentNew(
+        customConfiguration: CustomModalConfiguration,
+        content: Render
+    ) {
+        _backStack.add(customConfiguration.wrap(content))
+        redrawStack()
+    }
+
+    fun popBackStack() {
         if (_backStack.isNotEmpty()) _backStack.removeLast()
         redrawStack()
+    }
+
+    @Deprecated("@see popBackStack", ReplaceWith("popBackStack()"))
+    fun removeTopScreen() {
+        popBackStack()
     }
 
     fun isEmpty() = _backStack.isEmpty()

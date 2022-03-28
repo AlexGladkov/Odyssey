@@ -8,15 +8,21 @@ import androidx.compose.ui.Modifier
 import ru.alexgladkov.odyssey.compose.controllers.MultiStackRootController
 import ru.alexgladkov.odyssey.compose.controllers.TabNavigationModel
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
+import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.BottomNavConfiguration
+import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.TopNavConfiguration
 import ru.alexgladkov.odyssey.core.toScreenBundle
 
 @Composable
-fun ColumnScope.TabNavigator(startScreen: String?, currentTab: TabNavigationModel) {
+fun TabNavigator(
+    modifier: Modifier = Modifier,
+    startScreen: String?,
+    currentTab: TabNavigationModel
+) {
     val configuration = currentTab.rootController.currentScreen.collectAsState()
     val saveableStateHolder = rememberSaveableStateHolder()
 
     saveableStateHolder.SaveableStateProvider(currentTab.tabInfo.tabItem.name) {
-        Box(modifier = Modifier.fillMaxWidth().weight(1f)) {
+        Box(modifier = modifier) {
             CompositionLocalProvider(
                 LocalRootController provides currentTab.rootController
             ) {
@@ -45,10 +51,11 @@ fun ColumnScope.TabNavigator(startScreen: String?, currentTab: TabNavigationMode
 fun BottomBarNavigator(startScreen: String?) {
     val rootController = LocalRootController.current as MultiStackRootController
     val tabItem = rootController.stackChangeObserver.collectAsState()
-    val bottomNavConfiguration = rootController.bottomNavModel.bottomNavConfiguration
+    val bottomNavConfiguration =
+        rootController.tabsNavModel.navConfiguration as BottomNavConfiguration
 
     Column(modifier = Modifier.fillMaxSize()) {
-        TabNavigator(startScreen, tabItem.value)
+        TabNavigator(modifier = Modifier.weight(1f), startScreen, tabItem.value)
 
         BottomNavigation(
             backgroundColor = bottomNavConfiguration.backgroundColor
@@ -94,5 +101,40 @@ fun BottomBarNavigator(startScreen: String?) {
         }
     }
 
-    rootController.bottomNavModel.launchedEffect.invoke()
+    rootController.tabsNavModel.launchedEffect.invoke()
+}
+
+@Composable
+fun TopBarNavigator(startScreen: String?) {
+    val rootController = LocalRootController.current as MultiStackRootController
+    val tabItem = rootController.stackChangeObserver.collectAsState()
+    val bottomNavConfiguration = rootController.tabsNavModel.navConfiguration as TopNavConfiguration
+
+    Column(modifier = Modifier.fillMaxSize()) {
+        TabRow(
+            backgroundColor = bottomNavConfiguration.backgroundColor,
+            contentColor = bottomNavConfiguration.contentColor,
+            selectedTabIndex = rootController.tabItems.indexOfFirst { it == tabItem.value }
+                .coerceAtLeast(0)
+        ) {
+            rootController.tabItems.forEach { currentItem ->
+                val configuration = currentItem.tabInfo.tabItem.configuration
+                val isSelected = tabItem.value == currentItem
+                Tab(
+                    selected = isSelected,
+                    onClick = { rootController.switchTab(currentItem) },
+                    text = {
+                        Text(
+                            text = configuration.title,
+                            style = configuration.titleStyle ?: LocalTextStyle.current
+                        )
+                    }
+                )
+            }
+        }
+
+        TabNavigator(modifier = Modifier.weight(1f), startScreen, tabItem.value)
+    }
+
+    rootController.tabsNavModel.launchedEffect.invoke()
 }

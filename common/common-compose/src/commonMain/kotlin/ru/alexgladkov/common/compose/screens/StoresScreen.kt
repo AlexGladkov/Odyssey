@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ru.alexgladkov.odyssey.compose.extensions.present
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
 import ru.alexgladkov.odyssey.compose.navigation.bottom_sheet_navigation.ModalSheetConfiguration
 
@@ -33,7 +34,7 @@ fun StoresScreen(username: String) {
                 item {
                     Text(modifier = Modifier.clickable {
                         val modalSheetConfiguration = ModalSheetConfiguration(maxHeight = null, cornerRadius = 16)
-                        modalSheetController.presentNew(modalSheetConfiguration) {
+                        modalSheetController.present(modalSheetConfiguration) {
                             DepartmentScreen(storeId = i)
                         }
                     }.fillMaxWidth().padding(16.dp), text = "Store $i")

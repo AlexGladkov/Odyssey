@@ -22,7 +22,9 @@ fun ModalSheetNavigator(content: @Composable () -> Unit) = ModalNavigator(conten
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun ModalNavigator(content: @Composable () -> Unit) {
+fun ModalNavigator(
+    content: @Composable () -> Unit
+) {
     val modalController = remember { ModalController() }
     val rootController = LocalRootController.current
     var modalStack: List<ModalBundle> by remember { mutableStateOf(emptyList()) }

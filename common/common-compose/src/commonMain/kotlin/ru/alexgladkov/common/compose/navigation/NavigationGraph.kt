@@ -2,10 +2,7 @@ package ru.alexgladkov.common.compose.navigation
 
 import ru.alexgladkov.common.compose.sample_lmwork.screens.AuthScreen
 import ru.alexgladkov.common.compose.screens.*
-import ru.alexgladkov.common.compose.tabs.BottomConfiguration
-import ru.alexgladkov.common.compose.tabs.CartTab
-import ru.alexgladkov.common.compose.tabs.FeedTab
-import ru.alexgladkov.common.compose.tabs.SearchTab
+import ru.alexgladkov.common.compose.tabs.*
 import ru.alexgladkov.odyssey.compose.extensions.*
 import ru.alexgladkov.odyssey.compose.navigation.RootComposeBuilder
 
@@ -27,11 +24,16 @@ fun RootComposeBuilder.generateGraph() {
     }
 
     onboardingFlow()
+
     mainScreen()
+
+    topNavScreen()
+
+    customNavScreen()
 }
 
 fun RootComposeBuilder.mainScreen() {
-    bottomNavigation(name = "main", bottomNavModel = BottomConfiguration()) {
+    bottomNavigation(name = "main", tabsNavModel = BottomConfiguration()) {
         tab(FeedTab()) {
             screen(name = "feed") {
                 FeedScreen()
@@ -48,6 +50,56 @@ fun RootComposeBuilder.mainScreen() {
         }
         tab(CartTab()) {
             screen(name = "cart") {
+                CartScreen()
+            }
+        }
+    }
+}
+
+fun RootComposeBuilder.topNavScreen() {
+    topNavigation(name = "top", tabsNavModel = TopConfiguration()) {
+        tab(FeedTab()) {
+            screen(name = "top.feed") {
+                FeedScreen()
+            }
+        }
+        tab(SearchTab()) {
+            screen(name = "top.search") {
+                SearchScreen()
+            }
+
+            screen(name = "top.product") {
+                ProductScreen()
+            }
+        }
+        tab(CartTab()) {
+            screen(name = "top.cart") {
+                CartScreen()
+            }
+        }
+    }
+}
+
+fun RootComposeBuilder.customNavScreen() {
+    customNavigation(name = "custom", tabsNavModel = CustomConfiguration(
+        content = { CustomNavScreen() }
+    )) {
+        tab(FeedTab()) {
+            screen(name = "custom.feed") {
+                FeedScreen()
+            }
+        }
+        tab(SearchTab()) {
+            screen(name = "custom.search") {
+                SearchScreen()
+            }
+
+            screen(name = "custom.product") {
+                ProductScreen()
+            }
+        }
+        tab(CartTab()) {
+            screen(name = "custom.cart") {
                 CartScreen()
             }
         }

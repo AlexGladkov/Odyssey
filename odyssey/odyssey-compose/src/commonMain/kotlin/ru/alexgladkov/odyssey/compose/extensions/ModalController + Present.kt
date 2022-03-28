@@ -4,6 +4,7 @@ import ru.alexgladkov.odyssey.compose.Render
 import ru.alexgladkov.odyssey.compose.controllers.ModalController
 import ru.alexgladkov.odyssey.compose.controllers.wrap
 import ru.alexgladkov.odyssey.compose.navigation.bottom_sheet_navigation.AlertConfiguration
+import ru.alexgladkov.odyssey.compose.navigation.bottom_sheet_navigation.CustomModalConfiguration
 import ru.alexgladkov.odyssey.compose.navigation.bottom_sheet_navigation.ModalSheetConfiguration
 
 fun ModalController.present(
@@ -18,4 +19,11 @@ fun ModalController.present(
     content: Render
 ) {
     presentNew(alertConfiguration, content)
+}
+
+fun ModalController.present(
+    customModalConfiguration: CustomModalConfiguration,
+    content: Render
+) {
+    presentNew(customModalConfiguration, content)
 }

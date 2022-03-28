@@ -11,6 +11,7 @@ import ru.alexgladkov.odyssey.compose.base.Navigator
 import ru.alexgladkov.odyssey.compose.extensions.setupWithActivity
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
 import ru.alexgladkov.odyssey.compose.navigation.RootComposeBuilder
+import ru.alexgladkov.odyssey.compose.navigation.bottom_sheet_navigation.ModalNavigator
 import ru.alexgladkov.odyssey.compose.navigation.bottom_sheet_navigation.ModalSheetNavigator
 
 fun ComponentActivity.setupThemedNavigation(
@@ -28,7 +29,7 @@ fun ComponentActivity.setupThemedNavigation(
         ) {
             OdysseyTheme {
                 val backgroundColor = Odyssey.color.primaryBackground
-                ModalSheetNavigator(backgroundColor) {
+                ModalNavigator {
                     Navigator(startScreen, backgroundColor = backgroundColor)
                 }
             }

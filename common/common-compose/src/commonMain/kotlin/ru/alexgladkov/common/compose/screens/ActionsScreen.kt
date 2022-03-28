@@ -21,6 +21,7 @@ import ru.alexgladkov.common.compose.theme.Odyssey
 import ru.alexgladkov.odyssey.compose.extensions.present
 import ru.alexgladkov.odyssey.compose.extensions.push
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
+import ru.alexgladkov.odyssey.compose.navigation.bottom_sheet_navigation.AlertConfiguration
 import ru.alexgladkov.odyssey.compose.navigation.bottom_sheet_navigation.ModalSheetConfiguration
 
 @Composable
@@ -50,7 +51,7 @@ fun ActionsScreen(count: Int?) {
                 item {
                     val modalSheetConfiguration = ModalSheetConfiguration(maxHeight = 0.7f, cornerRadius = 16)
                     ActionCell("Present Modal Screen", icon = Icons.Filled.ArrowCircleUp) {
-                        modalController.presentNew(modalSheetConfiguration) {
+                        modalController.present(modalSheetConfiguration) {
                             ModalSheetScreen {
                                 modalController.removeTopScreen()
                             }
@@ -60,12 +61,20 @@ fun ActionsScreen(count: Int?) {
 
                 item {
                     ActionCell("Show Alert Dialog", icon = Icons.Filled.AddAlert) {
-                        AlertDialogScreen()
+                        val alertConfiguration = AlertConfiguration(maxHeight = 0.7f, maxWidth = 0.8f, cornerRadius = 4)
+                        modalController.present(alertConfiguration) {
+                            AlertDialogScreen {
+                                modalController.popBackStack()
+                            }
+                        }
                     }
                 }
 
                 item {
-                    ActionCell("Back", icon = if (count == 0 || count == null) Icons.Filled.Close else Icons.Filled.ArrowBack) {
+                    ActionCell(
+                        "Back",
+                        icon = if (count == 0 || count == null) Icons.Filled.Close else Icons.Filled.ArrowBack
+                    ) {
                         rootController.popBackStack()
                     }
                 }
@@ -121,4 +130,4 @@ fun Int?.toSequence(): String {
     }
 
     return builder.toString()
- }
+}
