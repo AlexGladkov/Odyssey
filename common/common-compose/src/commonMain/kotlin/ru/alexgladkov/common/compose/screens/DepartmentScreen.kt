@@ -16,7 +16,7 @@ import ru.alexgladkov.odyssey.compose.local.LocalRootController
 
 @Composable
 fun DepartmentScreen(storeId: Int) {
-    val modalSheetController = LocalRootController.current.findModalSheetController()
+    val modalSheetController = LocalRootController.current.findModalController()
 
     Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
         Text("Departments for $storeId store", fontSize = 20.sp, color = Color.Black)

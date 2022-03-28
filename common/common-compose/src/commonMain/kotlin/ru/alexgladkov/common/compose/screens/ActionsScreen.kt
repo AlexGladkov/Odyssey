@@ -1,0 +1,124 @@
+package ru.alexgladkov.common.compose.screens
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.Divider
+import androidx.compose.material.Icon
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import ru.alexgladkov.common.compose.theme.Odyssey
+import ru.alexgladkov.odyssey.compose.extensions.present
+import ru.alexgladkov.odyssey.compose.extensions.push
+import ru.alexgladkov.odyssey.compose.local.LocalRootController
+import ru.alexgladkov.odyssey.compose.navigation.bottom_sheet_navigation.ModalSheetConfiguration
+
+@Composable
+fun ActionsScreen(count: Int?) {
+    val rootController = LocalRootController.current
+    val modalController = rootController.findModalController()
+
+    Column {
+        CounterView(count)
+
+        Box(
+            modifier = Modifier.background(Odyssey.color.primaryBackground).fillMaxSize()
+        ) {
+            LazyColumn {
+                item {
+                    ActionCell(text = "Push Screen", icon = Icons.Filled.ArrowForward) {
+                        rootController.push("push", (count ?: 0) + 1)
+                    }
+                }
+
+                item {
+                    ActionCell("Present Flow", icon = Icons.Filled.ArrowUpward) {
+                        rootController.present("present")
+                    }
+                }
+
+                item {
+                    val modalSheetConfiguration = ModalSheetConfiguration(maxHeight = 0.7f, cornerRadius = 16)
+                    ActionCell("Present Modal Screen", icon = Icons.Filled.ArrowCircleUp) {
+                        modalController.presentNew(modalSheetConfiguration) {
+                            ModalSheetScreen {
+                                modalController.removeTopScreen()
+                            }
+                        }
+                    }
+                }
+
+                item {
+                    ActionCell("Show Alert Dialog", icon = Icons.Filled.AddAlert) {
+                        AlertDialogScreen()
+                    }
+                }
+
+                item {
+                    ActionCell("Back", icon = if (count == 0 || count == null) Icons.Filled.Close else Icons.Filled.ArrowBack) {
+                        rootController.popBackStack()
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun CounterView(count: Int?) {
+    Row(
+        Modifier.background(Odyssey.color.primaryBackground).fillMaxWidth().padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = "Chain: ${count?.toSequence() ?: "[0]"}",
+            color = Odyssey.color.primaryText
+        )
+    }
+}
+
+@Composable
+fun ActionCell(text: String, icon: ImageVector, onClick: () -> Unit) {
+    Column(modifier = Modifier
+        .clickable { onClick.invoke() }
+        .fillMaxWidth()
+    ) {
+        Row(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+            Text(text = text, color = Odyssey.color.primaryText, fontSize = 18.sp)
+            Spacer(modifier = Modifier.weight(1f))
+            Icon(icon, contentDescription = "", tint = Odyssey.color.controlColor)
+        }
+
+//        Divider(
+//            modifier = Modifier.padding(start = 16.dp), thickness = 0.5.dp,
+//            color = Odyssey.color.secondaryText
+//        )
+    }
+}
+
+fun Int?.toSequence(): String {
+    if (this == null) return "0"
+    if (this == 0) return "0"
+
+    val builder = StringBuilder()
+
+    for (i in 0..this) {
+        if (i == this) {
+            builder.append(i)
+        } else {
+            builder.append(i).append(" -> ")
+        }
+    }
+
+    return builder.toString()
+ }

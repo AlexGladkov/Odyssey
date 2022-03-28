@@ -2,7 +2,6 @@ package ru.alexgladkov.odyssey.compose.extensions
 
 import ru.alexgladkov.odyssey.compose.RootController
 import ru.alexgladkov.odyssey.core.LaunchFlag
-import ru.alexgladkov.odyssey.core.animations.defaultPresentationAnimation
 import ru.alexgladkov.odyssey.core.animations.defaultPushAnimation
 
 /**
@@ -13,7 +12,7 @@ import ru.alexgladkov.odyssey.core.animations.defaultPushAnimation
  * @param launchFlag - flag if you want to change default behavior @see LaunchFlag
  */
 fun RootController.push(screen: String, params: Any? = null, launchFlag: LaunchFlag? = null) {
-    launch(screen, null, 0, params, defaultPushAnimation(), launchFlag)
+    launch(screen = screen, startScreen = null, startTabPosition = 0, params = params, animationType = defaultPushAnimation(), launchFlag)
 }
 
 /**
@@ -23,5 +22,5 @@ fun RootController.push(screen: String, params: Any? = null, launchFlag: LaunchF
  * @param params - any bunch of params you need for the screen
  */
 fun RootController.push(screen: String, params: Any? = null) {
-    launch(screen = screen, params = params)
+    launch(screen = screen, params = params, animationType = defaultPushAnimation())
 }

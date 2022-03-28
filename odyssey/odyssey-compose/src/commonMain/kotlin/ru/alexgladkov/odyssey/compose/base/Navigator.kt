@@ -1,9 +1,11 @@
 package ru.alexgladkov.odyssey.compose.base
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import ru.alexgladkov.odyssey.compose.RootController
 import ru.alexgladkov.odyssey.compose.helpers.BottomSheetBundle
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
@@ -12,12 +14,15 @@ import ru.alexgladkov.odyssey.core.screen.ScreenInteractor
 import ru.alexgladkov.odyssey.core.toScreenBundle
 
 @Composable
-fun Navigator(startScreen: String? = null, startParams: Any? = null) {
+fun Navigator(
+    startScreen: String? = null, startParams: Any? = null,
+    backgroundColor: Color
+) {
     val rootController = LocalRootController.current
     val navConfiguration = rootController.currentScreen.collectAsState()
 
     navConfiguration.value.let { config ->
-        NavigatorAnimated(config.screen, config, rootController)
+        NavigatorAnimated(config.screen, config, rootController, backgroundColor)
     }
 
     LaunchedEffect(Unit) {
@@ -29,14 +34,15 @@ fun Navigator(startScreen: String? = null, startParams: Any? = null) {
 private fun NavigatorAnimated(
     screen: ScreenInteractor,
     configuration: NavConfiguration,
-    rootController: RootController
+    rootController: RootController,
+    backgroundColor: Color
 ) {
     AnimatedHost(
         currentScreen = screen.toScreenBundle(),
         screenToRemove = configuration.screenToRemove?.toScreenBundle(),
         animationType = screen.animationType,
         isForward = screen.isForward,
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.background(backgroundColor).fillMaxSize(),
         onScreenRemove = rootController.onScreenRemove
     ) { currentScreen ->
         val render = rootController.getScreenRender(currentScreen.realKey)

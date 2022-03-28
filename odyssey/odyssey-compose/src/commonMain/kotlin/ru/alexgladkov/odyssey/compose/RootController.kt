@@ -2,12 +2,13 @@ package ru.alexgladkov.odyssey.compose
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.graphics.Color
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import ru.alexgladkov.odyssey.compose.base.BottomBarNavigator
 import ru.alexgladkov.odyssey.compose.base.Navigator
-import ru.alexgladkov.odyssey.compose.controllers.ModalSheetController
+import ru.alexgladkov.odyssey.compose.controllers.ModalController
 import ru.alexgladkov.odyssey.compose.controllers.MultiStackRootController
 import ru.alexgladkov.odyssey.compose.controllers.TabNavigationModel
 import ru.alexgladkov.odyssey.compose.extensions.createUniqueKey
@@ -18,8 +19,6 @@ import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.MultiStac
 import ru.alexgladkov.odyssey.core.LaunchFlag
 import ru.alexgladkov.odyssey.core.NavConfiguration
 import ru.alexgladkov.odyssey.core.animations.AnimationType
-import ru.alexgladkov.odyssey.core.animations.defaultPresentationAnimation
-import ru.alexgladkov.odyssey.core.animations.defaultPushAnimation
 import ru.alexgladkov.odyssey.core.backpress.BackPressedCallback
 import ru.alexgladkov.odyssey.core.backpress.OnBackPressedDispatcher
 import ru.alexgladkov.odyssey.core.screen.Screen
@@ -49,7 +48,7 @@ open class RootController(private val rootControllerType: RootControllerType = R
     private var _childrenRootController: MutableList<RootController> = mutableListOf()
     private val _screenMap = mutableMapOf<String, RenderWithParams<Any?>>()
     private var _onBackPressedDispatcher: OnBackPressedDispatcher? = null
-    private var _modalSheetController: ModalSheetController? = null
+    private var _modalController: ModalController? = null
     private var _deepLinkUri: String? = null
 
     var parentRootController: RootController? = null
@@ -171,8 +170,8 @@ open class RootController(private val rootControllerType: RootControllerType = R
      * Returns to previous screen
      */
     open fun popBackStack() {
-        if (_modalSheetController?.isEmpty() == false) {
-            _modalSheetController?.removeTopScreen()
+        if (_modalController?.isEmpty() == false) {
+            _modalController?.removeTopScreen()
             return
         }
 
@@ -198,16 +197,19 @@ open class RootController(private val rootControllerType: RootControllerType = R
     /**
      * Returns controller to show modal sheets
      */
-    fun findModalSheetController(): ModalSheetController {
-        return if (_modalSheetController == null) {
-            findRootController()._modalSheetController!!
+    fun findModalController(): ModalController {
+        return if (_modalController == null) {
+            findRootController()._modalController!!
         } else {
-            _modalSheetController!!
+            _modalController!!
         }
     }
 
-    fun attachModalSheet(modalSheetController: ModalSheetController) {
-        this._modalSheetController = modalSheetController
+    @Deprecated("@see findModalController", ReplaceWith("findModalController()"))
+    fun findModalSheetController() = findModalController()
+
+    fun attachModalController(modalController: ModalController) {
+        this._modalController = modalController
     }
 
     fun drawCurrentScreen(startScreen: String? = null, startParams: Any? = null) {
@@ -415,7 +417,7 @@ open class RootController(private val rootControllerType: RootControllerType = R
                 CompositionLocalProvider(
                     LocalRootController provides bundle.rootController
                 ) {
-                    Navigator(startScreen = bundle.startScreen, startParams = bundle.params)
+                    Navigator(startScreen = bundle.startScreen, startParams = bundle.params, backgroundColor = Color.White)
                 }
             }
 

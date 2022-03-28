@@ -15,7 +15,7 @@ import ru.alexgladkov.odyssey.compose.navigation.bottom_sheet_navigation.ModalSh
 
 @Composable
 fun FeedScreen() {
-    val modalSheetController = LocalRootController.current.findModalSheetController()
+    val modalSheetController = LocalRootController.current.findModalController()
 
     Box(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         Column {
