@@ -14,7 +14,7 @@ import ru.alexgladkov.odyssey.compose.navigation.bottom_sheet_navigation.ModalSh
 
 @Composable
 fun StoresScreen(username: String) {
-    val modalSheetController = LocalRootController.current.findModalSheetController()
+    val modalSheetController = LocalRootController.current.findModalController()
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         Row(modifier = Modifier.fillMaxWidth()) {
