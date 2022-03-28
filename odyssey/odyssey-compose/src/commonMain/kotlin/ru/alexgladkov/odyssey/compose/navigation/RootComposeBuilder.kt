@@ -6,7 +6,7 @@ import ru.alexgladkov.odyssey.compose.RenderWithParams
 import ru.alexgladkov.odyssey.compose.ScreenType
 import ru.alexgladkov.odyssey.compose.helpers.FlowBuilderModel
 import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.MultiStackBuilderModel
-import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.BottomNavModel
+import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.TabsNavModel
 
 /**
  * Base builder, declarative helper for navigation graph builder
@@ -38,13 +38,13 @@ class RootComposeBuilder {
 
     fun addMultiStack(
         key: String,
-        bottomNavModel: BottomNavModel,
+        tabsNavModel: TabsNavModel<*>,
         multiStackBuilderModel: MultiStackBuilderModel
     ) {
         _screens.add(
             AllowedDestination(
                 key = key,
-                screenType = ScreenType.MultiStack(multiStackBuilderModel, bottomNavModel)
+                screenType = ScreenType.MultiStack(multiStackBuilderModel, tabsNavModel)
             )
         )
     }
