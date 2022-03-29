@@ -97,6 +97,10 @@ open class ModalController {
         popBackStack()
     }
 
+    fun clearBackStack() {
+        _backStack.clear()
+    }
+
     fun isEmpty() = _backStack.isEmpty()
 
     private fun redrawStack() {

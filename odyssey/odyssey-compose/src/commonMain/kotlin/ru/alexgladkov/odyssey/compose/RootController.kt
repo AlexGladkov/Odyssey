@@ -43,7 +43,10 @@ data class AllowedDestination(
     val screenType: ScreenType
 )
 
-open class RootController(private val rootControllerType: RootControllerType = RootControllerType.Root, val backgroundColor: Color) {
+open class RootController(
+    private val rootControllerType: RootControllerType = RootControllerType.Root,
+    val backgroundColor: Color
+) {
     private val _allowedDestinations: MutableList<AllowedDestination> = mutableListOf()
     private val _backstack = mutableListOf<Screen>()
     private val _currentScreen: MutableStateFlow<NavConfiguration> =
@@ -180,6 +183,19 @@ open class RootController(private val rootControllerType: RootControllerType = R
         }
     }
 
+    /**
+     * back to  the first screen by name recursively
+     */
+    fun backToScreen(screenName: String) {
+        _modalController?.clearBackStack()
+
+        when (_backstack.last().key) {
+            flowKey -> backToScreen(_childrenRootController.last(), screenName)
+            multiStackKey -> backToScreen(_childrenRootController.last(), screenName)
+            else -> backToScreen(this, screenName)
+        }
+    }
+
     //Find first RootController in hierarchy
     fun findRootController(): RootController {
         var currentRootController = this
@@ -281,6 +297,38 @@ open class RootController(private val rootControllerType: RootControllerType = R
         } ?: throw IllegalStateException("Can't launch $_deepLinkUri to unknown screen")
 
         _deepLinkUri = null
+    }
+
+    private fun backToScreen(rootController: RootController?, screenName: String) {
+        rootController?.let {
+            val isLastScreen = it._backstack.size <= 1
+            if (isLastScreen) {
+                if (it.debugName == "Root") {
+                    it.onApplicationFinish?.invoke()
+                } else {
+                    val last = it._backstack.removeLast()
+                    val parentController = it.parentRootController ?: return
+                    val current = parentController._backstack.last()
+                    if (current.realKey == screenName) {
+                        parentController._currentScreen.value = current
+                            .copy(animationType = last.animationType, isForward = false)
+                            .wrap(with = last)
+                    } else {
+                        backToScreen(it.parentRootController, screenName)
+                    }
+                }
+            } else {
+                val last = it._backstack.removeLast()
+                val current = it._backstack.last()
+                if (current.realKey == screenName) {
+                    it._currentScreen.value = current
+                        .copy(animationType = last.animationType, isForward = false)
+                        .wrap(with = last)
+                } else {
+                    backToScreen(rootController, screenName)
+                }
+            }
+        }
     }
 
     private fun removeTopScreen(rootController: RootController?) {
