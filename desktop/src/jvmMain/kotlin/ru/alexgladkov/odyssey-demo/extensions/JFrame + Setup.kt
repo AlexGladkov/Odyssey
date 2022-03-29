@@ -1,24 +1,18 @@
-### How to use it with desktop
+package ru.alexgladkov.`odyssey-demo`.extensions
 
-For working with Android I've created helper class DesktopScreenHost and now to setup Application you just need to use this
-in your `main()` function
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.ProvidedValue
+import androidx.compose.ui.awt.ComposePanel
+import ru.alexgladkov.common.compose.theme.Odyssey
+import ru.alexgladkov.common.compose.theme.OdysseyTheme
+import ru.alexgladkov.odyssey.compose.base.Navigator
+import ru.alexgladkov.odyssey.compose.local.LocalRootController
+import ru.alexgladkov.odyssey.compose.navigation.RootComposeBuilder
+import ru.alexgladkov.odyssey.compose.navigation.bottom_sheet_navigation.ModalNavigator
+import java.awt.BorderLayout
+import javax.swing.JFrame
+import javax.swing.WindowConstants
 
-```kotlin
-val window = JFrame()
-window.title = "Odyssey Demo"
-window.setSize(800, 600)
-
-window.setupNavigation("actions") {
-    screen("actions") {
-        ActionsScreen(count = 0)
-    }
-
-    // Here you can place other graph
-}
-```
-
-Sometimes you need to add compose wrapper for your navigator for this you can write your own function like this
-```kotlin
 fun JFrame.setupThemedNavigation(
     startScreen: String,
     vararg providers: ProvidedValue<*>,
@@ -50,4 +44,3 @@ fun JFrame.setupThemedNavigation(
     setLocationRelativeTo(null)
     isVisible = true
 }
-```
