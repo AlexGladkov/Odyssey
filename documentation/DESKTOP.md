@@ -4,41 +4,38 @@ For working with Android I've created helper class DesktopScreenHost and now to 
 in your `main()` function
 
 ```kotlin
-fun main() = SwingUtilities.invokeLater {
-        val window = JFrame()
-        window.title = "Odyssey Demo"
-        window.setSize(800, 600)
+val window = JFrame()
+window.title = "Odyssey Demo"
+window.setSize(800, 600)
 
-        DesktopScreenHost(window)
-            .setupWithRootController(
-                startScreen = NavigationTree.Root.Splash.toString(),
-                block = buildComposeNavigationGraph()
-            )
+window.setupNavigation("actions") {
+    screen("actions") {
+        ActionsScreen(count = 0)
     }
+
+    // Here you can place other graph
+}
 ```
 
-If you need to customize parameters of your ScreenHost you can create your own ScreenHost class like this
-
+Sometimes you need to add compose wrapper for your navigator for this you can write your own function like this
 ```kotlin
-class DesktopScreenHost constructor(
-    private val window: JFrame,
-    // add your params here
-) : ComposableScreenHost() {
+fun JFrame.setupNavigation(
+    startScreen: String,
+    vararg providers: ProvidedValue<*>,
+    navigationGraph: RootComposeBuilder.() -> Unit
+) {
+    val rootController = RootComposeBuilder().apply(navigationGraph).build()
 
-    override fun prepareFowDrawing() {
-        val composePanel = ComposePanel()
-
-        composePanel.setContent {
-            val destinationState = destinationObserver.wrap().observeAsState()
-            destinationState.value?.let {
-                launchScreen(it)
+    setContent {
+        CompositionLocalProvider(
+            *providers,
+            LocalRootController provides rootController
+        ) {
+            // Here you can provide your own composables (Theme for example)
+            ModalSheetNavigator {
+                Navigator(startScreen)
             }
         }
-
-        window.defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-        window.contentPane.add(composePanel, BorderLayout.CENTER)
-        window.setLocationRelativeTo(null)
-        window.isVisible = true
     }
 }
 ```

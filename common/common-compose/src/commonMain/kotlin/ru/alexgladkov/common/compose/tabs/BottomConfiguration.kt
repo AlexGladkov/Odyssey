@@ -25,8 +25,8 @@ class TopConfiguration : TabsNavModel<TopNavConfiguration>() {
         @Composable
         get() {
             return TopNavConfiguration(
-                backgroundColor = Color.White,
-                contentColor = Color.DarkGray
+                backgroundColor = Odyssey.color.secondaryBackground,
+                contentColor = Odyssey.color.primaryText
             )
         }
 }

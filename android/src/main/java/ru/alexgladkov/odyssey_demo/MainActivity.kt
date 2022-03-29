@@ -2,7 +2,9 @@ package ru.alexgladkov.odyssey_demo
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import ru.alexgladkov.common.compose.navigation.customNavScreen
 import ru.alexgladkov.common.compose.navigation.mainScreen
+import ru.alexgladkov.common.compose.navigation.topNavScreen
 import ru.alexgladkov.common.compose.screens.ActionsScreen
 import ru.alexgladkov.common.compose.screens.PresentedActionsScreen
 import ru.alexgladkov.odyssey.compose.extensions.flow
@@ -30,6 +32,8 @@ class MainActivity : AppCompatActivity() {
             }
 
             mainScreen()
+            topNavScreen()
+            customNavScreen()
         }
     }
 }

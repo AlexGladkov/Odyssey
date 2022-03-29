@@ -79,6 +79,24 @@ fun ActionsScreen(count: Int?) {
 
                 item {
                     ActionCell(
+                        "Show Top Navigation",
+                        icon = Icons.Filled.SpaceDashboard
+                    ) {
+                        rootController.present("top")
+                    }
+                }
+
+                item {
+                    ActionCell(
+                        "Show Drawer Navigation",
+                        icon = Icons.Filled.DashboardCustomize
+                    ) {
+                        rootController.present("drawer")
+                    }
+                }
+
+                item {
+                    ActionCell(
                         "Start New Chain",
                         icon = Icons.Filled.OpenInNew
                     ) {
