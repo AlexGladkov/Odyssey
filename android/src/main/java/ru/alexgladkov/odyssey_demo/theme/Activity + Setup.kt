@@ -19,18 +19,18 @@ fun ComponentActivity.setupThemedNavigation(
     vararg providers: ProvidedValue<*>,
     navigationGraph: RootComposeBuilder.() -> Unit
 ) {
-    val rootController = RootComposeBuilder().apply(navigationGraph).build()
-    rootController.setupWithActivity(this)
-
     setContent {
-        CompositionLocalProvider(
-            *providers,
-            LocalRootController provides rootController
-        ) {
-            OdysseyTheme {
-                val backgroundColor = Odyssey.color.primaryBackground
+        OdysseyTheme {
+            val rootController = RootComposeBuilder(backgroundColor = Odyssey.color.primaryBackground)
+                .apply(navigationGraph).build()
+            rootController.setupWithActivity(this)
+
+            CompositionLocalProvider(
+                *providers,
+                LocalRootController provides rootController
+            ) {
                 ModalNavigator {
-                    Navigator(startScreen, backgroundColor = backgroundColor)
+                    Navigator(startScreen)
                 }
             }
         }

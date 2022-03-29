@@ -27,7 +27,7 @@ fun ComponentActivity.setupNavigation(
             LocalRootController provides rootController
         ) {
             ModalNavigator {
-                Navigator(startScreen, backgroundColor = Color.White)
+                Navigator(startScreen)
             }
         }
     }

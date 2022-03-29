@@ -15,10 +15,10 @@ import ru.alexgladkov.odyssey.core.toScreenBundle
 
 @Composable
 fun Navigator(
-    startScreen: String? = null, startParams: Any? = null,
-    backgroundColor: Color
+    startScreen: String? = null, startParams: Any? = null
 ) {
     val rootController = LocalRootController.current
+    val backgroundColor = rootController.backgroundColor
     val navConfiguration = rootController.currentScreen.collectAsState()
 
     navConfiguration.value.let { config ->

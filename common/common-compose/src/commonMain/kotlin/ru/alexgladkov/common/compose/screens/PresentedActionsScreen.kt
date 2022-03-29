@@ -6,16 +6,16 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowDownward
-import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material.icons.filled.ArrowUpward
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import ru.alexgladkov.common.compose.theme.Odyssey
 import ru.alexgladkov.odyssey.compose.extensions.present
 import ru.alexgladkov.odyssey.compose.extensions.push
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
+import ru.alexgladkov.odyssey.compose.navigation.bottom_sheet_navigation.AlertConfiguration
+import ru.alexgladkov.odyssey.compose.navigation.bottom_sheet_navigation.ModalSheetConfiguration
+import ru.alexgladkov.odyssey.core.LaunchFlag
 
 @Composable
 fun PresentedActionsScreen(count: Int?) {
@@ -38,6 +38,46 @@ fun PresentedActionsScreen(count: Int?) {
                 item {
                     ActionCell("Present Flow", icon = Icons.Filled.ArrowUpward) {
                         rootController.findRootController().present("present")
+                    }
+                }
+
+                item {
+                    val modalSheetConfiguration = ModalSheetConfiguration(maxHeight = 0.7f, cornerRadius = 16)
+                    ActionCell("Present Modal Screen", icon = Icons.Filled.ArrowCircleUp) {
+                        modalController.present(modalSheetConfiguration) {
+                            ModalSheetScreen {
+                                modalController.popBackStack()
+                            }
+                        }
+                    }
+                }
+
+                item {
+                    ActionCell("Show Alert Dialog", icon = Icons.Filled.AddAlert) {
+                        val alertConfiguration = AlertConfiguration(maxHeight = 0.7f, maxWidth = 0.8f, cornerRadius = 4)
+                        modalController.present(alertConfiguration) {
+                            AlertDialogScreen {
+                                modalController.popBackStack()
+                            }
+                        }
+                    }
+                }
+
+                item {
+                    ActionCell(
+                        "Show Bottom Navigation",
+                        icon = Icons.Filled.Dashboard
+                    ) {
+                        rootController.findRootController().present("main")
+                    }
+                }
+
+                item {
+                    ActionCell(
+                        "Start New Chain",
+                        icon = Icons.Filled.OpenInNew
+                    ) {
+                        rootController.findRootController().present(screen = "present", launchFlag = LaunchFlag.SingleNewTask)
                     }
                 }
 

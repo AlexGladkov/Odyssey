@@ -4,9 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Divider
 import androidx.compose.material.Icon
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -14,7 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.alexgladkov.common.compose.theme.Odyssey
@@ -23,6 +20,7 @@ import ru.alexgladkov.odyssey.compose.extensions.push
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
 import ru.alexgladkov.odyssey.compose.navigation.bottom_sheet_navigation.AlertConfiguration
 import ru.alexgladkov.odyssey.compose.navigation.bottom_sheet_navigation.ModalSheetConfiguration
+import ru.alexgladkov.odyssey.core.LaunchFlag
 
 @Composable
 fun ActionsScreen(count: Int?) {
@@ -53,7 +51,7 @@ fun ActionsScreen(count: Int?) {
                     ActionCell("Present Modal Screen", icon = Icons.Filled.ArrowCircleUp) {
                         modalController.present(modalSheetConfiguration) {
                             ModalSheetScreen {
-                                modalController.removeTopScreen()
+                                modalController.popBackStack()
                             }
                         }
                     }
@@ -67,6 +65,24 @@ fun ActionsScreen(count: Int?) {
                                 modalController.popBackStack()
                             }
                         }
+                    }
+                }
+
+                item {
+                    ActionCell(
+                        "Show Bottom Navigation",
+                        icon = Icons.Filled.Dashboard
+                    ) {
+                        rootController.present("main")
+                    }
+                }
+
+                item {
+                    ActionCell(
+                        "Start New Chain",
+                        icon = Icons.Filled.OpenInNew
+                    ) {
+                        rootController.present(screen = "present", launchFlag = LaunchFlag.SingleNewTask)
                     }
                 }
 
@@ -107,11 +123,6 @@ fun ActionCell(text: String, icon: ImageVector, onClick: () -> Unit) {
             Spacer(modifier = Modifier.weight(1f))
             Icon(icon, contentDescription = "", tint = Odyssey.color.controlColor)
         }
-
-//        Divider(
-//            modifier = Modifier.padding(start = 16.dp), thickness = 0.5.dp,
-//            color = Odyssey.color.secondaryText
-//        )
     }
 }
 

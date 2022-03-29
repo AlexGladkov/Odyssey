@@ -34,7 +34,8 @@ sealed class ScreenType {
     data class Flow(val flowBuilderModel: FlowBuilderModel) : ScreenType()
     data class MultiStack<Cfg : TabsNavConfiguration>(
         val multiStackBuilderModel: MultiStackBuilderModel,
-        val tabsNavModel: TabsNavModel<Cfg>): ScreenType()
+        val tabsNavModel: TabsNavModel<Cfg>
+    ) : ScreenType()
 }
 
 data class AllowedDestination(
@@ -42,7 +43,7 @@ data class AllowedDestination(
     val screenType: ScreenType
 )
 
-open class RootController(private val rootControllerType: RootControllerType = RootControllerType.Root) {
+open class RootController(private val rootControllerType: RootControllerType = RootControllerType.Root, val backgroundColor: Color) {
     private val _allowedDestinations: MutableList<AllowedDestination> = mutableListOf()
     private val _backstack = mutableListOf<Screen>()
     private val _currentScreen: MutableStateFlow<NavConfiguration> =
@@ -71,16 +72,12 @@ open class RootController(private val rootControllerType: RootControllerType = R
         initServiceScreens()
     }
 
-    /**
-     * Get screen render compose function
-     */
+    // Get screen render compose function
     fun getScreenRender(screenName: String?): RenderWithParams<Any?>? {
         return _screenMap[screenName]
     }
 
-    /**
-     * Render screen with params
-     */
+    // Render screen with params
     @Composable
     fun RenderScreen(screenName: String?, params: Any?) {
         _screenMap[screenName]?.invoke(params)
@@ -169,9 +166,7 @@ open class RootController(private val rootControllerType: RootControllerType = R
         }
     }
 
-    /**
-     * Returns to previous screen
-     */
+    // Returns to previous screen
     open fun popBackStack() {
         if (_modalController?.isEmpty() == false) {
             _modalController?.removeTopScreen()
@@ -185,9 +180,7 @@ open class RootController(private val rootControllerType: RootControllerType = R
         }
     }
 
-    /**
-     * Find first RootController in hierarchy
-     */
+    //Find first RootController in hierarchy
     fun findRootController(): RootController {
         var currentRootController = this
         while (currentRootController.parentRootController != null) {
@@ -197,9 +190,7 @@ open class RootController(private val rootControllerType: RootControllerType = R
         return currentRootController
     }
 
-    /**
-     * Returns controller to show modal sheets
-     */
+    // Returns controller to show modal sheets
     fun findModalController(): ModalController {
         return if (_modalController == null) {
             findRootController()._modalController!!
@@ -211,10 +202,19 @@ open class RootController(private val rootControllerType: RootControllerType = R
     @Deprecated("@see findModalController", ReplaceWith("findModalController()"))
     fun findModalSheetController() = findModalController()
 
+    /**
+     * Attaches Modal Controller to Root Controller
+     * @param modalController - controller to show modal sheets
+     */
     fun attachModalController(modalController: ModalController) {
         this._modalController = modalController
     }
 
+    /**
+     * Draws current screen in stack (need for Navigator)
+     * @param startScreen - draw start screen for flow/multistack
+     * @param startParams - param for startScreen in flow
+     */
     fun drawCurrentScreen(startScreen: String? = null, startParams: Any? = null) {
         if (_backstack.isEmpty()) {
             launch(
@@ -343,7 +343,7 @@ open class RootController(private val rootControllerType: RootControllerType = R
             LaunchFlag.SingleNewTask -> _backstack.clear()
         }
 
-        val rootController = RootController(RootControllerType.Flow)
+        val rootController = RootController(RootControllerType.Flow, backgroundColor)
 
         rootController.debugName = key
         rootController.parentRootController = this
@@ -361,7 +361,7 @@ open class RootController(private val rootControllerType: RootControllerType = R
                 ?: flowBuilderModel.allowedDestination.first().key
 
         val screen = Screen(
-            key = flowKey,
+            key = randomizeKey(flowKey),
             realKey = flowKey,
             animationType = animationType,
             params = FlowBundle(
@@ -393,7 +393,7 @@ open class RootController(private val rootControllerType: RootControllerType = R
 
         val parentRootController = this
         val configurations = multiStackBuilderModel.tabItems.map {
-            val rootController = RootController(RootControllerType.Tab)
+            val rootController = RootController(RootControllerType.Tab, backgroundColor)
             rootController.parentRootController = parentRootController
             rootController.debugName = it.tabItem.name
             rootController.setDeepLinkUri(_deepLinkUri)
@@ -403,6 +403,7 @@ open class RootController(private val rootControllerType: RootControllerType = R
         }
 
         val rootController = MultiStackRootController(
+            backgroundColor = backgroundColor,
             rootControllerType = RootControllerType.MultiStack,
             tabsNavModel = tabsNavModel,
             tabItems = configurations,
@@ -433,7 +434,7 @@ open class RootController(private val rootControllerType: RootControllerType = R
                 CompositionLocalProvider(
                     LocalRootController provides bundle.rootController
                 ) {
-                    Navigator(startScreen = bundle.startScreen, startParams = bundle.params, backgroundColor = Color.White)
+                    Navigator(startScreen = bundle.startScreen, startParams = bundle.params)
                 }
             }
 
@@ -468,7 +469,6 @@ open class RootController(private val rootControllerType: RootControllerType = R
 
     companion object {
         private const val flowKey = "odyssey_flow_reserved_type"
-        private const val modalSheet = "odyssey_modal_sheet_reserved_type"
         private const val multiStackKey = "odyssey_multi_stack_reserved_type"
     }
 }
