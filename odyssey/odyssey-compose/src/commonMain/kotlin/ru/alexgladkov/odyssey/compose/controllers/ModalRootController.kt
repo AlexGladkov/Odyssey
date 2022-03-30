@@ -16,6 +16,7 @@ enum class ModalDialogState {
  * Class helper to use with compose for bottom modal sheet
  * @param maxHeight - maxHeight in Float. use null for wrap by content
  * @param cornerRadius - card corner radius in dp
+ * @param threshold - threshold for closing modal bottom sheet
  * @param alpha - scrimer alpha
  * @param closeOnBackdropClick - true if you want to close on backdrop click
  * @param content - composable content
@@ -25,6 +26,7 @@ data class ModalSheetBundle(
     override val animationTime: Int,
     override val content: Render,
     val maxHeight: Float?,
+    val threshold: Float,
     val closeOnBackdropClick: Boolean,
     val alpha: Float,
     val cornerRadius: Int,
@@ -149,6 +151,7 @@ open class ModalController {
 internal fun ModalSheetConfiguration.wrap(with: Render): ModalBundle = ModalSheetBundle(
     maxHeight = maxHeight,
     closeOnBackdropClick = closeOnBackdropClick,
+    threshold = threshold,
     animationTime = animationTime,
     cornerRadius = cornerRadius,
     alpha = alpha,

@@ -64,7 +64,7 @@ internal fun BoxScope.BottomModalSheet(
             modifier = modifier.swipeable(
                 state = swipeableState,
                 anchors = anchors,
-                thresholds = { _, _ -> FractionalThreshold(0.3f) },
+                thresholds = { _, _ -> FractionalThreshold(bundle.threshold) },
                 orientation = Orientation.Vertical
             ).offset {
                 val swipeOffset = swipeableState.offset.value
