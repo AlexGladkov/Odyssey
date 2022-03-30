@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.*
 import ru.alexgladkov.odyssey.compose.animations.AnimatedTransition
 import ru.alexgladkov.odyssey.compose.controllers.*
+import ru.alexgladkov.odyssey.compose.helpers.extractWindowHeight
 import ru.alexgladkov.odyssey.compose.helpers.noRippleClickable
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
 import ru.alexgladkov.odyssey.core.animations.AnimationType
@@ -76,23 +77,38 @@ fun ModalNavigator(
 @Composable
 private fun BoxScope.BottomModalSheet(
     bundle: ModalSheetBundle,
-    modalController: ModalController
+    modalController: ModalController,
 ) {
+    val animationTime = 400
+    val height = extractWindowHeight()
     var modifier = Modifier.align(Alignment.BottomStart).fillMaxWidth()
     if (bundle.maxHeight != null)
         modifier = modifier.fillMaxHeight(bundle.maxHeight)
+
+    var offsetValue by remember { mutableStateOf(height) }
+    var backdropAlphaValue by remember { mutableStateOf(0f) }
+
+    val backdropAlpha by animateFloatAsState(
+        targetValue = backdropAlphaValue,
+        animationSpec = tween(durationMillis = animationTime, easing = FastOutSlowInEasing),
+    )
+
+    val offset by animateDpAsState(
+        targetValue = offsetValue,
+        animationSpec = tween(durationMillis = animationTime, easing = FastOutSlowInEasing),
+        finishedListener = {
+            when (bundle.dialogState) {
+                ModalDialogState.IDLE -> modalController.setTopDialogState(ModalDialogState.OPEN)
+                ModalDialogState.ClOSE -> modalController.finishCloseAction()
+            }
+        }
+    )
+
     if (bundle.backContent != null) {
         bundle.backContent.invoke()
     } else {
-        Screamer(bundle.alpha) { modalController.removeTopScreen() }
+        Screamer(backdropAlpha) { modalController.popBackStack() }
     }
-
-//    var offset by remember { mutableStateOf(320.dp) }
-    var offsetValue by remember { mutableStateOf(350.dp) }
-    val offset by animateDpAsState(
-        targetValue = offsetValue,
-        animationSpec = tween(durationMillis = 500, easing = FastOutSlowInEasing),
-    )
 
     Box(modifier = Modifier.fillMaxSize()) {
         Card(
@@ -106,20 +122,18 @@ private fun BoxScope.BottomModalSheet(
         }
     }
 
-    LaunchedEffect(Unit) {
-        offsetValue = 0.dp
-//        val animationTime = 0.5
-//        val tick = 10L
-//
-//        val step = (tick / (animationTime * 1000L).toFloat()) * 100
-//
-//        launch {
-//            while (offset > (-16).dp) {
-//                delay(tick)
-//                println("Debug $offset")
-//                offset -= step.dp
-//            }
-//        }
+    LaunchedEffect(bundle.dialogState) {
+        when (bundle.dialogState) {
+            ModalDialogState.ClOSE -> {
+                offsetValue = height
+                backdropAlphaValue = 0f
+            }
+
+            else -> {
+                offsetValue = 0.dp
+                backdropAlphaValue = bundle.alpha
+            }
+        }
     }
 }
 
@@ -128,17 +142,67 @@ private fun BoxScope.AlertDialog(
     bundle: AlertBundle,
     modalController: ModalController
 ) {
+    val animationTime = 400
+    val height = extractWindowHeight()
+
     var modifier = Modifier.align(Alignment.Center)
     if (bundle.maxHeight != null)
         modifier = modifier.fillMaxHeight(bundle.maxHeight)
     if (bundle.maxWidth != null)
         modifier = modifier.fillMaxWidth(bundle.maxWidth)
-    Screamer(bundle.alpha) { modalController.removeTopScreen() }
+
+    var backdropAlphaValue by remember { mutableStateOf(0f) }
+    var dialogAlphaValue by remember { mutableStateOf(0f) }
+    var offsetValue by remember { mutableStateOf(0.dp) }
+
+    val backdropAlpha by animateFloatAsState(
+        targetValue = backdropAlphaValue,
+        animationSpec = tween(durationMillis = animationTime, easing = FastOutSlowInEasing),
+    )
+
+    val dialogAlpha by animateFloatAsState(
+        targetValue = dialogAlphaValue,
+        animationSpec = tween(durationMillis = animationTime, easing = FastOutSlowInEasing),
+        finishedListener = {
+            if (bundle.dialogState == ModalDialogState.IDLE) {
+                modalController.setTopDialogState(ModalDialogState.OPEN)
+            }
+        }
+    )
+
+    val offset by animateDpAsState(
+        targetValue = offsetValue,
+        animationSpec = tween(durationMillis = animationTime, easing = FastOutSlowInEasing),
+        finishedListener = {
+            if (bundle.dialogState == ModalDialogState.ClOSE) {
+                modalController.finishCloseAction()
+            }
+        }
+    )
+
+    Screamer(backdropAlpha) { modalController.popBackStack() }
+
     Card(
-        modifier = modifier,
+        modifier = modifier.alpha(dialogAlpha).offset(y = offset),
         shape = RoundedCornerShape(corner = CornerSize(bundle.cornerRadius))
     ) {
         bundle.content.invoke()
+    }
+
+    LaunchedEffect(bundle.dialogState) {
+        when (bundle.dialogState) {
+            ModalDialogState.ClOSE -> {
+                backdropAlphaValue = 0f
+                dialogAlphaValue = 1f
+                offsetValue = height
+            }
+
+            else -> {
+                backdropAlphaValue = bundle.alpha
+                dialogAlphaValue = 1f
+                offsetValue = 0.dp
+            }
+        }
     }
 }
 

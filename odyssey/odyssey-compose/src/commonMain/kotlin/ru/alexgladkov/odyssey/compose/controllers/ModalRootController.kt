@@ -8,6 +8,10 @@ import ru.alexgladkov.odyssey.compose.navigation.bottom_sheet_navigation.ModalSh
 import ru.alexgladkov.odyssey.core.extensions.CFlow
 import ru.alexgladkov.odyssey.core.extensions.wrap
 
+enum class ModalDialogState {
+    IDLE, OPEN, ClOSE
+}
+
 /**
  * Class helper to use with compose for bottom modal sheet
  * @param maxHeight - maxHeight in Float. use null for wrap by content
@@ -17,12 +21,13 @@ import ru.alexgladkov.odyssey.core.extensions.wrap
  * @param content - composable content
  */
 data class ModalSheetBundle(
+    override val dialogState: ModalDialogState,
+    override val content: Render,
     val maxHeight: Float?,
     val closeOnBackdropClick: Boolean,
     val alpha: Float,
     val cornerRadius: Int,
     val backContent: Render? = null,
-    val content: Render
 ) : ModalBundle
 
 /**
@@ -35,22 +40,27 @@ data class ModalSheetBundle(
  * @param content - composable content
  */
 data class AlertBundle(
+    override val dialogState: ModalDialogState,
+    override val content: Render,
     val maxHeight: Float?,
     val maxWidth: Float?,
     val closeOnBackdropClick: Boolean,
     val alpha: Float,
     val cornerRadius: Int,
-    val content: Render
 ) : ModalBundle
 
 /**
  * Class helper to use with modal for custom modal
  */
 data class CustomModalBundle(
-    val content: Render
+    override val dialogState: ModalDialogState,
+    override val content: Render
 ) : ModalBundle
 
-interface ModalBundle
+interface ModalBundle {
+    val content: Render
+    val dialogState: ModalDialogState
+}
 
 @Deprecated("see ModalSheetController", ReplaceWith("ModalSheetController"))
 class ModalSheetController : ModalController()
@@ -88,6 +98,24 @@ open class ModalController {
     }
 
     fun popBackStack() {
+        setTopDialogState(modalDialogState = ModalDialogState.ClOSE)
+    }
+
+    internal fun setTopDialogState(modalDialogState: ModalDialogState) {
+        val newState = when (val last = _backStack.last()) {
+            is ModalSheetBundle -> last.copy(dialogState = modalDialogState)
+            is AlertBundle -> last.copy(dialogState = modalDialogState)
+            is CustomModalBundle -> last.copy(dialogState = modalDialogState)
+            else -> TODO("Not implemented dialog type $last")
+        }
+
+        _backStack.removeLast()
+        _backStack.add(newState)
+        redrawStack()
+    }
+
+    /** Removes last modal from backstack */
+    internal fun finishCloseAction() {
         if (_backStack.isNotEmpty()) _backStack.removeLast()
         redrawStack()
     }
@@ -113,12 +141,14 @@ internal fun ModalSheetConfiguration.wrap(with: Render): ModalBundle = ModalShee
     cornerRadius = cornerRadius,
     alpha = alpha,
     backContent = backContent,
+    dialogState = ModalDialogState.IDLE,
     content = with
 )
 
 internal fun AlertConfiguration.wrap(with: Render): ModalBundle = AlertBundle(
     maxHeight = maxHeight,
     maxWidth = maxWidth,
+    dialogState = ModalDialogState.IDLE,
     closeOnBackdropClick = closeOnBackdropClick,
     cornerRadius = cornerRadius,
     alpha = alpha,
@@ -127,5 +157,5 @@ internal fun AlertConfiguration.wrap(with: Render): ModalBundle = AlertBundle(
 
 @Suppress("unused")
 internal fun CustomModalConfiguration.wrap(with: Render): ModalBundle = CustomModalBundle(
-    content = with
+    content = with, dialogState = ModalDialogState.IDLE
 )
