@@ -2,9 +2,9 @@ package ru.alexgladkov.odyssey.compose.controllers
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import ru.alexgladkov.odyssey.compose.Render
-import ru.alexgladkov.odyssey.compose.navigation.bottom_sheet_navigation.AlertConfiguration
-import ru.alexgladkov.odyssey.compose.navigation.bottom_sheet_navigation.CustomModalConfiguration
-import ru.alexgladkov.odyssey.compose.navigation.bottom_sheet_navigation.ModalSheetConfiguration
+import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.AlertConfiguration
+import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.CustomModalConfiguration
+import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.ModalSheetConfiguration
 import ru.alexgladkov.odyssey.core.extensions.CFlow
 import ru.alexgladkov.odyssey.core.extensions.wrap
 
@@ -22,6 +22,7 @@ enum class ModalDialogState {
  */
 data class ModalSheetBundle(
     override val dialogState: ModalDialogState,
+    override val animationTime: Int,
     override val content: Render,
     val maxHeight: Float?,
     val closeOnBackdropClick: Boolean,
@@ -41,6 +42,7 @@ data class ModalSheetBundle(
  */
 data class AlertBundle(
     override val dialogState: ModalDialogState,
+    override val animationTime: Int,
     override val content: Render,
     val maxHeight: Float?,
     val maxWidth: Float?,
@@ -54,11 +56,20 @@ data class AlertBundle(
  */
 data class CustomModalBundle(
     override val dialogState: ModalDialogState,
+    override val animationTime: Int,
     override val content: Render
 ) : ModalBundle
 
+/**
+ * Common interface for any modal screens
+ * @param content - composable content
+ * @param animationTime - time for all animations
+ * @param dialogState - current dialog state
+ * @see ModalDialogState
+ */
 interface ModalBundle {
     val content: Render
+    val animationTime: Int
     val dialogState: ModalDialogState
 }
 
@@ -138,6 +149,7 @@ open class ModalController {
 internal fun ModalSheetConfiguration.wrap(with: Render): ModalBundle = ModalSheetBundle(
     maxHeight = maxHeight,
     closeOnBackdropClick = closeOnBackdropClick,
+    animationTime = animationTime,
     cornerRadius = cornerRadius,
     alpha = alpha,
     backContent = backContent,
@@ -148,6 +160,7 @@ internal fun ModalSheetConfiguration.wrap(with: Render): ModalBundle = ModalShee
 internal fun AlertConfiguration.wrap(with: Render): ModalBundle = AlertBundle(
     maxHeight = maxHeight,
     maxWidth = maxWidth,
+    animationTime = animationTime,
     dialogState = ModalDialogState.IDLE,
     closeOnBackdropClick = closeOnBackdropClick,
     cornerRadius = cornerRadius,
@@ -157,5 +170,5 @@ internal fun AlertConfiguration.wrap(with: Render): ModalBundle = AlertBundle(
 
 @Suppress("unused")
 internal fun CustomModalConfiguration.wrap(with: Render): ModalBundle = CustomModalBundle(
-    content = with, dialogState = ModalDialogState.IDLE
+    content = with, dialogState = ModalDialogState.IDLE, animationTime = animationTime
 )
