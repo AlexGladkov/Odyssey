@@ -24,7 +24,7 @@ internal fun BoxScope.BottomModalSheet(
     bundle: ModalSheetBundle,
     modalController: ModalController,
 ) {
-    val height by derivedStateOf { extractWindowHeight() }
+    val height = extractWindowHeight()
     val viewHeight by derivedStateOf { (height * (bundle.maxHeight ?: 1f)) }
     val swipeableState = rememberSwipeableState(0)
 
