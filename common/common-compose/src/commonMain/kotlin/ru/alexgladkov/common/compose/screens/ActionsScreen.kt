@@ -28,7 +28,7 @@ fun ActionsScreen(count: Int?) {
     val modalController = rootController.findModalController()
 
     Column {
-        CounterView(rootController.id.toString(), count)
+        CounterView(rootController.id.toString(), rootController.deep, count)
 
         Box(
             modifier = Modifier.background(Odyssey.color.primaryBackground).fillMaxSize()
@@ -121,13 +121,13 @@ fun ActionsScreen(count: Int?) {
 }
 
 @Composable
-fun CounterView(controllerId: String, count: Int?) {
+fun CounterView(controllerId: String, deep: Int, count: Int?) {
     Row(
         Modifier.background(Odyssey.color.primaryBackground).fillMaxWidth().padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = "Controller: $controllerId Chain: ${count?.toSequence() ?: "[0]"}",
+            text = "Controller: $controllerId Deep: $deep\nChain: ${count?.toSequence() ?: "[0]"}",
             color = Odyssey.color.primaryText
         )
     }

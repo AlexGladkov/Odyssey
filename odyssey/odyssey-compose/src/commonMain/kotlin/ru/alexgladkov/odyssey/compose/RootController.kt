@@ -56,6 +56,8 @@ open class RootController(private val rootControllerType: RootControllerType = R
     private var _modalController: ModalController? = null
     private var _deepLinkUri: String? = null
     val id = getNextId()
+    var deep: Int = 0
+        protected set
     var parentRootController: RootController? = null
     var onApplicationFinish: (() -> Unit)? = null
     var onScreenRemove: (ScreenBundle) -> Unit =
@@ -347,6 +349,7 @@ open class RootController(private val rootControllerType: RootControllerType = R
 
         val rootController = RootController(RootControllerType.Flow, backgroundColor)
 
+        rootController.deep = this.deep + 1
         rootController.debugName = key
         rootController.parentRootController = this
         rootController.onApplicationFinish = {
@@ -409,9 +412,9 @@ open class RootController(private val rootControllerType: RootControllerType = R
             rootControllerType = RootControllerType.MultiStack,
             tabsNavModel = tabsNavModel,
             tabItems = configurations,
-            startTabPosition = startTabPosition
+            startTabPosition = startTabPosition,
         )
-
+        rootController.deep = this.deep + 1
         rootController.setDeepLinkUri(_deepLinkUri)
         _childrenRootController.add(rootController)
 

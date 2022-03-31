@@ -23,7 +23,7 @@ fun PresentedActionsScreen(count: Int?) {
     val modalController = rootController.findModalController()
 
     Column {
-        CounterView(rootController.id.toString(), count)
+        CounterView(rootController.id.toString(), rootController.deep, count)
 
         Box(
             modifier = Modifier.background(Odyssey.color.primaryBackground).fillMaxSize()
