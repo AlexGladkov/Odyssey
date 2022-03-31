@@ -21,7 +21,7 @@ enum class ModalDialogState {
  * @param closeOnBackdropClick - true if you want to close on backdrop click
  * @param content - composable content
  */
-data class ModalSheetBundle(
+internal data class ModalSheetBundle(
     override val dialogState: ModalDialogState,
     override val animationTime: Int,
     override val content: Render,
@@ -42,7 +42,7 @@ data class ModalSheetBundle(
  * @param alpha - scrimer alpha
  * @param content - composable content
  */
-data class AlertBundle(
+internal data class AlertBundle(
     override val dialogState: ModalDialogState,
     override val animationTime: Int,
     override val content: Render,
@@ -56,7 +56,7 @@ data class AlertBundle(
 /**
  * Class helper to use with modal for custom modal
  */
-data class CustomModalBundle(
+internal data class CustomModalBundle(
     override val dialogState: ModalDialogState,
     override val animationTime: Int,
     override val content: Render
@@ -69,7 +69,7 @@ data class CustomModalBundle(
  * @param dialogState - current dialog state
  * @see ModalDialogState
  */
-interface ModalBundle {
+sealed interface ModalBundle {
     val content: Render
     val animationTime: Int
     val dialogState: ModalDialogState
@@ -119,7 +119,6 @@ open class ModalController {
             is ModalSheetBundle -> last.copy(dialogState = modalDialogState)
             is AlertBundle -> last.copy(dialogState = modalDialogState)
             is CustomModalBundle -> last.copy(dialogState = modalDialogState)
-            else -> TODO("Not implemented dialog type $last")
         }
 
         _backStack.removeLast()
