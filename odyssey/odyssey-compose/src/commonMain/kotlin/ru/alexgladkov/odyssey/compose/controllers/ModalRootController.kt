@@ -2,27 +2,35 @@ package ru.alexgladkov.odyssey.compose.controllers
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import ru.alexgladkov.odyssey.compose.Render
-import ru.alexgladkov.odyssey.compose.navigation.bottom_sheet_navigation.AlertConfiguration
-import ru.alexgladkov.odyssey.compose.navigation.bottom_sheet_navigation.CustomModalConfiguration
-import ru.alexgladkov.odyssey.compose.navigation.bottom_sheet_navigation.ModalSheetConfiguration
+import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.AlertConfiguration
+import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.CustomModalConfiguration
+import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.ModalSheetConfiguration
 import ru.alexgladkov.odyssey.core.extensions.CFlow
 import ru.alexgladkov.odyssey.core.extensions.wrap
+
+enum class ModalDialogState {
+    IDLE, OPEN, ClOSE
+}
 
 /**
  * Class helper to use with compose for bottom modal sheet
  * @param maxHeight - maxHeight in Float. use null for wrap by content
  * @param cornerRadius - card corner radius in dp
+ * @param threshold - threshold for closing modal bottom sheet
  * @param alpha - scrimer alpha
  * @param closeOnBackdropClick - true if you want to close on backdrop click
  * @param content - composable content
  */
-data class ModalSheetBundle(
+internal data class ModalSheetBundle(
+    override val dialogState: ModalDialogState,
+    override val animationTime: Int,
+    override val content: Render,
     val maxHeight: Float?,
+    val threshold: Float,
     val closeOnBackdropClick: Boolean,
     val alpha: Float,
     val cornerRadius: Int,
     val backContent: Render? = null,
-    val content: Render
 ) : ModalBundle
 
 /**
@@ -34,23 +42,38 @@ data class ModalSheetBundle(
  * @param alpha - scrimer alpha
  * @param content - composable content
  */
-data class AlertBundle(
+internal data class AlertBundle(
+    override val dialogState: ModalDialogState,
+    override val animationTime: Int,
+    override val content: Render,
     val maxHeight: Float?,
     val maxWidth: Float?,
     val closeOnBackdropClick: Boolean,
     val alpha: Float,
     val cornerRadius: Int,
-    val content: Render
 ) : ModalBundle
 
 /**
  * Class helper to use with modal for custom modal
  */
-data class CustomModalBundle(
-    val content: Render
+internal data class CustomModalBundle(
+    override val dialogState: ModalDialogState,
+    override val animationTime: Int,
+    override val content: Render
 ) : ModalBundle
 
-interface ModalBundle
+/**
+ * Common interface for any modal screens
+ * @param content - composable content
+ * @param animationTime - time for all animations
+ * @param dialogState - current dialog state
+ * @see ModalDialogState
+ */
+sealed interface ModalBundle {
+    val content: Render
+    val animationTime: Int
+    val dialogState: ModalDialogState
+}
 
 @Deprecated("see ModalSheetController", ReplaceWith("ModalSheetController"))
 class ModalSheetController : ModalController()
@@ -88,6 +111,23 @@ open class ModalController {
     }
 
     fun popBackStack() {
+        setTopDialogState(modalDialogState = ModalDialogState.ClOSE)
+    }
+
+    internal fun setTopDialogState(modalDialogState: ModalDialogState) {
+        val newState = when (val last = _backStack.last()) {
+            is ModalSheetBundle -> last.copy(dialogState = modalDialogState)
+            is AlertBundle -> last.copy(dialogState = modalDialogState)
+            is CustomModalBundle -> last.copy(dialogState = modalDialogState)
+        }
+
+        _backStack.removeLast()
+        _backStack.add(newState)
+        redrawStack()
+    }
+
+    /** Removes last modal from backstack */
+    internal fun finishCloseAction() {
         if (_backStack.isNotEmpty()) _backStack.removeLast()
         redrawStack()
     }
@@ -110,15 +150,20 @@ open class ModalController {
 internal fun ModalSheetConfiguration.wrap(with: Render): ModalBundle = ModalSheetBundle(
     maxHeight = maxHeight,
     closeOnBackdropClick = closeOnBackdropClick,
+    threshold = threshold,
+    animationTime = animationTime,
     cornerRadius = cornerRadius,
     alpha = alpha,
     backContent = backContent,
+    dialogState = ModalDialogState.IDLE,
     content = with
 )
 
 internal fun AlertConfiguration.wrap(with: Render): ModalBundle = AlertBundle(
     maxHeight = maxHeight,
     maxWidth = maxWidth,
+    animationTime = animationTime,
+    dialogState = ModalDialogState.IDLE,
     closeOnBackdropClick = closeOnBackdropClick,
     cornerRadius = cornerRadius,
     alpha = alpha,
@@ -127,5 +172,5 @@ internal fun AlertConfiguration.wrap(with: Render): ModalBundle = AlertBundle(
 
 @Suppress("unused")
 internal fun CustomModalConfiguration.wrap(with: Render): ModalBundle = CustomModalBundle(
-    content = with
+    content = with, dialogState = ModalDialogState.IDLE, animationTime = animationTime
 )

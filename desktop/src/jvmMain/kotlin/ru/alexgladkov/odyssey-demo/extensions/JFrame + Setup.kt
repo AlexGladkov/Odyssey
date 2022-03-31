@@ -8,7 +8,7 @@ import ru.alexgladkov.common.compose.theme.OdysseyTheme
 import ru.alexgladkov.odyssey.compose.base.Navigator
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
 import ru.alexgladkov.odyssey.compose.navigation.RootComposeBuilder
-import ru.alexgladkov.odyssey.compose.navigation.bottom_sheet_navigation.ModalNavigator
+import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.ModalNavigator
 import java.awt.BorderLayout
 import javax.swing.JFrame
 import javax.swing.WindowConstants

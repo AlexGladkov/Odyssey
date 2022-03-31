@@ -28,7 +28,14 @@ kotlin {
         named("commonTest")
         named("androidMain") {
             dependencies {
+                implementation(Dependencies.JetBrains.Kotlin.coroutinesAndroid)
                 implementation(Dependencies.AndroidX.Activity.activityCompose)
+            }
+        }
+
+        desktopMain {
+            dependencies {
+                implementation(Dependencies.JetBrains.Kotlin.coroutinesSwing)
             }
         }
     }
