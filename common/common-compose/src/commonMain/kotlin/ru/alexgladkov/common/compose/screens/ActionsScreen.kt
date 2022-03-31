@@ -119,11 +119,19 @@ fun ActionsScreen(count: Int?) {
 
 @Composable
 fun CounterView(count: Int?) {
-    Row(
+    val rootController = LocalRootController.current
+    val level = rootController.measureLevel()
+
+    Column(
         Modifier.background(Odyssey.color.primaryBackground).fillMaxWidth().padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
+            text = "Controller ${rootController.debugName}, Level $level",
+            color = Odyssey.color.primaryText
+        )
+
+        Text(
+            modifier = Modifier.padding(top = 4.dp),
             text = "Chain: ${count?.toSequence() ?: "[0]"}",
             color = Odyssey.color.primaryText
         )

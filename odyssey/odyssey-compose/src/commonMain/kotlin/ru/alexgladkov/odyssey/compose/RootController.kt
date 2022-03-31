@@ -56,6 +56,7 @@ open class RootController(
     private var _onBackPressedDispatcher: OnBackPressedDispatcher? = null
     private var _modalController: ModalController? = null
     private var _deepLinkUri: String? = null
+    private var _debugLevel: Int = 0
 
     var parentRootController: RootController? = null
     var onApplicationFinish: (() -> Unit)? = null
@@ -117,6 +118,10 @@ open class RootController(
             }
         }
     }
+
+    /** Measure deep of root controller */
+    fun measureLevel(): Int = findRootController()._backstack.size
+
 
     /**
      * Send command to controller to launch new scenario
