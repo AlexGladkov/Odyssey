@@ -21,7 +21,7 @@ fun TabScreen(count: Int?) {
     val modalController = rootController.findModalController()
 
     Column {
-        CounterView(count)
+        CounterView(rootController.id.toString(), count)
 
         Box(
             modifier = Modifier.background(Odyssey.color.primaryBackground).fillMaxSize()

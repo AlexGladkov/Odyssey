@@ -24,6 +24,8 @@ import ru.alexgladkov.odyssey.core.backpress.OnBackPressedDispatcher
 import ru.alexgladkov.odyssey.core.screen.Screen
 import ru.alexgladkov.odyssey.core.screen.ScreenBundle
 import ru.alexgladkov.odyssey.core.wrap
+import java.util.*
+import java.util.concurrent.atomic.AtomicInteger
 import kotlin.collections.HashMap
 
 typealias RenderWithParams<T> = @Composable (T) -> Unit
@@ -53,7 +55,7 @@ open class RootController(private val rootControllerType: RootControllerType = R
     private var _onBackPressedDispatcher: OnBackPressedDispatcher? = null
     private var _modalController: ModalController? = null
     private var _deepLinkUri: String? = null
-
+    val id = getNextId()
     var parentRootController: RootController? = null
     var onApplicationFinish: (() -> Unit)? = null
     var onScreenRemove: (ScreenBundle) -> Unit =
@@ -470,5 +472,7 @@ open class RootController(private val rootControllerType: RootControllerType = R
     companion object {
         private const val flowKey = "odyssey_flow_reserved_type"
         private const val multiStackKey = "odyssey_multi_stack_reserved_type"
+        private val lastId = AtomicInteger(-1)
+        private fun getNextId(): Int = lastId.addAndGet(1)
     }
 }

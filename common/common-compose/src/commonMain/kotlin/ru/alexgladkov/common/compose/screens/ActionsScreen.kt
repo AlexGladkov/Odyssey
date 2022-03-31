@@ -28,7 +28,7 @@ fun ActionsScreen(count: Int?) {
     val modalController = rootController.findModalController()
 
     Column {
-        CounterView(count)
+        CounterView(rootController.id.toString(), count)
 
         Box(
             modifier = Modifier.background(Odyssey.color.primaryBackground).fillMaxSize()
@@ -100,7 +100,10 @@ fun ActionsScreen(count: Int?) {
                         "Start New Chain",
                         icon = Icons.Filled.OpenInNew
                     ) {
-                        rootController.present(screen = "present", launchFlag = LaunchFlag.SingleNewTask)
+                        rootController.present(
+                            screen = "present",
+                            launchFlag = LaunchFlag.SingleNewTask
+                        )
                     }
                 }
 
@@ -118,13 +121,13 @@ fun ActionsScreen(count: Int?) {
 }
 
 @Composable
-fun CounterView(count: Int?) {
+fun CounterView(controllerId: String, count: Int?) {
     Row(
         Modifier.background(Odyssey.color.primaryBackground).fillMaxWidth().padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = "Chain: ${count?.toSequence() ?: "[0]"}",
+            text = "Controller: $controllerId Chain: ${count?.toSequence() ?: "[0]"}",
             color = Odyssey.color.primaryText
         )
     }
