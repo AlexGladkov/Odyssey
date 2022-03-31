@@ -349,7 +349,6 @@ open class RootController(private val rootControllerType: RootControllerType = R
 
         val rootController = RootController(RootControllerType.Flow, backgroundColor)
 
-        rootController.deep = this.deep + 1
         rootController.debugName = key
         rootController.parentRootController = this
         rootController.onApplicationFinish = {
@@ -359,7 +358,7 @@ open class RootController(private val rootControllerType: RootControllerType = R
         rootController.setDeepLinkUri(_deepLinkUri)
         rootController.updateScreenMap(flowBuilderModel.screenMap)
         rootController.setNavigationGraph(flowBuilderModel.allowedDestination)
-        _childrenRootController.add(rootController)
+        addChildRootController(rootController)
 
         val targetScreen =
             flowBuilderModel.allowedDestination.firstOrNull { startScreen == it.key }?.key
@@ -414,9 +413,9 @@ open class RootController(private val rootControllerType: RootControllerType = R
             tabItems = configurations,
             startTabPosition = startTabPosition,
         )
-        rootController.deep = this.deep + 1
+
         rootController.setDeepLinkUri(_deepLinkUri)
-        _childrenRootController.add(rootController)
+        addChildRootController(rootController)
 
         val screen = Screen(
             key = multiStackKey,
@@ -430,6 +429,11 @@ open class RootController(private val rootControllerType: RootControllerType = R
 
         _backstack.add(screen)
         _currentScreen.value = screen.wrap()
+    }
+
+    private fun addChildRootController(rootController: RootController){
+        rootController.deep = this.deep + 1
+        _childrenRootController.add(rootController)
     }
 
     private fun initServiceScreens() {
