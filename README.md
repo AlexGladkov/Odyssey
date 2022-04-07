@@ -6,20 +6,40 @@
 
 Odyssey it's a declarative multiplatform navigation library for Multiplatform Compose
 
-🚧 WARNING! It's an early preview, so you use it with your own responsibility
-
-### Getting Started
-
-First add dependency to gradle
-
 ```kotlin
-named("commonMain") {
-    dependencies {
-        implementation("io.github.alexgladkov:odyssey-core:1.0.0-beta02") // For core classes
-        implementation("io.github.alexgladkov:odyssey-compose:1.0.0-beta02") // For compose extensions
+fun RootComposeBuilder.splashScreen() {
+    screen("splash") { SplashScreen() }
+}
+
+class MainActivity : AppCompatActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        setupNavigation("splash") {
+            splashScreen()
+        }
     }
 }
 ```
+
+###Documentation
+[Getting Started](documentation/GETTING_STARTED.md)
+
+### Supported Features
+ - Platforms: Android, Desktop
+ - [Simple navigation](documentation/SINGLE_SCREEN.md)
+ - [Nested navigation](documentation/FLOW_SCREEN.md)
+ - [Bottom Navigation View](documentation/BOTTOM_NAVIGATION.md)
+ - Multiple Modal Sheets
+ - Tab Navigation
+ - Side Drawer
+ - State Saving
+ - Beautiful Transition Animations
+ - Back Press Handling
+ - Deep Links
+ - Easy Multi Module Integration
+ 
 
 ### Start
 This library contains two basic entities for work - RootController and NavigationGraph.
