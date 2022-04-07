@@ -36,5 +36,23 @@ fun ModalSheetScreen(onCloseClick: () -> Unit) {
                 }
             }
         }
+        ActionCell(text = "Double-Modal show/close", icon = Icons.Filled.ArrowCircleUp) {
+            val height = Random.nextFloat().coerceAtLeast(0.4f)
+            val modalSheetConfiguration = ModalSheetConfiguration(
+                maxHeight = height,
+                cornerRadius = 16
+            )
+            modalController.present(modalSheetConfiguration) {
+                ModalSheetScreen {
+// close by next modal
+                }
+            }
+            modalController.present(modalSheetConfiguration.copy(maxHeight = height - 0.1f)) {
+                ModalSheetScreen {
+                    modalController.popBackStack()
+                    modalController.popBackStack()
+                }
+            }
+        }
     }
 }

@@ -114,6 +114,7 @@ open class RootController(
         _onBackPressedDispatcher = onBackPressedDispatcher
         _onBackPressedDispatcher?.backPressedCallback = object : BackPressedCallback() {
             override fun onBackPressed() {
+                println("DEBUG: On Back Pressed")
                 popBackStack()
             }
         }
@@ -177,11 +178,11 @@ open class RootController(
     // Returns to previous screen
     open fun popBackStack() {
         if (_modalController?.isEmpty() == false) {
-            _modalController?.removeTopScreen()
+            _modalController?.popBackStack()
             return
         }
 
-        when (_backstack.last().key) {
+        when (_backstack.last().realKey) {
             flowKey -> removeTopScreen(_childrenRootController.last())
             multiStackKey -> _childrenRootController.last().popBackStack()
             else -> removeTopScreen(this)
@@ -337,6 +338,7 @@ open class RootController(
     }
 
     private fun removeTopScreen(rootController: RootController?) {
+        println("RC ${rootController?.debugName}")
         rootController?.let {
             val isLastScreen = it._backstack.size <= 1
             if (isLastScreen) {

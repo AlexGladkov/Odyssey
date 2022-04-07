@@ -9,9 +9,6 @@ plugins {
 
 group = Dependencies.odysseyPackage
 version = Dependencies.odyssey
-dependencies {
-    implementation("androidx.compose.ui:ui-unit:1.0.5")
-}
 
 kotlin {
     android {
