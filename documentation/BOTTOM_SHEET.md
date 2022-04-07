@@ -13,3 +13,8 @@ Also you **CAN** show many bottom sheets
 ```kotlin
 val modalSheetConfiguration = ModalSheetConfiguration(0.7f, cornerRadius = 16)
 ```
+
+To close modal sheet you can use this
+```kotlin
+    modalController.popBackStack()
+```

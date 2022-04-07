@@ -23,84 +23,23 @@ class MainActivity : AppCompatActivity() {
 }
 ```
 
-###Documentation
+### Documentation
 [Getting Started](documentation/GETTING_STARTED.md)
 
 ### Supported Features
- - Platforms: Android, Desktop
+ - Platforms: [Android](documentation/ANDROID.md), [Desktop](documentation/DESKTOP.md)
  - [Simple navigation](documentation/SINGLE_SCREEN.md)
  - [Nested navigation](documentation/FLOW_SCREEN.md)
+ - [Params support](documentation/PARAMS_SUPPORT.md)
  - [Bottom Navigation View](documentation/BOTTOM_NAVIGATION.md)
- - Multiple Modal Sheets
- - Tab Navigation
- - Side Drawer
- - State Saving
- - Beautiful Transition Animations
- - Back Press Handling
+ - [Multiple Modal Sheets](documentation/BOTTOM_SHEET.md)
+ - [Tab Navigation](documentation/TAB_NAVIGATION.md)
+ - [Side Drawer](documentation/SIDE_DRAWER.md)
+ - [State Saving](documentation/STATE_SAVING.md)
+ - [Beautiful Transition Animations](documentation/ANIMATIONS.md)
+ - [Back Press Handling](documentation/BACK_PRESS.md)
  - Deep Links
  - Easy Multi Module Integration
- 
-
-### Start
-This library contains two basic entities for work - RootController and NavigationGraph.
-
-RootController needs to make navigation and works like single action
-
-NavigationGraph describes your destinations and connections between them
-
-To create navigation graph just create this extension
-
-```kotlin 
-fun RootComposeBuilder.generateGraph() {}
-```
-
-Then you can add screens inside this navigation graph and connect it to platforms. For now you can use 
-this types of navigation
-
-[1. Simple Screen](documentation/SINGLE_SCREEN.md)
-[2. Flow](documentation/FLOW_SCREEN.md)
-[3. Bottom Navigation](documentation/BOTTOM_NAVIGATION.md)
-[4. Bottom Sheet Navigation](documentation/BOTTOM_SHEET.md)
-
-#### Navigation
-[1. How to connect Android](documentation/ANDROID.md)
-[2. How to connect Desktop](documentation/DESKTOP.md)
-[3. How to connect iOS](documentation/IOS.md)
-
-[4. Animations](documentation/ANIMATIONS.md)
-
-#### Parameters
-
-If you need to add params to your navigation just use params parameter in launch function
-
-```kotlin
-rootController.launch(screen = "screen_name", params = paramState.value)
-```
-
-#### Navigation
-
-You must pass RootController to screen for inner navigation and if you need to open next screen
-just use this. You can use String as key for screen
-
-```kotlin
- rootController.launch("splash")
-```
-
-You can use specific flags to make navigation as you want. Now we have only one flag.
-```LaunchFlag.SingleNewTask``` to clear backstack if you need to start new screen from scratch
-
-```kotlin
- rootController.launch(screen = "splash", launchFlag = LaunchFlag.SingleNewTask)
-```
-
-#### Back
-
-If you need to go back just use. Library supports multibackstack navigation for any of platform
-
-```kotlin
- rootController.popBackStack()
-```
-
 
 ### Example
 
