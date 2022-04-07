@@ -5,6 +5,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import ru.alexgladkov.common.compose.theme.Odyssey
 import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.TabConfiguration
 import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.TabItem
 
@@ -15,8 +16,8 @@ class SearchTab : TabItem() {
         get() {
             return TabConfiguration(
                 title = "Search",
-                selectedColor = Color.DarkGray,
-                unselectedColor = Color.LightGray,
+                selectedColor = Odyssey.color.primaryText,
+                unselectedColor = Odyssey.color.controlColor,
                 titleStyle = TextStyle(
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Medium

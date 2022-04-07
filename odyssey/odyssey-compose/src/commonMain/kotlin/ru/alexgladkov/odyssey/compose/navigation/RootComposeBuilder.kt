@@ -1,18 +1,19 @@
 package ru.alexgladkov.odyssey.compose.navigation
 
+import androidx.compose.ui.graphics.Color
 import ru.alexgladkov.odyssey.compose.AllowedDestination
 import ru.alexgladkov.odyssey.compose.RootController
 import ru.alexgladkov.odyssey.compose.RenderWithParams
 import ru.alexgladkov.odyssey.compose.ScreenType
 import ru.alexgladkov.odyssey.compose.helpers.FlowBuilderModel
 import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.MultiStackBuilderModel
-import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.BottomNavModel
+import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.TabsNavModel
 
 /**
  * Base builder, declarative helper for navigation graph builder
  * @see RootController
  */
-class RootComposeBuilder {
+class RootComposeBuilder(private val backgroundColor: Color = Color.White) {
     private val _screens: MutableList<AllowedDestination> = mutableListOf()
     private val _screenMap: HashMap<String, RenderWithParams<Any?>> = hashMapOf()
 
@@ -21,14 +22,6 @@ class RootComposeBuilder {
         screenMap: Map<String, RenderWithParams<Any?>>,
     ) {
         _screens.add(AllowedDestination(key = key, screenType = ScreenType.Simple))
-        _screenMap.putAll(screenMap)
-    }
-
-    fun addModalBottomSheet(
-        key: String,
-        screenMap: Map<String, RenderWithParams<Any?>>
-    ) {
-        _screens.add(AllowedDestination(key = key, screenType = ScreenType.BottomSheet))
         _screenMap.putAll(screenMap)
     }
 
@@ -46,18 +39,18 @@ class RootComposeBuilder {
 
     fun addMultiStack(
         key: String,
-        bottomNavModel: BottomNavModel,
+        tabsNavModel: TabsNavModel<*>,
         multiStackBuilderModel: MultiStackBuilderModel
     ) {
         _screens.add(
             AllowedDestination(
                 key = key,
-                screenType = ScreenType.MultiStack(multiStackBuilderModel, bottomNavModel)
+                screenType = ScreenType.MultiStack(multiStackBuilderModel, tabsNavModel)
             )
         )
     }
 
-    fun build(): RootController = RootController().apply {
+    fun build(): RootController = RootController(backgroundColor = backgroundColor).apply {
         updateScreenMap(_screenMap)
         setNavigationGraph(_screens)
     }

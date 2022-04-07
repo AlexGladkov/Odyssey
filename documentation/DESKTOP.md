@@ -4,41 +4,50 @@ For working with Android I've created helper class DesktopScreenHost and now to 
 in your `main()` function
 
 ```kotlin
-fun main() = SwingUtilities.invokeLater {
-        val window = JFrame()
-        window.title = "Odyssey Demo"
-        window.setSize(800, 600)
+val window = JFrame()
+window.title = "Odyssey Demo"
+window.setSize(800, 600)
 
-        DesktopScreenHost(window)
-            .setupWithRootController(
-                startScreen = NavigationTree.Root.Splash.toString(),
-                block = buildComposeNavigationGraph()
-            )
+window.setupNavigation("actions") {
+    screen("actions") {
+        ActionsScreen(count = 0)
     }
+
+    // Here you can place other graph
+}
 ```
 
-If you need to customize parameters of your ScreenHost you can create your own ScreenHost class like this
-
+Sometimes you need to add compose wrapper for your navigator for this you can write your own function like this
 ```kotlin
-class DesktopScreenHost constructor(
-    private val window: JFrame,
-    // add your params here
-) : ComposableScreenHost() {
+fun JFrame.setupThemedNavigation(
+    startScreen: String,
+    vararg providers: ProvidedValue<*>,
+    navigationGraph: RootComposeBuilder.() -> Unit
+) {
 
-    override fun prepareFowDrawing() {
-        val composePanel = ComposePanel()
+    val composePanel = ComposePanel()
 
-        composePanel.setContent {
-            val destinationState = destinationObserver.wrap().observeAsState()
-            destinationState.value?.let {
-                launchScreen(it)
+    // Below function setup drawing, you can extend it
+    // by adding CompositionLocalProviders or something else
+    composePanel.setContent {
+        OdysseyTheme {
+            val rootController = RootComposeBuilder(backgroundColor = Odyssey.color.primaryBackground)
+                .apply(navigationGraph).build()
+
+            CompositionLocalProvider(
+                *providers,
+                LocalRootController provides rootController
+            ) {
+                ModalNavigator {
+                    Navigator(startScreen)
+                }
             }
         }
-
-        window.defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-        window.contentPane.add(composePanel, BorderLayout.CENTER)
-        window.setLocationRelativeTo(null)
-        window.isVisible = true
     }
+
+    defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
+    contentPane.add(composePanel, BorderLayout.CENTER)
+    setLocationRelativeTo(null)
+    isVisible = true
 }
 ```

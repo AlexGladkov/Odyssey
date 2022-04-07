@@ -6,7 +6,7 @@ import androidx.compose.ui.awt.ComposePanel
 import ru.alexgladkov.odyssey.compose.base.Navigator
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
 import ru.alexgladkov.odyssey.compose.navigation.RootComposeBuilder
-import ru.alexgladkov.odyssey.compose.navigation.bottom_sheet_navigation.ModalSheetNavigator
+import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.ModalNavigator
 import java.awt.BorderLayout
 import javax.swing.JFrame
 import javax.swing.WindowConstants
@@ -25,7 +25,7 @@ fun JFrame.setupNavigation(
         CompositionLocalProvider(
             LocalRootController provides rootController
         ) {
-            ModalSheetNavigator {
+            ModalNavigator {
                 Navigator(startScreen)
             }
         }

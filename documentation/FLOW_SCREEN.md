@@ -16,3 +16,15 @@ fun RootComposeBuilder.generateGraph() {
     }
 }
 ```
+
+To call this screen in your code just use this from your current screen
+```kotlin
+    val rootController = LocalRootController.current
+    rootController.present("auth_flow")
+```
+
+Or if you try to show flow above current flow you need to call new flow from rootController navigation
+```kotlin
+    val rootController = LocalRootController.current
+    rootController.findRootController().present("auth_flow")
+```

@@ -1,11 +1,12 @@
 package ru.alexgladkov.odyssey.compose.controllers
 
+import androidx.compose.ui.graphics.Color
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import ru.alexgladkov.odyssey.compose.RootController
 import ru.alexgladkov.odyssey.compose.RootControllerType
 import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.TabInfo
-import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.BottomNavModel
+import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.TabsNavModel
 
 data class TabNavigationModel(
     val tabInfo: TabInfo,
@@ -13,11 +14,14 @@ data class TabNavigationModel(
 )
 
 class MultiStackRootController(
+    backgroundColor: Color,
     val rootControllerType: RootControllerType,
-    val bottomNavModel: BottomNavModel,
-    val tabItems: List<TabNavigationModel>
-) : RootController(rootControllerType) {
-    private val _stackChangeObserver: MutableStateFlow<TabNavigationModel> = MutableStateFlow(tabItems.first())
+    val tabsNavModel: TabsNavModel<*>,
+    val tabItems: List<TabNavigationModel>,
+    startTabPosition: Int
+) : RootController(rootControllerType, backgroundColor) {
+    private val _stackChangeObserver: MutableStateFlow<TabNavigationModel> =
+        MutableStateFlow(tabItems[startTabPosition])
     val stackChangeObserver = _stackChangeObserver.asStateFlow()
 
     fun switchTab(tabConfiguration: TabNavigationModel) {
