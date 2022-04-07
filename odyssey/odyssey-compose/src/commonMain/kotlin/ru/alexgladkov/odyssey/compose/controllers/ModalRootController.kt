@@ -115,14 +115,17 @@ open class ModalController {
     }
 
     internal fun setTopDialogState(modalDialogState: ModalDialogState) {
-        val newState = when (val last = _backStack.last()) {
-            is ModalSheetBundle -> last.copy(dialogState = modalDialogState)
-            is AlertBundle -> last.copy(dialogState = modalDialogState)
-            is CustomModalBundle -> last.copy(dialogState = modalDialogState)
-        }
+        val last =
+            _backStack.last { modalDialogState != ModalDialogState.ClOSE || it.dialogState != modalDialogState }
+        val index = _backStack.indexOf(last)
+        val newState =
+            when (last) {
+                is ModalSheetBundle -> last.copy(dialogState = modalDialogState)
+                is AlertBundle -> last.copy(dialogState = modalDialogState)
+                is CustomModalBundle -> last.copy(dialogState = modalDialogState)
+            }
 
-        _backStack.removeLast()
-        _backStack.add(newState)
+        _backStack[index] = newState
         redrawStack()
     }
 
