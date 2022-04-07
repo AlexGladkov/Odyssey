@@ -1,7 +1,7 @@
 To work with bottom navigation you should use bottomNavigation inside graph builder
 
 ```kotlin
-bottomNavigation(name = "main", bottomNavModel = BottomConfiguration()) {
+bottomNavigation(name = "main", tabsNavModel = BottomConfiguration()) {
         tab(FeedTab()) {
             screen(name = "feed") {
                 FeedScreen()

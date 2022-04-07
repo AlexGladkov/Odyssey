@@ -15,8 +15,8 @@ First add dependency to gradle
 ```kotlin
 named("commonMain") {
     dependencies {
-        implementation("io.github.alexgladkov:odyssey-core:0.4.2") // For core classes
-        implementation("io.github.alexgladkov:odyssey-compose:0.4.2") // For compose extensions
+        implementation("io.github.alexgladkov:odyssey-core:1.0.0-beta02") // For core classes
+        implementation("io.github.alexgladkov:odyssey-compose:1.0.0-beta02") // For compose extensions
     }
 }
 ```
@@ -37,8 +37,8 @@ fun RootComposeBuilder.generateGraph() {}
 Then you can add screens inside this navigation graph and connect it to platforms. For now you can use 
 this types of navigation
 
-[1. Simple Screen](documentation/SIMPLE_SCREEN.md)
-[2. Flow](documentation/FLOW_SCREEn.md)
+[1. Simple Screen](documentation/SINGLE_SCREEN.md)
+[2. Flow](documentation/FLOW_SCREEN.md)
 [3. Bottom Navigation](documentation/BOTTOM_NAVIGATION.md)
 [4. Bottom Sheet Navigation](documentation/BOTTOM_SHEET.md)
 
