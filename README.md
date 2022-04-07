@@ -1,6 +1,6 @@
 [![Maven metadata URL](https://img.shields.io/maven-metadata/v?color=blue&metadataUrl=https://s01.oss.sonatype.org/service/local/repo_groups/public/content/io/github/alexgladkov/odyssey-core/maven-metadata.xml&style=for-the-badge)](https://repo.maven.apache.org/maven2/io/github/alexgladkov/)
 [![Support Platform](https://img.shields.io/static/v1?label=platforms&message=windows%20|%20macos%20|%20linux%20|%20android&color=green&style=for-the-badge)](https://github.com/AlexGladkov/Odyssey/tree/main/common/common-compose)
-[![Compose Version](https://img.shields.io/static/v1?label=Compose%20version&message=v%201.0.0&color=purple&style=for-the-badge)](https://www.jetbrains.com/ru-ru/lp/compose-mpp/)
+[![Compose Version](https://img.shields.io/static/v1?label=Compose%20version&message=v%201.1.1&color=purple&style=for-the-badge)](https://www.jetbrains.com/ru-ru/lp/compose-mpp/)
 
 **Odyssey**
 
