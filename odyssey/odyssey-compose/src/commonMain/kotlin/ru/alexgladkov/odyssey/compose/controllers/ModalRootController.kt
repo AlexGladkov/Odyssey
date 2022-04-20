@@ -8,8 +8,10 @@ import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.ModalSheetConf
 import ru.alexgladkov.odyssey.core.extensions.CFlow
 import ru.alexgladkov.odyssey.core.extensions.wrap
 
-enum class ModalDialogState {
-    IDLE, OPEN, ClOSE
+sealed class ModalDialogState {
+    object Idle : ModalDialogState()
+    object Open : ModalDialogState()
+    data class Close(val animate: Boolean = true) : ModalDialogState()
 }
 
 /**
@@ -120,13 +122,17 @@ open class ModalController {
         redrawStack()
     }
 
-    fun popBackStack() {
-        setTopDialogState(modalDialogState = ModalDialogState.ClOSE)
+    fun popBackStack(animate: Boolean = true) {
+        setTopDialogState(modalDialogState = ModalDialogState.Close(animate))
     }
 
     internal fun setTopDialogState(modalDialogState: ModalDialogState) {
+        if (modalDialogState is ModalDialogState.Close && !modalDialogState.animate) {
+            finishCloseAction()
+            return
+        }
         val last =
-            _backStack.last { modalDialogState != ModalDialogState.ClOSE || it.dialogState != modalDialogState }
+            _backStack.last { modalDialogState !is ModalDialogState.Close || it.dialogState != modalDialogState }
         val index = _backStack.indexOf(last)
         val newState =
             when (last) {
@@ -173,7 +179,7 @@ internal fun ModalSheetConfiguration.wrap(with: Render): ModalBundle = ModalShee
     cornerRadius = cornerRadius,
     alpha = alpha,
     backContent = backContent,
-    dialogState = ModalDialogState.IDLE,
+    dialogState = ModalDialogState.Idle,
     content = with
 )
 
@@ -181,7 +187,7 @@ internal fun AlertConfiguration.wrap(with: Render): ModalBundle = AlertBundle(
     maxHeight = maxHeight,
     maxWidth = maxWidth,
     animationTime = animationTime,
-    dialogState = ModalDialogState.IDLE,
+    dialogState = ModalDialogState.Idle,
     closeOnBackdropClick = closeOnBackdropClick,
     cornerRadius = cornerRadius,
     alpha = alpha,
@@ -190,5 +196,5 @@ internal fun AlertConfiguration.wrap(with: Render): ModalBundle = AlertBundle(
 
 @Suppress("unused")
 internal fun CustomModalConfiguration.wrap(with: Render): ModalBundle = CustomModalBundle(
-    content = with, dialogState = ModalDialogState.IDLE, animationTime = animationTime
+    content = with, dialogState = ModalDialogState.Idle, animationTime = animationTime
 )

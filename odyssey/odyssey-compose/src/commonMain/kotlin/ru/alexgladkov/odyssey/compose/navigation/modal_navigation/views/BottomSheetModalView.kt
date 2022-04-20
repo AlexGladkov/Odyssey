@@ -47,8 +47,8 @@ internal fun BoxScope.BottomModalSheet(
         animationSpec = bundle.animationTime.asTween(),
         finishedListener = {
             when (bundle.dialogState) {
-                ModalDialogState.IDLE -> modalController.setTopDialogState(ModalDialogState.OPEN)
-                ModalDialogState.ClOSE -> modalController.finishCloseAction()
+                ModalDialogState.Idle -> modalController.setTopDialogState(ModalDialogState.Open)
+                is ModalDialogState.Close -> modalController.finishCloseAction()
             }
         }
     )
@@ -90,11 +90,11 @@ internal fun BoxScope.BottomModalSheet(
 
     LaunchedEffect(bundle.dialogState, swipeableState.offset.value) {
         if (swipeableState.offset.value == viewHeight) {
-            modalController.setTopDialogState(ModalDialogState.ClOSE)
+            modalController.setTopDialogState(ModalDialogState.Close())
         }
 
         when (bundle.dialogState) {
-            ModalDialogState.ClOSE -> {
+            is ModalDialogState.Close -> {
                 offsetValue = height
                 backdropAlphaValue = 0f
             }
