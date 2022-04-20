@@ -44,8 +44,7 @@ data class AllowedDestination(
 )
 
 open class RootController(
-    private val rootControllerType: RootControllerType = RootControllerType.Root,
-    val backgroundColor: Color
+    private val rootControllerType: RootControllerType = RootControllerType.Root
 ) {
     private val _allowedDestinations: MutableList<AllowedDestination> = mutableListOf()
     private val _backstack = mutableListOf<Screen>()
@@ -56,9 +55,9 @@ open class RootController(
     private var _onBackPressedDispatcher: OnBackPressedDispatcher? = null
     private var _modalController: ModalController? = null
     private var _deepLinkUri: String? = null
-    private var _debugLevel: Int = 0
 
     var parentRootController: RootController? = null
+    var backgroundColor: Color = Color.White
     var onApplicationFinish: (() -> Unit)? = null
     var onScreenRemove: (ScreenBundle) -> Unit =
         { parentRootController?.onScreenRemove?.invoke(it) }
@@ -398,7 +397,8 @@ open class RootController(
             LaunchFlag.SingleNewTask -> _backstack.clear()
         }
 
-        val rootController = RootController(RootControllerType.Flow, backgroundColor)
+        val rootController = RootController(RootControllerType.Flow)
+        rootController.backgroundColor = backgroundColor
 
         rootController.debugName = key
         rootController.parentRootController = this
@@ -448,7 +448,8 @@ open class RootController(
 
         val parentRootController = this
         val configurations = multiStackBuilderModel.tabItems.map {
-            val rootController = RootController(RootControllerType.Tab, backgroundColor)
+            val rootController = RootController(RootControllerType.Tab)
+            rootController.backgroundColor = backgroundColor
             rootController.parentRootController = parentRootController
             rootController.debugName = it.tabItem.name
             rootController.setDeepLinkUri(_deepLinkUri)
@@ -458,7 +459,6 @@ open class RootController(
         }
 
         val rootController = MultiStackRootController(
-            backgroundColor = backgroundColor,
             rootControllerType = RootControllerType.MultiStack,
             tabsNavModel = tabsNavModel,
             tabItems = configurations,

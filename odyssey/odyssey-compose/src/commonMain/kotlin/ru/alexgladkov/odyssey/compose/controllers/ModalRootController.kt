@@ -8,8 +8,10 @@ import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.ModalSheetConf
 import ru.alexgladkov.odyssey.core.extensions.CFlow
 import ru.alexgladkov.odyssey.core.extensions.wrap
 
-enum class ModalDialogState {
-    IDLE, OPEN, ClOSE
+sealed class ModalDialogState {
+    object Idle : ModalDialogState()
+    object Open : ModalDialogState()
+    data class Close(val animate: Boolean = true) : ModalDialogState()
 }
 
 /**
@@ -17,8 +19,9 @@ enum class ModalDialogState {
  * @param maxHeight - maxHeight in Float. use null for wrap by content
  * @param cornerRadius - card corner radius in dp
  * @param threshold - threshold for closing modal bottom sheet
- * @param alpha - scrimer alpha
+ * @param alpha - screamer alpha
  * @param closeOnBackdropClick - true if you want to close on backdrop click
+ * @param closeOnSwipe - true if you want to close on swipe
  * @param content - composable content
  */
 internal data class ModalSheetBundle(
@@ -30,6 +33,7 @@ internal data class ModalSheetBundle(
     val closeOnBackdropClick: Boolean,
     val alpha: Float,
     val cornerRadius: Int,
+    val closeOnSwipe: Boolean = true,
     val backContent: Render? = null,
 ) : ModalBundle
 
@@ -64,14 +68,22 @@ internal data class CustomModalBundle(
 
 /**
  * Common interface for any modal screens
- * @param content - composable content
- * @param animationTime - time for all animations
- * @param dialogState - current dialog state
  * @see ModalDialogState
  */
 sealed interface ModalBundle {
+    /**
+     * composable content
+     */
     val content: Render
+
+    /**
+     * time for all animations
+     */
     val animationTime: Int
+
+    /**
+     * current dialog state
+     */
     val dialogState: ModalDialogState
 }
 
@@ -110,13 +122,17 @@ open class ModalController {
         redrawStack()
     }
 
-    fun popBackStack() {
-        setTopDialogState(modalDialogState = ModalDialogState.ClOSE)
+    fun popBackStack(animate: Boolean = true) {
+        setTopDialogState(modalDialogState = ModalDialogState.Close(animate))
     }
 
     internal fun setTopDialogState(modalDialogState: ModalDialogState) {
+        if (modalDialogState is ModalDialogState.Close && !modalDialogState.animate) {
+            finishCloseAction()
+            return
+        }
         val last =
-            _backStack.last { modalDialogState != ModalDialogState.ClOSE || it.dialogState != modalDialogState }
+            _backStack.last { modalDialogState !is ModalDialogState.Close || it.dialogState != modalDialogState }
         val index = _backStack.indexOf(last)
         val newState =
             when (last) {
@@ -157,12 +173,13 @@ open class ModalController {
 internal fun ModalSheetConfiguration.wrap(with: Render): ModalBundle = ModalSheetBundle(
     maxHeight = maxHeight,
     closeOnBackdropClick = closeOnBackdropClick,
+    closeOnSwipe = closeOnSwipe,
     threshold = threshold,
     animationTime = animationTime,
     cornerRadius = cornerRadius,
     alpha = alpha,
     backContent = backContent,
-    dialogState = ModalDialogState.IDLE,
+    dialogState = ModalDialogState.Idle,
     content = with
 )
 
@@ -170,7 +187,7 @@ internal fun AlertConfiguration.wrap(with: Render): ModalBundle = AlertBundle(
     maxHeight = maxHeight,
     maxWidth = maxWidth,
     animationTime = animationTime,
-    dialogState = ModalDialogState.IDLE,
+    dialogState = ModalDialogState.Idle,
     closeOnBackdropClick = closeOnBackdropClick,
     cornerRadius = cornerRadius,
     alpha = alpha,
@@ -179,5 +196,5 @@ internal fun AlertConfiguration.wrap(with: Render): ModalBundle = AlertBundle(
 
 @Suppress("unused")
 internal fun CustomModalConfiguration.wrap(with: Render): ModalBundle = CustomModalBundle(
-    content = with, dialogState = ModalDialogState.IDLE, animationTime = animationTime
+    content = with, dialogState = ModalDialogState.Idle, animationTime = animationTime
 )

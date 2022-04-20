@@ -54,5 +54,14 @@ fun ModalSheetScreen(onCloseClick: () -> Unit) {
                 }
             }
         }
+
+        ActionCell(text = "Modal screen without closing animation", icon = Icons.Filled.ArrowCircleUp) {
+            val modalSheetConfiguration = ModalSheetConfiguration(maxHeight = Random.nextFloat(), cornerRadius = 16)
+            modalController.present(modalSheetConfiguration) {
+                ModalSheetScreen {
+                    modalController.popBackStack(animate = false)
+                }
+            }
+        }
     }
 }

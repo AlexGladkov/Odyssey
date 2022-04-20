@@ -14,12 +14,11 @@ data class TabNavigationModel(
 )
 
 class MultiStackRootController(
-    backgroundColor: Color,
     val rootControllerType: RootControllerType,
     val tabsNavModel: TabsNavModel<*>,
     val tabItems: List<TabNavigationModel>,
     startTabPosition: Int
-) : RootController(rootControllerType, backgroundColor) {
+) : RootController(rootControllerType) {
     private val _stackChangeObserver: MutableStateFlow<TabNavigationModel> =
         MutableStateFlow(tabItems[startTabPosition])
     val stackChangeObserver = _stackChangeObserver.asStateFlow()

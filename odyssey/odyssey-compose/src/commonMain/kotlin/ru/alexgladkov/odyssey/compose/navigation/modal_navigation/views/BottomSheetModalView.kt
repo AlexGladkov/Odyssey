@@ -47,8 +47,8 @@ internal fun BoxScope.BottomModalSheet(
         animationSpec = bundle.animationTime.asTween(),
         finishedListener = {
             when (bundle.dialogState) {
-                ModalDialogState.IDLE -> modalController.setTopDialogState(ModalDialogState.OPEN)
-                ModalDialogState.ClOSE -> modalController.finishCloseAction()
+                ModalDialogState.Idle -> modalController.setTopDialogState(ModalDialogState.Open)
+                is ModalDialogState.Close -> modalController.finishCloseAction()
             }
         }
     )
@@ -56,11 +56,15 @@ internal fun BoxScope.BottomModalSheet(
     if (bundle.backContent != null) {
         bundle.backContent.invoke()
     } else {
-        Screamer(backdropAlpha) { modalController.popBackStack() }
+        Screamer(backdropAlpha) {
+            if (bundle.closeOnBackdropClick) {
+                modalController.popBackStack()
+            }
+        }
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        Card(
+        if (bundle.closeOnSwipe){
             modifier = modifier.swipeable(
                 state = swipeableState,
                 anchors = anchors,
@@ -71,7 +75,10 @@ internal fun BoxScope.BottomModalSheet(
                 val positiveOffset = if (swipeOffset < 0) 0 else swipeOffset
 
                 IntOffset(x = 0, y = offset + positiveOffset.toInt())
-            },
+            }
+        }
+        Card(
+            modifier = modifier,
             shape = RoundedCornerShape(
                 topStart = bundle.cornerRadius.dp,
                 topEnd = bundle.cornerRadius.dp
@@ -83,11 +90,11 @@ internal fun BoxScope.BottomModalSheet(
 
     LaunchedEffect(bundle.dialogState, swipeableState.offset.value) {
         if (swipeableState.offset.value == viewHeight) {
-            modalController.setTopDialogState(ModalDialogState.ClOSE)
+            modalController.setTopDialogState(ModalDialogState.Close())
         }
 
         when (bundle.dialogState) {
-            ModalDialogState.ClOSE -> {
+            is ModalDialogState.Close -> {
                 offsetValue = height
                 backdropAlphaValue = 0f
             }

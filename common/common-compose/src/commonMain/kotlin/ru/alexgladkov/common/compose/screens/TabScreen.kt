@@ -18,7 +18,6 @@ import ru.alexgladkov.odyssey.compose.local.LocalRootController
 @Composable
 fun TabScreen(count: Int?) {
     val rootController = LocalRootController.current
-    val modalController = rootController.findModalController()
 
     Column {
         CounterView(count)
