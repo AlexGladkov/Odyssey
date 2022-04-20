@@ -13,7 +13,7 @@ import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.TabsNavMo
  * Base builder, declarative helper for navigation graph builder
  * @see RootController
  */
-class RootComposeBuilder(private val backgroundColor: Color = Color.White) {
+class RootComposeBuilder {
     private val _screens: MutableList<AllowedDestination> = mutableListOf()
     private val _screenMap: HashMap<String, RenderWithParams<Any?>> = hashMapOf()
 
@@ -50,7 +50,7 @@ class RootComposeBuilder(private val backgroundColor: Color = Color.White) {
         )
     }
 
-    fun build(): RootController = RootController(backgroundColor = backgroundColor).apply {
+    fun build(): RootController = RootController().apply {
         updateScreenMap(_screenMap)
         setNavigationGraph(_screens)
     }
