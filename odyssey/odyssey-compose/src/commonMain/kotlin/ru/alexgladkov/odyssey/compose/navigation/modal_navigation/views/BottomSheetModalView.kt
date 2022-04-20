@@ -56,7 +56,11 @@ internal fun BoxScope.BottomModalSheet(
     if (bundle.backContent != null) {
         bundle.backContent.invoke()
     } else {
-        Screamer(backdropAlpha) { modalController.popBackStack() }
+        Screamer(backdropAlpha) {
+            if (bundle.closeOnBackdropClick) {
+                modalController.popBackStack()
+            }
+        }
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
