@@ -47,8 +47,8 @@ internal fun BoxScope.AlertDialog(
         targetValue = dialogAlphaValue,
         animationSpec = bundle.animationTime.asTween(),
         finishedListener = {
-            if (bundle.dialogState == ModalDialogState.IDLE) {
-                modalController.setTopDialogState(ModalDialogState.OPEN)
+            if (bundle.dialogState == ModalDialogState.Idle) {
+                modalController.setTopDialogState(ModalDialogState.Open)
             }
         }
     )
@@ -57,7 +57,7 @@ internal fun BoxScope.AlertDialog(
         targetValue = offsetValue,
         animationSpec = bundle.animationTime.asTween(),
         finishedListener = {
-            if (bundle.dialogState == ModalDialogState.ClOSE) {
+            if (bundle.dialogState is ModalDialogState.Close) {
                 modalController.finishCloseAction()
             }
         }
@@ -74,7 +74,7 @@ internal fun BoxScope.AlertDialog(
 
     LaunchedEffect(bundle.dialogState) {
         when (bundle.dialogState) {
-            ModalDialogState.ClOSE -> {
+            is ModalDialogState.Close -> {
                 backdropAlphaValue = 0f
                 dialogAlphaValue = 1f
                 offsetValue = height
