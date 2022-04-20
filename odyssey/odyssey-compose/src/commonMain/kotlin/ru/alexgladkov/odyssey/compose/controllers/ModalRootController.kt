@@ -17,8 +17,9 @@ enum class ModalDialogState {
  * @param maxHeight - maxHeight in Float. use null for wrap by content
  * @param cornerRadius - card corner radius in dp
  * @param threshold - threshold for closing modal bottom sheet
- * @param alpha - scrimer alpha
+ * @param alpha - screamer alpha
  * @param closeOnBackdropClick - true if you want to close on backdrop click
+ * @param closeOnSwipe - true if you want to close on swipe
  * @param content - composable content
  */
 internal data class ModalSheetBundle(
@@ -30,6 +31,7 @@ internal data class ModalSheetBundle(
     val closeOnBackdropClick: Boolean,
     val alpha: Float,
     val cornerRadius: Int,
+    val closeOnSwipe: Boolean = true,
     val backContent: Render? = null,
 ) : ModalBundle
 
@@ -64,14 +66,22 @@ internal data class CustomModalBundle(
 
 /**
  * Common interface for any modal screens
- * @param content - composable content
- * @param animationTime - time for all animations
- * @param dialogState - current dialog state
  * @see ModalDialogState
  */
 sealed interface ModalBundle {
+    /**
+     * composable content
+     */
     val content: Render
+
+    /**
+     * time for all animations
+     */
     val animationTime: Int
+
+    /**
+     * current dialog state
+     */
     val dialogState: ModalDialogState
 }
 
@@ -157,6 +167,7 @@ open class ModalController {
 internal fun ModalSheetConfiguration.wrap(with: Render): ModalBundle = ModalSheetBundle(
     maxHeight = maxHeight,
     closeOnBackdropClick = closeOnBackdropClick,
+    closeOnSwipe = closeOnSwipe,
     threshold = threshold,
     animationTime = animationTime,
     cornerRadius = cornerRadius,

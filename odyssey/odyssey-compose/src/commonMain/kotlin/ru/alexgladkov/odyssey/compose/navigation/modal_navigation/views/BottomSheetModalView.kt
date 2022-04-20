@@ -60,7 +60,7 @@ internal fun BoxScope.BottomModalSheet(
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        Card(
+        if (bundle.closeOnSwipe){
             modifier = modifier.swipeable(
                 state = swipeableState,
                 anchors = anchors,
@@ -71,7 +71,10 @@ internal fun BoxScope.BottomModalSheet(
                 val positiveOffset = if (swipeOffset < 0) 0 else swipeOffset
 
                 IntOffset(x = 0, y = offset + positiveOffset.toInt())
-            },
+            }
+        }
+        Card(
+            modifier = modifier,
             shape = RoundedCornerShape(
                 topStart = bundle.cornerRadius.dp,
                 topEnd = bundle.cornerRadius.dp
