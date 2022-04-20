@@ -19,8 +19,9 @@ fun ComponentActivity.setupThemedNavigation(
 ) {
     setContent {
         OdysseyTheme {
-            val rootController = RootComposeBuilder(backgroundColor = Odyssey.color.primaryBackground)
+            val rootController = RootComposeBuilder()
                 .apply(navigationGraph).build()
+            rootController.backgroundColor = Odyssey.color.primaryBackground
             rootController.setupWithActivity(this)
 
             CompositionLocalProvider(
