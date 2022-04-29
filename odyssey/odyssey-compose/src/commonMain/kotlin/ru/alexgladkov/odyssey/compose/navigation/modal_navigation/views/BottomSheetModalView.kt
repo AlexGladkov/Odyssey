@@ -64,7 +64,7 @@ internal fun BoxScope.BottomModalSheet(
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        if (bundle.closeOnSwipe){
+        if (bundle.closeOnSwipe) {
             modifier = modifier.swipeable(
                 state = swipeableState,
                 anchors = anchors,
@@ -89,7 +89,7 @@ internal fun BoxScope.BottomModalSheet(
     }
 
     LaunchedEffect(bundle.dialogState, swipeableState.offset.value) {
-        if (swipeableState.offset.value == viewHeight) {
+        if (swipeableState.offset.value == viewHeight && bundle.dialogState !is ModalDialogState.Close) {
             modalController.setTopDialogState(ModalDialogState.Close())
         }
 
