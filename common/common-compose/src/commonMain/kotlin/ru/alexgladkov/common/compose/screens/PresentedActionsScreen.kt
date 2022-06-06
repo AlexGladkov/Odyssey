@@ -9,13 +9,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import ru.alexgladkov.common.compose.theme.Odyssey
+import theme.Odyssey
 import ru.alexgladkov.odyssey.compose.extensions.present
 import ru.alexgladkov.odyssey.compose.extensions.push
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
 import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.AlertConfiguration
 import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.ModalSheetConfiguration
 import ru.alexgladkov.odyssey.core.LaunchFlag
+import screens.views.ActionCell
 
 @Composable
 fun PresentedActionsScreen(count: Int?) {
@@ -36,7 +37,7 @@ fun PresentedActionsScreen(count: Int?) {
                 }
 
                 item {
-                    ActionCell("Present Flow", icon = Icons.Filled.ArrowUpward) {
+                    ActionCell("Present Flow", icon = Icons.Filled.ArrowForward) {
                         rootController.findRootController().present("present")
                     }
                 }

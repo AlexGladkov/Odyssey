@@ -32,6 +32,7 @@ dependencies {
     implementation(project(":odyssey:odyssey-compose"))
     implementation(project(":odyssey:odyssey-core"))
     implementation(project(":common:common-compose"))
+    implementation(project(":common:common-shared"))
     implementation(compose.material)
 
     implementation(Dependencies.AndroidX.AppCompat.appCompat)

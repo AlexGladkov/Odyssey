@@ -9,18 +9,19 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import ru.alexgladkov.common.compose.theme.Odyssey
+import theme.Odyssey
 import ru.alexgladkov.odyssey.compose.extensions.present
 import ru.alexgladkov.odyssey.compose.extensions.push
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
 import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.AlertConfiguration
 import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.ModalSheetConfiguration
 import ru.alexgladkov.odyssey.core.LaunchFlag
+import screens.views.ActionCell
+import utils.toSequence
 
 @Composable
 fun ActionsScreen(count: Int?) {
@@ -136,35 +137,4 @@ fun CounterView(count: Int?) {
             color = Odyssey.color.primaryText
         )
     }
-}
-
-@Composable
-fun ActionCell(text: String, icon: ImageVector, onClick: () -> Unit) {
-    Column(modifier = Modifier
-        .clickable { onClick.invoke() }
-        .fillMaxWidth()
-    ) {
-        Row(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
-            Text(text = text, color = Odyssey.color.primaryText, fontSize = 18.sp)
-            Spacer(modifier = Modifier.weight(1f))
-            Icon(icon, contentDescription = "", tint = Odyssey.color.controlColor)
-        }
-    }
-}
-
-fun Int?.toSequence(): String {
-    if (this == null) return "0"
-    if (this == 0) return "0"
-
-    val builder = StringBuilder()
-
-    for (i in 0..this) {
-        if (i == this) {
-            builder.append(i)
-        } else {
-            builder.append(i).append(" -> ")
-        }
-    }
-
-    return builder.toString()
 }

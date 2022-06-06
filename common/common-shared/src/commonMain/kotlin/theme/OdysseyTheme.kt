@@ -1,4 +1,4 @@
-package ru.alexgladkov.common.compose.theme
+package theme
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider

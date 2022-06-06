@@ -10,7 +10,7 @@ import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import ru.alexgladkov.common.compose.theme.Odyssey
+import theme.Odyssey
 import ru.alexgladkov.odyssey.compose.extensions.present
 import ru.alexgladkov.odyssey.compose.extensions.push
 import ru.alexgladkov.odyssey.compose.local.LocalRootController

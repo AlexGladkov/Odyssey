@@ -1,5 +1,5 @@
 plugins {
-    id("multiplatform-compose-setup")
+    id("multiplatform-compose-old-setup")
     id("android-setup")
 }
 
@@ -8,6 +8,7 @@ kotlin {
         named("commonMain") {
             dependencies {
                 api(compose.materialIconsExtended)
+                implementation(project(":common:common-shared"))
                 implementation(project(":odyssey:odyssey-compose"))
                 implementation(project(":odyssey:odyssey-core"))
             }
