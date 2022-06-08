@@ -160,7 +160,7 @@ open class ModalController {
         _backStack.clear()
     }
 
-    fun isEmpty() = _backStack.isEmpty()
+    fun isEmpty() = _backStack.none { it.dialogState !is ModalDialogState.Close }
 
     private fun redrawStack() {
         val newStack = ArrayList<ModalBundle>().apply {
