@@ -1,5 +1,5 @@
 #!/bin/bash
 
 cd "$(dirname "$0")"
-#./gradlew linkDebugExecutableUikitX64 -i
-./gradlew iosDeployIPhone13Debug -i
+#./gradlew uikit:linkDebugExecutableUikitX64 -i
+./gradlew uikit:iosDeployIPhone13Debug -i
