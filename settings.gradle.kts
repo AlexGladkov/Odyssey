@@ -7,7 +7,8 @@ include(
     ":odyssey:odyssey-compose",
 
     ":android",
-    ":desktop"
+    ":desktop",
+    ":uikit"
 )
 
 //includeBuild("convention-plugins")
