@@ -5,8 +5,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
-    kotlin("multiplatform")
-    id("org.jetbrains.compose")
+    kotlin("multiplatform") version "1.6.21"
+    id("org.jetbrains.compose") version "1.2.0-alpha01-dev686"
 }
 
 kotlin {
@@ -60,6 +60,10 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
+                implementation("ru.alexgladkov:comon-common-root")
+                implementation("ru.alexgladkov:odyssey-odyssey-core")
+                implementation("ru.alexgladkov:odyssey-odyssey-compose")
+                implementation("ru.alexgladkov:common-common-root")
                 implementation(compose.ui)
                 implementation(compose.foundation)
                 implementation(compose.material)
@@ -103,7 +107,7 @@ compose.experimental {
         bundleIdPrefix = "ru.alexgladkov"
         projectName = "OdysseyiOS"
         deployConfigurations {
-            // Usage ./gradlew iosDeployIPhone13Debug
+            // Usage ./gradlew uikit:iosDeployIPhone13Debug
             simulator("IPhone13") {
                 device = IOSDevices.IPHONE_13_PRO
             }
@@ -122,4 +126,12 @@ compose.desktop.nativeApplication {
         packageName = "UISample"
         packageVersion = "1.0.0"
     }
+}
+
+repositories {
+    google()
+    mavenCentral()
+    mavenLocal()
+    maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
+    maven("https://jitpack.io")
 }
