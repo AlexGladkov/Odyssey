@@ -1,13 +1,30 @@
 import org.jetbrains.compose.compose
-import org.jetbrains.compose.experimental.dsl.IOSDevices
-import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.compose.experimental.dsl.IOSDevices
+
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        google()
+        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
+    }
+}
 
 plugins {
     kotlin("multiplatform") version "1.6.21"
     id("org.jetbrains.compose") version "1.2.0-alpha01-dev686"
 }
+
+version = "1.0-SNAPSHOT"
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    gradlePluginPortal()
+    maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
+    google()}
 
 kotlin {
     macosX64 {
@@ -93,13 +110,6 @@ kotlin {
             dependsOn(uikitMain)
         }
     }
-
-    targets.withType<KotlinNativeTarget> {
-        binaries.all {
-            // TODO: the current compose binary surprises LLVM, so disable checks for now.
-            freeCompilerArgs += "-Xdisable-phases=VerifyBitcode"
-        }
-    }
 }
 
 compose.experimental {
@@ -126,12 +136,4 @@ compose.desktop.nativeApplication {
         packageName = "UISample"
         packageVersion = "1.0.0"
     }
-}
-
-repositories {
-    google()
-    mavenCentral()
-    mavenLocal()
-    maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
-    maven("https://jitpack.io")
 }
