@@ -99,10 +99,9 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-//                implementation(project(":common:common-root"))
-//                implementation(project(":odyssey:odyssey-core"))
-//                implementation(project(":common:common-root"))
+                implementation(project(":common:common-shared"))
                 implementation(project(":odyssey:odyssey-compose"))
+                implementation(project(":odyssey:odyssey-core"))
                 implementation(compose.ui)
                 implementation(compose.foundation)
                 implementation(compose.material)
@@ -176,7 +175,7 @@ compose.experimental {
         deployConfigurations {
             // Usage ./gradlew uikit:iosDeployIPhone13Debug
             simulator("IPhone13") {
-                device = org.jetbrains.compose.experimental.dsl.IOSDevices.IPHONE_13_PRO
+                device = IOSDevices.IPHONE_13_PRO
             }
         }
     }

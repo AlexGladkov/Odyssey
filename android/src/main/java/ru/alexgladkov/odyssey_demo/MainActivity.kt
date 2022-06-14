@@ -2,8 +2,8 @@ package ru.alexgladkov.odyssey_demo
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import navigation.mainScreen
 import ru.alexgladkov.common.compose.navigation.customNavScreen
-import ru.alexgladkov.common.compose.navigation.mainScreen
 import ru.alexgladkov.common.compose.navigation.topNavScreen
 import ru.alexgladkov.common.compose.screens.ActionsScreen
 import ru.alexgladkov.common.compose.screens.PresentedActionsScreen

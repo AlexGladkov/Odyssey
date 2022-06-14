@@ -1,4 +1,4 @@
-package ru.alexgladkov.common.compose.screens
+package screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column

@@ -1,12 +1,12 @@
-package ru.alexgladkov.common.compose.screens
+package screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowCircleUp
-import androidx.compose.material.icons.filled.ArrowDownward
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -25,10 +25,10 @@ fun ModalSheetScreen(onCloseClick: () -> Unit) {
 
     Column(modifier = Modifier.background(Odyssey.color.primaryBackground)) {
         Text(modifier = Modifier.padding(16.dp), text = "Modal Sheet", fontSize = 24.sp, color = Odyssey.color.primaryText)
-        ActionCell(text = "Close", icon = Icons.Filled.ArrowDownward) {
+        ActionCell(text = "Close", icon = Icons.Filled.KeyboardArrowDown) {
             onCloseClick.invoke()
         }
-        ActionCell(text = "Show one more Modal", icon = Icons.Filled.ArrowCircleUp) {
+        ActionCell(text = "Show one more Modal", icon = Icons.Filled.KeyboardArrowUp) {
             val modalSheetConfiguration = ModalSheetConfiguration(maxHeight = Random.nextFloat(), cornerRadius = 16)
             modalController.present(modalSheetConfiguration) {
                 ModalSheetScreen {
@@ -36,7 +36,7 @@ fun ModalSheetScreen(onCloseClick: () -> Unit) {
                 }
             }
         }
-        ActionCell(text = "Double-Modal show/close", icon = Icons.Filled.ArrowCircleUp) {
+        ActionCell(text = "Double-Modal show/close", icon = Icons.Filled.KeyboardArrowUp) {
             val height = Random.nextFloat().coerceAtLeast(0.4f)
             val modalSheetConfiguration = ModalSheetConfiguration(
                 maxHeight = height,
@@ -44,7 +44,7 @@ fun ModalSheetScreen(onCloseClick: () -> Unit) {
             )
             modalController.present(modalSheetConfiguration) {
                 ModalSheetScreen {
-// close by next modal
+                    // close by next modal
                 }
             }
             modalController.present(modalSheetConfiguration.copy(maxHeight = height - 0.1f)) {
@@ -55,7 +55,7 @@ fun ModalSheetScreen(onCloseClick: () -> Unit) {
             }
         }
 
-        ActionCell(text = "Modal screen without closing animation", icon = Icons.Filled.ArrowCircleUp) {
+        ActionCell(text = "Modal screen without closing animation", icon = Icons.Filled.KeyboardArrowUp) {
             val modalSheetConfiguration = ModalSheetConfiguration(maxHeight = Random.nextFloat(), cornerRadius = 16)
             modalController.present(modalSheetConfiguration) {
                 ModalSheetScreen {

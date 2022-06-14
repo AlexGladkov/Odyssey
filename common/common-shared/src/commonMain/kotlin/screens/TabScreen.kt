@@ -1,4 +1,4 @@
-package ru.alexgladkov.common.compose.screens
+package screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -7,13 +7,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material.icons.filled.ArrowUpward
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import theme.Odyssey
 import ru.alexgladkov.odyssey.compose.extensions.present
 import ru.alexgladkov.odyssey.compose.extensions.push
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
+import screens.views.ActionCell
 
 @Composable
 fun TabScreen(count: Int?) {
@@ -33,7 +34,7 @@ fun TabScreen(count: Int?) {
                 }
 
                 item {
-                    ActionCell("Present Flow", icon = Icons.Filled.ArrowUpward) {
+                    ActionCell("Present Flow", icon = Icons.Filled.KeyboardArrowUp) {
                         rootController.findRootController().present("present")
                     }
                 }

@@ -1,4 +1,4 @@
-package ru.alexgladkov.common.compose.tabs
+package tabs
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.TextStyle

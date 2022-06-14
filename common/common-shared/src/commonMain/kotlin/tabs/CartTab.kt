@@ -1,26 +1,19 @@
-package ru.alexgladkov.common.compose.tabs
+package tabs
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.sp
 import theme.Odyssey
 import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.TabConfiguration
 import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.TabItem
 
-class FeedTab : TabItem() {
+class CartTab : TabItem() {
 
     override val configuration: TabConfiguration
         @Composable
         get() {
             return TabConfiguration(
-                title = "Feed",
+                title = "Cart",
                 selectedColor = Odyssey.color.primaryText,
                 unselectedColor = Odyssey.color.controlColor,
-                titleStyle = TextStyle(
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium
-                )
             )
         }
 }
