@@ -57,7 +57,7 @@ internal fun BoxScope.BottomModalSheet(
         bundle.backContent.invoke()
     } else {
         Screamer(backdropAlpha) {
-            if (bundle.closeOnBackdropClick) {
+            if (bundle.closeOnBackdropClick && bundle.dialogState !is ModalDialogState.Close) {
                 modalController.popBackStack()
             }
         }
