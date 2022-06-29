@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
@@ -26,95 +27,64 @@ fun ActionScreen(count: Int?) {
     val rootController = LocalRootController.current
     val modalController = rootController.findModalController()
 
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Odyssey.color.primaryBackground)
     ) {
         Spacer(modifier = Modifier.height(56.dp))
-        CounterView(count)
 
-        ActionCell(text = "Push Screen", icon = Icons.Filled.ArrowForward) {
-            rootController.push("push", (count ?: 0) + 1)
-        }
+        LazyColumn {
+            item {
+                CounterView(count)
+            }
 
-        ActionCell("Present Flow", icon = Icons.Filled.KeyboardArrowUp) {
-            rootController.present("present", 0)
-        }
-
-        ActionCell("Back", icon = Icons.Filled.ArrowBack) {
-            rootController.popBackStack()
-        }
-
-        val modalSheetConfiguration = ModalSheetConfiguration(maxHeight = 0.7f, cornerRadius = 16)
-        ActionCell("Present Modal Screen", icon = Icons.Filled.KeyboardArrowUp) {
-            modalController.present(modalSheetConfiguration) {
-                ModalSheetScreen {
-                    modalController.popBackStack()
+            item {
+                ActionCell(text = "Push Screen", icon = Icons.Filled.ArrowForward) {
+                    rootController.push("push", (count ?: 0) + 1)
                 }
             }
-        }
 
-        ActionCell("Show Alert Dialog", icon = Icons.Filled.Settings) {
-            val alertConfiguration = AlertConfiguration(maxHeight = 0.7f, maxWidth = 0.8f, cornerRadius = 4)
-            modalController.present(alertConfiguration) {
-                AlertDialogScreen {
-                    modalController.popBackStack()
+            item {
+                ActionCell("Present Flow", icon = Icons.Filled.KeyboardArrowUp) {
+                    rootController.present("present", 0)
                 }
             }
-        }
 
-        ActionCell("Show Bottom Navigation", icon = Icons.Filled.Home) {
-            rootController.present("main")
-        }
+            item {
+                ActionCell("Back", icon = Icons.Filled.ArrowBack) {
+                    rootController.popBackStack()
+                }
+            }
 
-        Box(
-            modifier = Modifier.background(Odyssey.color.primaryBackground).fillMaxSize()
-        ) {
-//                item {
-////                    val modalSheetConfiguration = ModalSheetConfiguration(maxHeight = 0.7f, cornerRadius = 16)
-//                    ActionCell("Present Modal Screen", icon = null) {
-////                        modalController.present(modalSheetConfiguration) {
-////                            ModalSheetScreen {
-////                                modalController.popBackStack()
-////                            }
-////                        }
-//                    }
-//                }
-//
-//                item {
+            item {
+                val modalSheetConfiguration = ModalSheetConfiguration(maxHeight = 0.7f, cornerRadius = 16)
+                ActionCell("Present Modal Screen", icon = Icons.Filled.KeyboardArrowUp) {
+                    modalController.present(modalSheetConfiguration) {
+                        ModalSheetScreen {
+                            modalController.popBackStack()
+                        }
+                    }
+                }
+            }
 
-//                }
-//
-//
-//                item {
-//                    ActionCell("Show Top Navigation", icon = null
-//                    ) {
-////                        rootController.present("top")
-//                    }
-//                }
-//
-//                item {
-//                    ActionCell("Show Drawer Navigation", icon = null) {
-////                        rootController.present("drawer")
-//                    }
-//                }
-//
-//                item {
-//                    ActionCell("Start New Chain", icon = null) {
-////                        rootController.present(screen = "present", launchFlag = LaunchFlag.SingleNewTask)
-//                    }
-//                }
-//
-//                item {
-//                    ActionCell(
-//                        "Back",
-//                        icon = if (count == 0 || count == null) Icons.Filled.Close else Icons.Filled.ArrowBack
-//                    ) {
-////                        rootController.popBackStack()
-//                    }
-//                }
-//            }
+            item {
+                ActionCell("Show Alert Dialog", icon = Icons.Filled.Settings) {
+                    val alertConfiguration = AlertConfiguration(maxHeight = 0.7f, maxWidth = 0.8f, cornerRadius = 4)
+                    modalController.present(alertConfiguration) {
+                        AlertDialogScreen {
+                            modalController.popBackStack()
+                        }
+                    }
+                }
+            }
+
+            item {
+                ActionCell("Show Bottom Navigation", icon = Icons.Filled.Home) {
+                    rootController.present("main")
+                }
+            }
         }
     }
 }

@@ -36,7 +36,7 @@ object Dependencies {
 
         object Compose {
             // __LATEST_COMPOSE_RELEASE_VERSION__
-            private const val VERSION = "1.2.0-alpha01-dev709"
+            private const val VERSION = "1.2.0-alpha01-dev724"
             const val gradlePlugin = "org.jetbrains.compose:compose-gradle-plugin:$VERSION"
         }
 

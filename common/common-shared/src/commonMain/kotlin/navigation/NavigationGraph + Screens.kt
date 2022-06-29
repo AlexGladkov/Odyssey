@@ -10,7 +10,7 @@ import tabs.CartTab
 import tabs.FeedTab
 import tabs.SearchTab
 
-fun RootComposeBuilder.mainScreen() {
+fun RootComposeBuilder. mainScreen() {
     bottomNavigation(name = "main", tabsNavModel = BottomConfiguration()) {
         tab(FeedTab()) {
             screen(name = "tab") {
