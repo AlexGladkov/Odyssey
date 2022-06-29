@@ -9,6 +9,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import ru.alexgladkov.odyssey.compose.controllers.ModalController
@@ -30,8 +31,13 @@ internal fun BoxScope.BottomModalSheet(
 
     var modifier = Modifier.align(Alignment.BottomStart).fillMaxWidth()
 
+    val density = LocalDensity.current
+
+
     if (bundle.maxHeight != null)
-        modifier = modifier.fillMaxHeight(bundle.maxHeight)
+        modifier = modifier
+            .padding(top = with(density) { (height - viewHeight).toDp() })
+            .fillMaxHeight()
 
     var offsetValue by remember { mutableStateOf(height) }
     var backdropAlphaValue by remember { mutableStateOf(0f) }
