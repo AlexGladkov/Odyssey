@@ -106,6 +106,15 @@ fun ActionsScreen(count: Int?) {
 
                 item {
                     ActionCell(
+                        "Start Hilt demo",
+                        icon = Icons.Filled.ArrowForward
+                    ) {
+                        rootController.push(screen = "hilt")
+                    }
+                }
+
+                item {
+                    ActionCell(
                         "Back",
                         icon = if (count == 0 || count == null) Icons.Filled.Close else Icons.Filled.ArrowBack
                     ) {

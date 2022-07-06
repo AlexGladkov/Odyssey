@@ -33,5 +33,10 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".hilt.ui.HiltActivity"
+            android:exported="true">
+        </activity>
+
     </application>
 </manifest>

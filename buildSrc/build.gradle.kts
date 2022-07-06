@@ -16,6 +16,7 @@ dependencies {
     implementation(Dependencies.JetBrains.Kotlin.gradlePlugin)
     implementation(Dependencies.Android.Tools.Build.gradlePlugin)
     implementation(Dependencies.JetBrains.Kotlin.serializationPlugin)
+    implementation(Dependencies.Google.Dagger.hiltGradlePlugin)
 }
 
 val rootDirProject = file("../")

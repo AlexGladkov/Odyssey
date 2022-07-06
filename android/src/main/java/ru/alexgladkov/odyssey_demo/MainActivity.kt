@@ -1,5 +1,6 @@
 package ru.alexgladkov.odyssey_demo
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import ru.alexgladkov.common.compose.navigation.customNavScreen
@@ -9,6 +10,8 @@ import ru.alexgladkov.common.compose.screens.ActionsScreen
 import ru.alexgladkov.common.compose.screens.PresentedActionsScreen
 import ru.alexgladkov.odyssey.compose.extensions.flow
 import ru.alexgladkov.odyssey.compose.extensions.screen
+import ru.alexgladkov.odyssey_demo.hilt.ui.HiltActivity
+import ru.alexgladkov.odyssey_demo.hilt.ui.HiltDemoScreen
 import ru.alexgladkov.odyssey_demo.theme.setupThemedNavigation
 
 class MainActivity : AppCompatActivity() {
@@ -34,6 +37,15 @@ class MainActivity : AppCompatActivity() {
             mainScreen()
             topNavScreen()
             customNavScreen()
+
+            screen("hilt") {
+                HiltDemoScreen(
+                    onClick = {
+                        startActivity(Intent(this@MainActivity, HiltActivity::class.java))
+                        finish()
+                    }
+                )
+            }
         }
     }
 }
