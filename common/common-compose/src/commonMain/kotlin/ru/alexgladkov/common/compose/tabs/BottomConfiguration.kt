@@ -1,7 +1,6 @@
 package ru.alexgladkov.common.compose.tabs
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
 import ru.alexgladkov.common.compose.theme.Odyssey
 import ru.alexgladkov.odyssey.compose.navigation.RootComposeBuilder
 import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.*
@@ -31,7 +30,7 @@ class TopConfiguration : TabsNavModel<TopNavConfiguration>() {
         }
 }
 
-class CustomConfiguration(private val content: @Composable () -> Unit) :
+class CustomConfiguration(private val content: @Composable (params: Any?) -> Unit) :
     TabsNavModel<CustomNavConfiguration>() {
 
     override val navConfiguration: CustomNavConfiguration
