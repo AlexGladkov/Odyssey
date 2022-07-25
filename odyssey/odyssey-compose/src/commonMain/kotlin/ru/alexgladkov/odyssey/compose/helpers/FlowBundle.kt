@@ -13,7 +13,8 @@ data class FlowBundle(
 
 data class MultiStackBundle(
     val startScreen: String?,
-    val rootController: MultiStackRootController
+    val rootController: MultiStackRootController,
+    val params: Any? = null
 )
 
 data class DeepLinkBundle(

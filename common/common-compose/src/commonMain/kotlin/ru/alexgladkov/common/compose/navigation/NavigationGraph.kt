@@ -47,7 +47,7 @@ fun RootComposeBuilder.topNavScreen() {
 
 fun RootComposeBuilder.customNavScreen() {
     customNavigation(name = "drawer", tabsNavModel = CustomConfiguration(
-        content = { DrawerScreen() }
+        content = { params -> DrawerScreen(params) }
     )) {
         tab(FeedTab()) {
             screen(name = "tab") {

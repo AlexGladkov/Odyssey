@@ -2,10 +2,7 @@ package ru.alexgladkov.common.compose.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -20,7 +17,7 @@ import ru.alexgladkov.odyssey.compose.controllers.MultiStackRootController
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
 
 @Composable
-fun DrawerScreen() {
+fun DrawerScreen(params: Any?) {
     val rootController = LocalRootController.current as MultiStackRootController
     val tabItem = rootController.stackChangeObserver.collectAsState()
     val coroutineScope = rememberCoroutineScope()
@@ -28,7 +25,7 @@ fun DrawerScreen() {
         drawerState = rememberDrawerState(DrawerValue.Open)
     )
 
-    Scaffold (
+    Scaffold(
         scaffoldState = scaffoldState,
         drawerContent = {
             Column(
@@ -36,6 +33,15 @@ fun DrawerScreen() {
                     .fillMaxSize()
                     .background(color = Color.DarkGray)
             ) {
+                params?.toString()?.let { title ->
+                    Text(
+                        modifier = Modifier.height(40.dp).padding(10.dp).fillMaxWidth(),
+                        text = title,
+                        textAlign = TextAlign.Start,
+                        color = Color.White
+                    )
+                }
+
                 rootController.tabItems.forEach { currentItem ->
                     Text(
                         modifier = Modifier.height(40.dp).fillMaxWidth()
