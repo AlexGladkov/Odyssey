@@ -169,7 +169,8 @@ open class RootController(
                 tabsNavModel = screenType.tabsNavModel,
                 launchFlag = launchFlag,
                 startScreen = startScreen,
-                startTabPosition = startTabPosition
+                startTabPosition = startTabPosition,
+                params = params
             )
         }
     }
@@ -437,7 +438,8 @@ open class RootController(
         tabsNavModel: TabsNavModel<*>,
         startScreen: String? = null,
         startTabPosition: Int = 0,
-        launchFlag: LaunchFlag?
+        launchFlag: LaunchFlag?,
+        params: Any? = null,
     ) {
         if (rootControllerType == RootControllerType.Flow || rootControllerType == RootControllerType.MultiStack)
             throw IllegalStateException("Don't use flow inside flow, call findRootController instead")
@@ -474,7 +476,8 @@ open class RootController(
             animationType = animationType,
             params = MultiStackBundle(
                 rootController = rootController,
-                startScreen = startScreen
+                startScreen = startScreen,
+                params = params
             )
         )
 
@@ -512,7 +515,7 @@ open class RootController(
                         TabsNavType.Custom -> {
                             val customNavConfiguration =
                                 bundle.rootController.tabsNavModel.navConfiguration as CustomNavConfiguration
-                            customNavConfiguration.content()
+                            customNavConfiguration.content(bundle.params)
                         }
                     }
                 }

@@ -9,7 +9,6 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
@@ -91,7 +90,7 @@ fun ActionsScreen(count: Int?) {
                         "Show Drawer Navigation",
                         icon = Icons.Filled.DashboardCustomize
                     ) {
-                        rootController.present("drawer")
+                        rootController.present("drawer", params = "Custom Title from params")
                     }
                 }
 
