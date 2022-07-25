@@ -3,6 +3,8 @@ plugins {
     kotlin("android")
     id("kotlin-parcelize")
     id("org.jetbrains.compose")
+    kotlin("kapt")
+    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -27,6 +29,10 @@ android {
     }
 }
 
+kapt {
+    correctErrorTypes = true
+}
+
 dependencies {
     implementation(project(":common:common-root"))
     implementation(project(":odyssey:odyssey-compose"))
@@ -37,4 +43,7 @@ dependencies {
     implementation(Dependencies.AndroidX.AppCompat.appCompat)
     implementation(Dependencies.AndroidX.Activity.activityCompose)
     implementation(Dependencies.Images.kamel)
+    implementation(Dependencies.Google.Dagger.hiltAndroid)
+    kapt(Dependencies.Google.Dagger.hiltAndroidCompiler)
+    implementation(Dependencies.AndroidX.Hilt.hiltNavigationCompose)
 }

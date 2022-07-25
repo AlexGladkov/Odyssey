@@ -27,9 +27,12 @@ object Dependencies {
             const val serializationPlugin = "org.jetbrains.kotlin:kotlin-serialization:1.5.31"
 
             private const val coroutinesVersion = "1.6.0-native-mt"
-            const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
-            const val coroutinesAndroid = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
-            const val coroutinesSwing = "org.jetbrains.kotlinx:kotlinx-coroutines-swing:$coroutinesVersion"
+            const val coroutines =
+                "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
+            const val coroutinesAndroid =
+                "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
+            const val coroutinesSwing =
+                "org.jetbrains.kotlinx:kotlinx-coroutines-swing:$coroutinesVersion"
             const val coroutinesCommon =
                 "org.jetbrains.kotlinx:kotlinx-coroutines-core-common:$coroutinesVersion"
         }
@@ -73,6 +76,18 @@ object Dependencies {
 
         object Activity {
             const val activityCompose = "androidx.activity:activity-compose:1.3.0-beta02"
+        }
+
+        object Hilt {
+            const val hiltNavigationCompose = "androidx.hilt:hilt-navigation-compose:1.0.0"
+        }
+    }
+
+    object Google {
+        object Dagger {
+            const val hiltGradlePlugin = "com.google.dagger:hilt-android-gradle-plugin:2.41"
+            const val hiltAndroid = "com.google.dagger:hilt-android:2.41"
+            const val hiltAndroidCompiler = "com.google.dagger:hilt-android-compiler:2.41"
         }
     }
 }
