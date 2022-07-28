@@ -63,7 +63,11 @@ internal fun BoxScope.AlertDialog(
         }
     )
 
-    Screamer(backdropAlpha) { modalController.popBackStack() }
+    Screamer(backdropAlpha) {
+        if (bundle.closeOnBackdropClick && bundle.dialogState !is ModalDialogState.Close) {
+            modalController.popBackStack()
+        }
+    }
 
     Card(
         modifier = modifier.alpha(dialogAlpha).offset { IntOffset(x = 0, y = offset) },
