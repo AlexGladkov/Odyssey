@@ -48,7 +48,7 @@ internal fun BoxScope.AlertDialog(
         animationSpec = bundle.animationTime.asTween(),
         finishedListener = {
             if (bundle.dialogState == ModalDialogState.Idle) {
-                modalController.setTopDialogState(ModalDialogState.Open)
+                modalController.setTopDialogState(ModalDialogState.Open, bundle.key)
             }
         }
     )
@@ -58,14 +58,14 @@ internal fun BoxScope.AlertDialog(
         animationSpec = bundle.animationTime.asTween(),
         finishedListener = {
             if (bundle.dialogState is ModalDialogState.Close) {
-                modalController.finishCloseAction()
+                modalController.finishCloseAction(bundle.key)
             }
         }
     )
 
     Screamer(backdropAlpha) {
         if (bundle.closeOnBackdropClick && bundle.dialogState !is ModalDialogState.Close) {
-            modalController.popBackStack()
+            modalController.popBackStack(key = bundle.key)
         }
     }
 
@@ -73,7 +73,7 @@ internal fun BoxScope.AlertDialog(
         modifier = modifier.alpha(dialogAlpha).offset { IntOffset(x = 0, y = offset) },
         shape = RoundedCornerShape(corner = CornerSize(bundle.cornerRadius))
     ) {
-        bundle.content.invoke()
+        bundle.content.invoke(bundle.key)
     }
 
     LaunchedEffect(bundle.dialogState) {

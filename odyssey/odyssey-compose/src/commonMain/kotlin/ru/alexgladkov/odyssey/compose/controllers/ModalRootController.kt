@@ -2,6 +2,7 @@ package ru.alexgladkov.odyssey.compose.controllers
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import ru.alexgladkov.odyssey.compose.Render
+import ru.alexgladkov.odyssey.compose.RootController
 import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.AlertConfiguration
 import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.CustomModalConfiguration
 import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.ModalSheetConfiguration
@@ -25,6 +26,7 @@ sealed class ModalDialogState {
  * @param content - composable content
  */
 internal data class ModalSheetBundle(
+    override val key: String,
     override val dialogState: ModalDialogState,
     override val animationTime: Int,
     override val content: Render,
@@ -47,6 +49,7 @@ internal data class ModalSheetBundle(
  * @param content - composable content
  */
 internal data class AlertBundle(
+    override val key: String,
     override val dialogState: ModalDialogState,
     override val animationTime: Int,
     override val content: Render,
@@ -61,6 +64,7 @@ internal data class AlertBundle(
  * Class helper to use with modal for custom modal
  */
 internal data class CustomModalBundle(
+    override val key: String,
     override val dialogState: ModalDialogState,
     override val animationTime: Int,
     override val content: Render
@@ -71,6 +75,8 @@ internal data class CustomModalBundle(
  * @see ModalDialogState
  */
 sealed interface ModalBundle {
+    val key: String
+
     /**
      * composable content
      */
@@ -87,7 +93,7 @@ sealed interface ModalBundle {
     val dialogState: ModalDialogState
 }
 
-@Deprecated("see ModalSheetController", ReplaceWith("ModalSheetController"))
+@Deprecated("see ModalController", ReplaceWith("ModalController"))
 class ModalSheetController : ModalController()
 
 /**
@@ -102,7 +108,7 @@ open class ModalController {
         modalSheetConfiguration: ModalSheetConfiguration,
         content: Render
     ) {
-        _backStack.add(modalSheetConfiguration.wrap(content))
+        _backStack.add(modalSheetConfiguration.wrap(randomizeKey(), content))
         redrawStack()
     }
 
@@ -110,7 +116,7 @@ open class ModalController {
         alertConfiguration: AlertConfiguration,
         content: Render
     ) {
-        _backStack.add(alertConfiguration.wrap(content))
+        _backStack.add(alertConfiguration.wrap(randomizeKey(), content))
         redrawStack()
     }
 
@@ -118,21 +124,28 @@ open class ModalController {
         customConfiguration: CustomModalConfiguration,
         content: Render
     ) {
-        _backStack.add(customConfiguration.wrap(content))
+        _backStack.add(customConfiguration.wrap(randomizeKey(), content))
         redrawStack()
     }
 
+    @Deprecated("@see popBackStack with key param", ReplaceWith("popBackStack(key = KEY)"))
     fun popBackStack(animate: Boolean = true) {
-        setTopDialogState(modalDialogState = ModalDialogState.Close(animate))
+        popBackStack(key = null, animate = animate)
     }
 
-    internal fun setTopDialogState(modalDialogState: ModalDialogState) {
+    fun popBackStack(key: String? = null, animate: Boolean = true) {
+        setTopDialogState(modalDialogState = ModalDialogState.Close(animate), key)
+    }
+
+    internal fun setTopDialogState(modalDialogState: ModalDialogState, key: String? = null) {
         if (modalDialogState is ModalDialogState.Close && !modalDialogState.animate) {
-            finishCloseAction()
+            finishCloseAction(key)
             return
         }
-        val last =
-            _backStack.last { modalDialogState !is ModalDialogState.Close || it.dialogState != modalDialogState }
+        val last = if (key != null) _backStack.firstOrNull { it.key == key }
+        else _backStack
+            .lastOrNull { modalDialogState !is ModalDialogState.Close || it.dialogState != modalDialogState }
+        if (last == null) return
         val index = _backStack.indexOf(last)
         val newState =
             when (last) {
@@ -146,14 +159,16 @@ open class ModalController {
     }
 
     /** Removes last modal from backstack */
-    internal fun finishCloseAction() {
-        if (_backStack.isNotEmpty()) _backStack.removeLast()
+    internal fun finishCloseAction(key: String?) {
+        when {
+            key != null -> {
+                val index = _backStack.indexOfFirst { it.key == key }
+                if (index != -1)
+                    _backStack.removeAt(index)
+            }
+            _backStack.isNotEmpty() -> _backStack.removeLast()
+        }
         redrawStack()
-    }
-
-    @Deprecated("@see popBackStack", ReplaceWith("popBackStack()"))
-    fun removeTopScreen() {
-        popBackStack()
     }
 
     fun clearBackStack() {
@@ -168,9 +183,13 @@ open class ModalController {
         }
         _currentStack.value = newStack
     }
+    companion object{
+        internal fun randomizeKey() = RootController.randomizeKey("modal_")
+    }
 }
 
-internal fun ModalSheetConfiguration.wrap(with: Render): ModalBundle = ModalSheetBundle(
+internal fun ModalSheetConfiguration.wrap(key: String, with: Render): ModalBundle = ModalSheetBundle(
+    key = key,
     maxHeight = maxHeight,
     closeOnBackdropClick = closeOnBackdropClick,
     closeOnSwipe = closeOnSwipe,
@@ -183,7 +202,8 @@ internal fun ModalSheetConfiguration.wrap(with: Render): ModalBundle = ModalShee
     content = with
 )
 
-internal fun AlertConfiguration.wrap(with: Render): ModalBundle = AlertBundle(
+internal fun AlertConfiguration.wrap(key: String, with: Render): ModalBundle = AlertBundle(
+    key = key,
     maxHeight = maxHeight,
     maxWidth = maxWidth,
     animationTime = animationTime,
@@ -195,6 +215,6 @@ internal fun AlertConfiguration.wrap(with: Render): ModalBundle = AlertBundle(
 )
 
 @Suppress("unused")
-internal fun CustomModalConfiguration.wrap(with: Render): ModalBundle = CustomModalBundle(
-    content = with, dialogState = ModalDialogState.Idle, animationTime = animationTime
+internal fun CustomModalConfiguration.wrap(key: String, with: Render): ModalBundle = CustomModalBundle(
+    key = key, content = with, dialogState = ModalDialogState.Idle, animationTime = animationTime
 )

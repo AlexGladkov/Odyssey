@@ -44,9 +44,9 @@ fun PresentedActionsScreen(count: Int?) {
                 item {
                     val modalSheetConfiguration = ModalSheetConfiguration(maxHeight = 0.7f, cornerRadius = 16)
                     ActionCell("Present Modal Screen", icon = Icons.Filled.ArrowCircleUp) {
-                        modalController.present(modalSheetConfiguration) {
+                        modalController.present(modalSheetConfiguration) { key ->
                             ModalSheetScreen {
-                                modalController.popBackStack()
+                                modalController.popBackStack(key)
                             }
                         }
                     }
@@ -55,9 +55,9 @@ fun PresentedActionsScreen(count: Int?) {
                 item {
                     ActionCell("Show Alert Dialog", icon = Icons.Filled.AddAlert) {
                         val alertConfiguration = AlertConfiguration(maxHeight = 0.7f, maxWidth = 0.8f, cornerRadius = 4)
-                        modalController.present(alertConfiguration) {
+                        modalController.present(alertConfiguration) { key ->
                             AlertDialogScreen {
-                                modalController.popBackStack()
+                                modalController.popBackStack(key)
                             }
                         }
                     }

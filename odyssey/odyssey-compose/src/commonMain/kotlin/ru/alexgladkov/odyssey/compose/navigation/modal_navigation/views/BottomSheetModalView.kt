@@ -53,18 +53,18 @@ internal fun BoxScope.BottomModalSheet(
         animationSpec = bundle.animationTime.asTween(),
         finishedListener = {
             when (bundle.dialogState) {
-                ModalDialogState.Idle -> modalController.setTopDialogState(ModalDialogState.Open)
-                is ModalDialogState.Close -> modalController.finishCloseAction()
+                ModalDialogState.Idle -> modalController.setTopDialogState(ModalDialogState.Open, bundle.key)
+                is ModalDialogState.Close -> modalController.finishCloseAction(bundle.key)
             }
         }
     )
 
     if (bundle.backContent != null) {
-        bundle.backContent.invoke()
+        bundle.backContent.invoke(bundle.key)
     } else {
         Screamer(backdropAlpha) {
             if (bundle.closeOnBackdropClick && bundle.dialogState !is ModalDialogState.Close) {
-                modalController.popBackStack()
+                modalController.popBackStack(key = bundle.key)
             }
         }
     }
@@ -90,13 +90,13 @@ internal fun BoxScope.BottomModalSheet(
                 topEnd = bundle.cornerRadius.dp
             )
         ) {
-            bundle.content.invoke()
+            bundle.content.invoke(bundle.key)
         }
     }
 
     LaunchedEffect(bundle.dialogState, swipeableState.offset.value) {
         if (swipeableState.offset.value == viewHeight && bundle.dialogState !is ModalDialogState.Close) {
-            modalController.setTopDialogState(ModalDialogState.Close())
+            modalController.setTopDialogState(ModalDialogState.Close(), bundle.key)
         }
 
         when (bundle.dialogState) {
