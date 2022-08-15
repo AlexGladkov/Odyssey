@@ -30,9 +30,9 @@ fun ModalSheetScreen(onCloseClick: () -> Unit) {
         }
         ActionCell(text = "Show one more Modal", icon = Icons.Filled.ArrowCircleUp) {
             val modalSheetConfiguration = ModalSheetConfiguration(maxHeight = Random.nextFloat(), cornerRadius = 16)
-            modalController.present(modalSheetConfiguration) {
+            modalController.present(modalSheetConfiguration) { key ->
                 ModalSheetScreen {
-                    modalController.popBackStack()
+                    modalController.popBackStack(key)
                 }
             }
         }
@@ -47,19 +47,19 @@ fun ModalSheetScreen(onCloseClick: () -> Unit) {
 // close by next modal
                 }
             }
-            modalController.present(modalSheetConfiguration.copy(maxHeight = height - 0.1f)) {
+            modalController.present(modalSheetConfiguration.copy(maxHeight = height - 0.1f)) { key ->
                 ModalSheetScreen {
-                    modalController.popBackStack()
-                    modalController.popBackStack()
+                    modalController.popBackStack(key)
+                    modalController.popBackStack(key)
                 }
             }
         }
 
         ActionCell(text = "Modal screen without closing animation", icon = Icons.Filled.ArrowCircleUp) {
             val modalSheetConfiguration = ModalSheetConfiguration(maxHeight = Random.nextFloat(), cornerRadius = 16)
-            modalController.present(modalSheetConfiguration) {
+            modalController.present(modalSheetConfiguration) { key ->
                 ModalSheetScreen {
-                    modalController.popBackStack(animate = false)
+                    modalController.popBackStack(key, animate = false)
                 }
             }
         }

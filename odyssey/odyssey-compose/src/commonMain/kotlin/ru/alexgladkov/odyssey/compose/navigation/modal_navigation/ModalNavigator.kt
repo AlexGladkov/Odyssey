@@ -41,7 +41,7 @@ fun ModalNavigator(
                     AlertDialog(bundle, modalController)
                 }
                 is CustomModalBundle -> {
-                    bundle.content.invoke()
+                    bundle.content(bundle.key)
                 }
             }
         }
