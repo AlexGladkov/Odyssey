@@ -27,7 +27,7 @@ import ru.alexgladkov.odyssey.core.wrap
 import kotlin.collections.HashMap
 
 typealias RenderWithParams<T> = @Composable (T) -> Unit
-typealias Render = @Composable () -> Unit
+typealias Render = @Composable (key: String) -> Unit
 
 sealed class ScreenType {
     object Simple : ScreenType()
@@ -523,9 +523,8 @@ open class RootController(
         }
     }
 
-    private fun randomizeKey(key: String): String = createUniqueKey(key)
-
     companion object {
+        internal fun randomizeKey(key: String): String = createUniqueKey(key)
         private const val flowKey = "odyssey_flow_reserved_type"
         private const val multiStackKey = "odyssey_multi_stack_reserved_type"
     }
