@@ -82,6 +82,24 @@ fun RootComposeBuilder.topNavigation(
 }
 
 /**
+ * Adds custom bar navigation to navigation graph
+ * @param name - name in graph
+ * @param tabsNavModel - UI configuration for custom navigation
+ * @param builder - dsl for custom nav bar building
+ */
+fun RootComposeBuilder.customNavigation(
+    name: String,
+    tabsNavModel: TabsNavModel<CustomNavConfiguration>,
+    builder: MultiStackBuilder.() -> Unit
+) {
+    addMultiStack(
+        key = name,
+        tabsNavModel = tabsNavModel,
+        multiStackBuilderModel = MultiStackBuilder(name).apply(builder).build()
+    )
+}
+
+/**
  * Adds tab to bottom nav bar building
  * @param tabItem - tab UI configuration
  * @param builder - dsl buidler for flow in tab

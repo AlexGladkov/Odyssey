@@ -2,8 +2,10 @@ package ru.alexgladkov.odyssey_demo
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import ru.alexgladkov.common.compose.NavigationTree
 import ru.alexgladkov.common.compose.navigation.customNavScreen
 import ru.alexgladkov.common.compose.navigation.mainScreen
+import ru.alexgladkov.common.compose.navigation.navigationGraph
 import ru.alexgladkov.common.compose.navigation.topNavScreen
 import ru.alexgladkov.common.compose.screens.ActionsScreen
 import ru.alexgladkov.common.compose.screens.PresentedActionsScreen
@@ -16,24 +18,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setupThemedNavigation("actions") {
-            screen("actions") {
-                ActionsScreen(count = 0)
-            }
-
-            screen("push") {
-                ActionsScreen(count = it as? Int)
-            }
-
-            flow("present") {
-                screen("present_screen") {
-                    PresentedActionsScreen(count = (it as? Int) ?: 0)
-                }
-            }
-
-            mainScreen()
-            topNavScreen()
-            customNavScreen()
-        }
+        setupThemedNavigation(NavigationTree.Actions.name) { navigationGraph() }
     }
 }

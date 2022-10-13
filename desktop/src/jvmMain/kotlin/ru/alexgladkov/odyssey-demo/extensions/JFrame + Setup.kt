@@ -25,8 +25,8 @@ fun JFrame.setupThemedNavigation(
     // by adding CompositionLocalProviders or something else
     composePanel.setContent {
         OdysseyTheme {
-            val rootController = RootComposeBuilder(backgroundColor = Odyssey.color.primaryBackground)
-                .apply(navigationGraph).build()
+            val rootController = RootComposeBuilder().apply(navigationGraph).build()
+            rootController.backgroundColor = Odyssey.color.primaryBackground
 
             CompositionLocalProvider(
                 *providers,

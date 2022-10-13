@@ -13,7 +13,7 @@ kotlin {
     sourceSets {
         named("commonMain") {
             dependencies {
-                implementation(project(":common:common-compose"))
+                implementation(project(":common:common-sample"))
                 implementation(project(":odyssey:odyssey-core"))
                 implementation(project(":odyssey:odyssey-compose"))
             }
@@ -22,10 +22,6 @@ kotlin {
         named("jvmMain") {
             dependencies {
                 implementation(compose.desktop.currentOs)
-                implementation(project(":common:common-root"))
-                implementation(project(":common:common-compose"))
-
-                implementation(Dependencies.JetBrains.Ktor.okHttp)
             }
         }
 
@@ -39,7 +35,7 @@ kotlin {
 
 compose.desktop {
     application {
-        mainClass = "ru.alexgladkov.odyssey-demo.MainKt"
+        mainClass = "ru.alexgladkov.odyssey-demo.Main_DesktopKt"
 
         nativeDistributions {
             targetFormats(

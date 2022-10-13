@@ -48,8 +48,8 @@ open class RootController(
 ) {
     private val _allowedDestinations: MutableList<AllowedDestination> = mutableListOf()
     private val _backstack = mutableListOf<Screen>()
-    private val _currentScreen: MutableStateFlow<NavConfiguration> =
-        MutableStateFlow(Screen().wrap())
+    private val _currentScreen: MutableStateFlow<NavConfiguration?> =
+        MutableStateFlow(null)
     private var _childrenRootController: MutableList<RootController> = mutableListOf()
     private val _screenMap = mutableMapOf<String, RenderWithParams<Any?>>()
     private var _onBackPressedDispatcher: OnBackPressedDispatcher? = null
@@ -62,7 +62,7 @@ open class RootController(
     var onScreenRemove: (ScreenBundle) -> Unit =
         { parentRootController?.onScreenRemove?.invoke(it) }
 
-    var currentScreen: StateFlow<NavConfiguration> = _currentScreen.asStateFlow()
+    var currentScreen: StateFlow<NavConfiguration?> = _currentScreen.asStateFlow()
 
     /**
      * Debug name need to debug :) if you like console debugging
@@ -113,7 +113,6 @@ open class RootController(
         _onBackPressedDispatcher = onBackPressedDispatcher
         _onBackPressedDispatcher?.backPressedCallback = object : BackPressedCallback() {
             override fun onBackPressed() {
-                println("DEBUG: On Back Pressed")
                 popBackStack()
             }
         }
@@ -338,7 +337,6 @@ open class RootController(
     }
 
     private fun removeTopScreen(rootController: RootController?) {
-        println("RC ${rootController?.debugName}")
         rootController?.let {
             val isLastScreen = it._backstack.size <= 1
             if (isLastScreen) {
@@ -378,6 +376,7 @@ open class RootController(
 
         when (launchFlag) {
             LaunchFlag.SingleNewTask -> _backstack.clear()
+            null -> {}
         }
 
         _backstack.add(screen)
@@ -396,6 +395,7 @@ open class RootController(
 
         when (launchFlag) {
             LaunchFlag.SingleNewTask -> _backstack.clear()
+            null -> {}
         }
 
         val rootController = RootController(RootControllerType.Flow)
@@ -446,6 +446,7 @@ open class RootController(
 
         when (launchFlag) {
             LaunchFlag.SingleNewTask -> _backstack.clear()
+            null -> {}
         }
 
         val parentRootController = this
