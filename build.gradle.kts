@@ -4,10 +4,6 @@ plugins {
     `kotlin-dsl`
 }
 
-val compileSdkVersion by extra(31)
-val targetSdkVersion by extra(30)
-val minSdkVersion by extra(21)
-
 allprojects {
     repositories {
         google()
@@ -19,8 +15,13 @@ allprojects {
 }
 
 buildscript {
-    val kotlin_version by extra("1.5.31")
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        google()
+        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
+    }
     dependencies {
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.20")
     }
 }

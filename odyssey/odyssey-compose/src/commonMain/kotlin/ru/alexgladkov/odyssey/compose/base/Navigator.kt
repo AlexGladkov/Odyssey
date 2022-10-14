@@ -21,7 +21,7 @@ fun Navigator(
     val backgroundColor = rootController.backgroundColor
     val navConfiguration = rootController.currentScreen.collectAsState()
 
-    navConfiguration.value.let { config ->
+    navConfiguration.value?.let { config ->
         NavigatorAnimated(config.screen, config, rootController, backgroundColor)
     }
 

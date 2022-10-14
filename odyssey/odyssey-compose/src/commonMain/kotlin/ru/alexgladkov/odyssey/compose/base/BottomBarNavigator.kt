@@ -26,7 +26,7 @@ fun TabNavigator(
             CompositionLocalProvider(
                 LocalRootController provides currentTab.rootController
             ) {
-                configuration.value.let { navConfig ->
+                configuration.value?.let { navConfig ->
                     AnimatedHost(
                         currentScreen = navConfig.screen.toScreenBundle(),
                         animationType = navConfig.screen.animationType,

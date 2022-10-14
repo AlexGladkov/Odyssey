@@ -1,14 +1,18 @@
+import org.gradle.internal.impldep.org.codehaus.plexus.util.Os
 import org.jetbrains.compose.compose
+import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
+import org.jetbrains.compose.experimental.dsl.IOSDevices
+
 
 plugins {
-    id("com.android.library")
-    id("kotlin-multiplatform")
-    id("org.jetbrains.compose")
+    kotlin("multiplatform")// version "1.6.21"
+    id("org.jetbrains.compose")// version "1.2.0-alpha01-dev686"
 }
 
 kotlin {
-    jvm("desktop")
-    android()
     iosX64("uikitX64") {
         binaries {
             executable() {
@@ -39,22 +43,13 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(compose.runtime)
+                implementation(project(":common:common-sample"))
+                implementation(project(":odyssey:odyssey-compose"))
+                implementation(project(":odyssey:odyssey-core"))
+                implementation(compose.ui)
                 implementation(compose.foundation)
                 implementation(compose.material)
-            }
-        }
-
-        named("androidMain") {
-            dependencies {
-                implementation("androidx.appcompat:appcompat:1.4.0-alpha03")
-                implementation("androidx.core:core-ktx:1.6.0")
-            }
-        }
-
-        named("desktopMain") {
-            dependencies {
-                implementation(compose.desktop.common)
+                implementation(compose.runtime)
             }
         }
 
@@ -68,8 +63,30 @@ kotlin {
             dependsOn(uikitMain)
         }
     }
+}
 
-    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-        kotlinOptions.jvmTarget = "1.8"
+compose.experimental {
+    uikit.application {
+        bundleIdPrefix = "ru.alexgladkov"
+        projectName = "OdysseyiOS"
+        deployConfigurations {
+            // Usage ./gradlew uikit:iosDeployIPhone13Debug
+            simulator("IPhone13") {
+                device = IOSDevices.IPHONE_13_PRO
+            }
+        }
+    }
+}
+
+tasks.withType<KotlinCompile> {
+    kotlinOptions.jvmTarget = "11"
+}
+
+kotlin {
+    targets.withType<KotlinNativeTarget> {
+        binaries.all {
+            // TODO: the current compose binary surprises LLVM, so disable checks for now.
+            freeCompilerArgs += "-Xdisable-phases=VerifyBitcode"
+        }
     }
 }

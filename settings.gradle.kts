@@ -1,13 +1,12 @@
 include(
-    ":common:common-root",
-
-    ":common:common-compose",
+    ":common:common-sample",
 
     ":odyssey:odyssey-core",
     ":odyssey:odyssey-compose",
 
     ":android",
-    ":desktop"
+    ":desktop",
+    ":uikit"
 )
 
 //includeBuild("convention-plugins")
