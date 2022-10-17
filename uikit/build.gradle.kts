@@ -13,6 +13,26 @@ plugins {
 }
 
 kotlin {
+    macosX64 {
+        binaries {
+            executable {
+                entryPoint = "main"
+                freeCompilerArgs += listOf(
+                    "-linker-option", "-framework", "-linker-option", "Metal"
+                )
+            }
+        }
+    }
+    macosArm64 {
+        binaries {
+            executable {
+                entryPoint = "main"
+                freeCompilerArgs += listOf(
+                    "-linker-option", "-framework", "-linker-option", "Metal"
+                )
+            }
+        }
+    }
     iosX64("uikitX64") {
         binaries {
             executable() {
@@ -61,6 +81,16 @@ kotlin {
         }
         val uikitArm64Main by getting {
             dependsOn(uikitMain)
+        }
+
+        val macosMain by creating {
+            dependsOn(commonMain)
+        }
+        val macosX64Main by getting {
+            dependsOn(macosMain)
+        }
+        val macosArm64Main by getting {
+            dependsOn(macosMain)
         }
     }
 }
