@@ -1,12 +1,13 @@
 name: PR_build_targets
 
 on:
+  workflow_dispatch:
   pull_request:
     branches:
       - 'main'
 
 jobs:
-  Unit-test:
+  build:
     name: Run build on PR to main
     runs-on: ubuntu-20.04
 
