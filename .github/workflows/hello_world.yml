@@ -6,9 +6,9 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  build-macos-latest:
     name: Run build on PR to main
-    runs-on: ubuntu-20.04
+    runs-on: macos-latest,
 
     steps:
       - uses: actions/checkout@v2

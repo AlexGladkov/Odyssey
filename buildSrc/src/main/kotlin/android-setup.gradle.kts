@@ -20,6 +20,10 @@ android {
         pickFirst("lib/arm64-v8a/libjsc.so")
     }
 
+    lintOptions {
+        isCheckReleaseBuilds = false
+    }
+
     sourceSets {
         named("main") {
             manifest.srcFile("src/androidMain/AndroidManifest.xml")
