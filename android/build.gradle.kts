@@ -22,6 +22,13 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 
+    lintOptions {
+        isCheckReleaseBuilds = false
+        isCheckAllWarnings = false
+        isCheckDependencies = false
+        isCheckGeneratedSources = false
+    }
+
     packagingOptions {
         exclude("META-INF/*")
     }
