@@ -58,7 +58,8 @@ fun BottomBarNavigator(startScreen: String?) {
         TabNavigator(modifier = Modifier.weight(1f), startScreen, tabItem.value)
 
         BottomNavigation(
-            backgroundColor = bottomNavConfiguration.backgroundColor
+            backgroundColor = bottomNavConfiguration.backgroundColor,
+            elevation = bottomNavConfiguration.elevation
         ) {
             rootController.tabItems.forEach { currentItem ->
                 val configuration = currentItem.tabInfo.tabItem.configuration

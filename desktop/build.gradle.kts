@@ -35,7 +35,7 @@ kotlin {
 
 compose.desktop {
     application {
-        mainClass = "ru.alexgladkov.odyssey-demo.Main_DesktopKt"
+        mainClass = "ru.alexgladkov.odyssey-demo.Main_desktopKt"
 
         nativeDistributions {
             targetFormats(
