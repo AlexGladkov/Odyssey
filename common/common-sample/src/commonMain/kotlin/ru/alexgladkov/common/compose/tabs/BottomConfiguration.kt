@@ -1,6 +1,7 @@
 package ru.alexgladkov.common.compose.tabs
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.unit.dp
 import ru.alexgladkov.common.compose.theme.Odyssey
 import ru.alexgladkov.odyssey.compose.navigation.RootComposeBuilder
 import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.*
@@ -13,7 +14,8 @@ class BottomConfiguration : TabsNavModel<BottomNavConfiguration>() {
             return BottomNavConfiguration(
                 backgroundColor = Odyssey.color.secondaryBackground,
                 selectedColor = Odyssey.color.primaryText,
-                unselectedColor = Odyssey.color.controlColor
+                unselectedColor = Odyssey.color.controlColor,
+                elevation = 0.dp
             )
         }
 }
