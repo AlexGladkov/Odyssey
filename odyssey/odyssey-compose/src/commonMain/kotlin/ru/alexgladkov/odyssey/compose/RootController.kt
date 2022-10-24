@@ -469,6 +469,7 @@ open class RootController(
         )
 
         rootController.setDeepLinkUri(_deepLinkUri)
+        rootController.parentRootController = parentRootController
         _childrenRootController.add(rootController)
 
         val screen = Screen(
