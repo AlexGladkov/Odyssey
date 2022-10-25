@@ -83,6 +83,26 @@ fun PresentedActionsScreen(count: Int?) {
 
                 item {
                     ActionCell(
+                        "Back to actions",
+                        icon = if (count == 0 || count == null) Icons.Filled.ArrowDownward
+                        else Icons.Filled.ArrowBack
+                    ) {
+                        rootController.findRootController().backToScreen("actions")
+                    }
+                }
+
+                item {
+                    ActionCell(
+                        "Back to bottom navigation or exit",
+                        icon = if (count == 0 || count == null) Icons.Filled.ArrowDownward
+                        else Icons.Filled.ArrowBack
+                    ) {
+                        rootController.findRootController().backToScreen("main")
+                    }
+                }
+
+                item {
+                    ActionCell(
                         "Back",
                         icon = if (count == 0 || count == null) Icons.Filled.ArrowDownward
                         else Icons.Filled.ArrowBack
