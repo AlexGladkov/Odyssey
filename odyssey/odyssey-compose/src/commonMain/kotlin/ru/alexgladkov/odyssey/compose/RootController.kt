@@ -164,6 +164,7 @@ open class RootController(
 
             is ScreenType.Simple -> launchSimpleScreen(screen, params, animationType, launchFlag)
             is ScreenType.MultiStack<*> -> launchMultiStackScreen(
+                screenName = screen,
                 animationType = animationType,
                 multiStackBuilderModel = screenType.multiStackBuilderModel,
                 tabsNavModel = screenType.tabsNavModel,
@@ -315,7 +316,7 @@ open class RootController(
                     val last = it._backstack.removeLast()
                     val parentController = it.parentRootController ?: return
                     val current = parentController._backstack.last()
-                    if (current.realKey == screenName) {
+                    if (current.screenName == screenName) {
                         parentController._currentScreen.value = current
                             .copy(animationType = last.animationType, isForward = false)
                             .wrap(with = last)
@@ -326,7 +327,7 @@ open class RootController(
             } else {
                 val last = it._backstack.removeLast()
                 val current = it._backstack.last()
-                if (current.realKey == screenName) {
+                if (current.screenName == screenName) {
                     it._currentScreen.value = current
                         .copy(animationType = last.animationType, isForward = false)
                         .wrap(with = last)
@@ -360,17 +361,18 @@ open class RootController(
     }
 
     private fun launchSimpleScreen(
-        key: String,
+        screenName: String,
         params: Any?,
         animationType: AnimationType,
         launchFlag: LaunchFlag?
     ) {
         val screen = if (_backstack.isEmpty() && launchFlag == null) {
-            Screen(key = randomizeKey(key), realKey = key, params = params)
+            Screen(key = randomizeKey(screenName), realKey = screenName, screenName = screenName, params = params)
         } else {
             Screen(
-                key = randomizeKey(key),
-                realKey = key,
+                key = randomizeKey(screenName),
+                realKey = screenName,
+                screenName = screenName,
                 params = params,
                 animationType = animationType
             )
@@ -385,7 +387,7 @@ open class RootController(
     }
 
     private fun launchFlowScreen(
-        key: String,
+        screenName: String,
         startScreen: String?,
         params: Any?,
         animationType: AnimationType,
@@ -401,7 +403,7 @@ open class RootController(
         val rootController = RootController(RootControllerType.Flow)
         rootController.backgroundColor = backgroundColor
 
-        rootController.debugName = key
+        rootController.debugName = screenName
         rootController.parentRootController = this
         rootController.onApplicationFinish = {
             rootController.parentRootController?.popBackStack()
@@ -419,6 +421,7 @@ open class RootController(
         val screen = Screen(
             key = randomizeKey(flowKey),
             realKey = flowKey,
+            screenName = screenName,
             animationType = animationType,
             params = FlowBundle(
                 key = targetScreen,
@@ -433,6 +436,7 @@ open class RootController(
     }
 
     private fun launchMultiStackScreen(
+        screenName: String,
         animationType: AnimationType,
         multiStackBuilderModel: MultiStackBuilderModel,
         tabsNavModel: TabsNavModel<*>,
@@ -473,6 +477,7 @@ open class RootController(
         val screen = Screen(
             key = multiStackKey,
             realKey = multiStackKey,
+            screenName = screenName,
             animationType = animationType,
             params = MultiStackBundle(
                 rootController = rootController,

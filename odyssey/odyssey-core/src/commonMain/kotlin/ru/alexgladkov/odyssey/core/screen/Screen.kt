@@ -5,7 +5,8 @@ import ru.alexgladkov.odyssey.core.animations.AnimationType
 data class Screen(
     override val key: String = "",
     override val realKey: String = "",
-    override val params:  Any? = null,
+    override val params: Any? = null,
     override val animationType: AnimationType = AnimationType.None,
-    override val isForward: Boolean = true
+    override val isForward: Boolean = true,
+    val screenName: String = ""
 ) : ScreenInteractor
