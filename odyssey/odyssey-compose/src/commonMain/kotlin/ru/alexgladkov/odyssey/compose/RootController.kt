@@ -71,9 +71,6 @@ open class RootController(
     var debugName: String? = if (parentRootController == null) "Root" else null
         private set
 
-    init {
-        initServiceScreens()
-    }
 
     // Get screen render compose function
     fun getScreenRender(screenName: String?): RenderWithParams<Any?>? {
@@ -164,6 +161,7 @@ open class RootController(
 
             is ScreenType.Simple -> launchSimpleScreen(screen, params, animationType, launchFlag)
             is ScreenType.MultiStack<*> -> launchMultiStackScreen(
+                key = screen,
                 animationType = animationType,
                 multiStackBuilderModel = screenType.multiStackBuilderModel,
                 tabsNavModel = screenType.tabsNavModel,
@@ -182,9 +180,10 @@ open class RootController(
             return
         }
 
-        when (_backstack.last().realKey) {
-            flowKey -> removeTopScreen(_childrenRootController.last())
-            multiStackKey -> _childrenRootController.last().popBackStack()
+        val last = _backstack.last()
+        when {
+            last.isFlow -> removeTopScreen(_childrenRootController.last())
+            last.isMultiStack -> _childrenRootController.last().popBackStack()
             else -> removeTopScreen(this)
         }
     }
@@ -195,9 +194,10 @@ open class RootController(
     fun backToScreen(screenName: String) {
         _modalController?.clearBackStack()
 
-        when (_backstack.last().key) {
-            flowKey -> backToScreen(_childrenRootController.last(), screenName)
-            multiStackKey -> backToScreen(_childrenRootController.last(), screenName)
+        val last = _backstack.last()
+        when {
+            last.isFlow -> backToScreen(_childrenRootController.last(), screenName)
+            last.isMultiStack -> backToScreen(_childrenRootController.last(), screenName)
             else -> backToScreen(this, screenName)
         }
     }
@@ -417,8 +417,8 @@ open class RootController(
                 ?: flowBuilderModel.allowedDestination.first().key
 
         val screen = Screen(
-            key = randomizeKey(flowKey),
-            realKey = flowKey,
+            key = randomizeKey(key),
+            realKey = key,
             animationType = animationType,
             params = FlowBundle(
                 key = targetScreen,
@@ -433,6 +433,7 @@ open class RootController(
     }
 
     private fun launchMultiStackScreen(
+        key: String,
         animationType: AnimationType,
         multiStackBuilderModel: MultiStackBuilderModel,
         tabsNavModel: TabsNavModel<*>,
@@ -471,8 +472,8 @@ open class RootController(
         _childrenRootController.add(rootController)
 
         val screen = Screen(
-            key = multiStackKey,
-            realKey = multiStackKey,
+            key = randomizeKey(key),
+            realKey = key,
             animationType = animationType,
             params = MultiStackBundle(
                 rootController = rootController,
@@ -485,47 +486,44 @@ open class RootController(
         _currentScreen.value = screen.wrap()
     }
 
-    private fun initServiceScreens() {
-        if (rootControllerType == RootControllerType.Root) {
-            _screenMap[flowKey] = {
-                val bundle = it as FlowBundle
-                CompositionLocalProvider(
-                    LocalRootController provides bundle.rootController
-                ) {
-                    Navigator(startScreen = bundle.startScreen, startParams = bundle.params)
-                }
-            }
+    companion object {
+        internal fun randomizeKey(key: String): String = createUniqueKey(key)
 
-            _screenMap[multiStackKey] = {
-                val bundle = it as MultiStackBundle
-                CompositionLocalProvider(
-                    LocalRootController provides bundle.rootController
-                ) {
-                    when (bundle.rootController.tabsNavModel.navConfiguration.type) {
-                        TabsNavType.Bottom -> {
-                            BottomBarNavigator(
-                                startScreen = bundle.startScreen
-                            )
-                        }
-                        TabsNavType.Top -> {
-                            TopBarNavigator(
-                                startScreen = bundle.startScreen
-                            )
-                        }
-                        TabsNavType.Custom -> {
-                            val customNavConfiguration =
-                                bundle.rootController.tabsNavModel.navConfiguration as CustomNavConfiguration
-                            customNavConfiguration.content(bundle.params)
-                        }
+        private val Screen.isMultiStack: Boolean get() = this.params is ScreenType.MultiStack<*>
+        private val Screen.isFlow: Boolean get() = this.params is ScreenType.Flow
+
+        val flowContent: RenderWithParams<Any?> = {
+            val bundle = it as FlowBundle
+            CompositionLocalProvider(
+                LocalRootController provides bundle.rootController
+            ) {
+                Navigator(startScreen = bundle.startScreen, startParams = bundle.params)
+            }
+        }
+
+        val multiStackContent: RenderWithParams<Any?> = {
+            val bundle = it as MultiStackBundle
+            CompositionLocalProvider(
+                LocalRootController provides bundle.rootController
+            ) {
+                when (bundle.rootController.tabsNavModel.navConfiguration.type) {
+                    TabsNavType.Bottom -> {
+                        BottomBarNavigator(
+                            startScreen = bundle.startScreen
+                        )
+                    }
+                    TabsNavType.Top -> {
+                        TopBarNavigator(
+                            startScreen = bundle.startScreen
+                        )
+                    }
+                    TabsNavType.Custom -> {
+                        val customNavConfiguration =
+                            bundle.rootController.tabsNavModel.navConfiguration as CustomNavConfiguration
+                        customNavConfiguration.content(bundle.params)
                     }
                 }
             }
         }
-    }
-
-    companion object {
-        internal fun randomizeKey(key: String): String = createUniqueKey(key)
-        private const val flowKey = "odyssey_flow_reserved_type"
-        private const val multiStackKey = "odyssey_multi_stack_reserved_type"
     }
 }

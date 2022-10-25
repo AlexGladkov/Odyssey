@@ -29,6 +29,7 @@ class RootComposeBuilder {
         key: String,
         flowBuilderModel: FlowBuilderModel
     ) {
+        _screenMap[key] = RootController.flowContent
         _screens.add(
             AllowedDestination(
                 key = key,
@@ -42,6 +43,7 @@ class RootComposeBuilder {
         tabsNavModel: TabsNavModel<*>,
         multiStackBuilderModel: MultiStackBuilderModel
     ) {
+        _screenMap[key] = RootController.multiStackContent
         _screens.add(
             AllowedDestination(
                 key = key,
