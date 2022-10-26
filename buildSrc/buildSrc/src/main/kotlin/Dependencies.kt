@@ -1,6 +1,6 @@
 object Dependencies {
 
-    val odyssey = "1.0.1"
+    val odyssey = "1.1.0-dev-preview"
     val odysseyPackage = "io.github.alexgladkov"
 
     val compileSdk = 33

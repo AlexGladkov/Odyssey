@@ -35,7 +35,7 @@ fun TabScreen(count: Int?) {
 
                 item {
                     ActionCell("Present Flow", icon = Icons.Filled.ArrowUpward) {
-                        rootController.findRootController().present(NavigationTree.Present.name)
+                        rootController.findRootController().present(NavigationTree.TabPresent.name)
                     }
                 }
             }

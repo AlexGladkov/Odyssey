@@ -22,6 +22,12 @@ fun RootComposeBuilder.navigationGraph() {
         }
     }
 
+    flow(NavigationTree.TabPresent.name) {
+        screen(NavigationTree.TabPresentScreen.name) {
+            TabPresentedActionsScreen(count = (it as? Int) ?: 0)
+        }
+    }
+
     mainScreen()
     topNavScreen()
     customNavScreen()
