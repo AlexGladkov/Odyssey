@@ -45,7 +45,12 @@ private fun NavigatorAnimated(
         modifier = Modifier.background(backgroundColor).fillMaxSize(),
         onScreenRemove = rootController.onScreenRemove
     ) { currentScreen ->
-        val render = rootController.getScreenRender(currentScreen.realKey)
+        val renderKey = when {
+            currentScreen.realKey?.contains(RootController.multiStackKey) == true -> RootController.multiStackKey
+            currentScreen.realKey?.contains(RootController.flowKey) == true -> RootController.flowKey
+            else -> currentScreen.realKey
+        }
+        val render = rootController.getScreenRender(renderKey)
         render?.invoke(currentScreen.params)
             ?: throw IllegalStateException("Screen $currentScreen not found in screenMap")
     }

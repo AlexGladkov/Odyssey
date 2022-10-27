@@ -321,7 +321,9 @@ open class RootController(
                     val last = it._backstack.removeLast()
                     val parentController = it.parentRootController ?: return
                     val current = parentController._backstack.last()
-                    if (current.realKey.contains(screenName)) {
+                    val clearedKey = current.realKey.replace(multiStackKey, "")
+                        .replace(flowKey, "").replace("$", "")
+                    if (clearedKey == screenName) {
                         parentController._currentScreen.value = current
                             .copy(animationType = last.animationType, isForward = false)
                             .wrap(with = last)
@@ -332,7 +334,10 @@ open class RootController(
             } else {
                 val last = it._backstack.removeLast()
                 val current = it._backstack.last()
-                if (current.realKey.contains(screenName)) {
+                val clearedKey = current.realKey.replace(multiStackKey, "")
+                    .replace(flowKey, "").replace("$", "")
+
+                if (clearedKey == screenName) {
                     it._currentScreen.value = current
                         .copy(animationType = last.animationType, isForward = false)
                         .wrap(with = last)
@@ -483,7 +488,7 @@ open class RootController(
 
         val multiStackRealKey = "$multiStackKey$$screenName"
         val screen = Screen(
-            key = multiStackRealKey,
+            key = randomizeKey(multiStackRealKey),
             realKey = multiStackRealKey,
             animationType = animationType,
             params = MultiStackBundle(
@@ -525,9 +530,12 @@ open class RootController(
                             )
                         }
                         TabsNavType.Custom -> {
+                            println("DEBUG: multistack 6 ${bundle.rootController.tabsNavModel.navConfiguration}")
                             val customNavConfiguration =
                                 bundle.rootController.tabsNavModel.navConfiguration as CustomNavConfiguration
+                            println("DEBUG: multistack 7 ${bundle.params}, config ${customNavConfiguration}")
                             customNavConfiguration.content(bundle.params)
+                            println("DEBUG: multistack 8 ${bundle.params}")
                         }
                     }
                 }
@@ -537,7 +545,7 @@ open class RootController(
 
     companion object {
         internal fun randomizeKey(key: String): String = createUniqueKey(key)
-        private const val flowKey = "odyssey_flow_reserved_type"
-        private const val multiStackKey = "odyssey_multi_stack_reserved_type"
+        const val flowKey = "odyssey_flow_reserved_type"
+        const val multiStackKey = "odyssey_multi_stack_reserved_type"
     }
 }
