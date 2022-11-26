@@ -85,8 +85,14 @@ open class RootController(
     }
 
     // Render screen with params
+    @Deprecated("Use renderScreen function instead", ReplaceWith("renderScreen(screenName, params)"))
     @Composable
     fun RenderScreen(screenName: String?, params: Any?) {
+        renderScreen(screenName, params)
+    }
+
+    @Composable
+    fun renderScreen(screenName: String?, params: Any?) {
         _screenMap[screenName]?.invoke(params)
     }
 
@@ -227,8 +233,15 @@ open class RootController(
         }
     }
 
-    @Deprecated("@see findModalController", ReplaceWith("findModalController()"))
-    fun findModalSheetController() = findModalController()
+    // Returns your MultiStack host if it presented
+    fun findHostController(): MultiStackRootController? {
+        if (rootControllerType == RootControllerType.MultiStack) return this as? MultiStackRootController
+        if (rootControllerType == RootControllerType.Tab) {
+            return parentRootController as? MultiStackRootController
+        }
+
+        return null
+    }
 
     /**
      * Attaches Modal Controller to Root Controller
@@ -464,10 +477,18 @@ open class RootController(
         }
 
         val parentRootController = this
+        val multiStackRootController = MultiStackRootController(
+            rootControllerType = RootControllerType.MultiStack,
+            tabsNavModel = tabsNavModel,
+        )
+
+        multiStackRootController.setDeepLinkUri(_deepLinkUri)
+        multiStackRootController.parentRootController = parentRootController
+
         val configurations = multiStackBuilderModel.tabItems.map {
             val rootController = RootController(RootControllerType.Tab)
             rootController.backgroundColor = backgroundColor
-            rootController.parentRootController = parentRootController
+            rootController.parentRootController = multiStackRootController
             rootController.debugName = it.tabItem.name
             rootController.setDeepLinkUri(_deepLinkUri)
             rootController.updateScreenMap(it.screenMap)
@@ -475,16 +496,8 @@ open class RootController(
             TabNavigationModel(tabInfo = it, rootController = rootController)
         }
 
-        val rootController = MultiStackRootController(
-            rootControllerType = RootControllerType.MultiStack,
-            tabsNavModel = tabsNavModel,
-            tabItems = configurations,
-            startTabPosition = startTabPosition
-        )
-
-        rootController.setDeepLinkUri(_deepLinkUri)
-        rootController.parentRootController = parentRootController
-        _childrenRootController.add(rootController)
+        multiStackRootController.setupWithTabs(configurations, startTabPosition)
+        _childrenRootController.add(multiStackRootController)
 
         val multiStackRealKey = "$multiStackKey$$screenName"
         val screen = Screen(
@@ -492,7 +505,7 @@ open class RootController(
             realKey = multiStackRealKey,
             animationType = animationType,
             params = MultiStackBundle(
-                rootController = rootController,
+                rootController = multiStackRootController,
                 startScreen = startScreen,
                 params = params
             )
@@ -530,12 +543,9 @@ open class RootController(
                             )
                         }
                         TabsNavType.Custom -> {
-                            println("DEBUG: multistack 6 ${bundle.rootController.tabsNavModel.navConfiguration}")
                             val customNavConfiguration =
                                 bundle.rootController.tabsNavModel.navConfiguration as CustomNavConfiguration
-                            println("DEBUG: multistack 7 ${bundle.params}, config ${customNavConfiguration}")
                             customNavConfiguration.content(bundle.params)
-                            println("DEBUG: multistack 8 ${bundle.params}")
                         }
                     }
                 }

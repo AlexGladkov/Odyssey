@@ -14,11 +14,6 @@ import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.views.AlertDia
 import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.views.BottomModalSheet
 import ru.alexgladkov.odyssey.core.extensions.Closeable
 
-@Deprecated("@see ModalNavigator", ReplaceWith("ModalNavigator(content)"))
-@Composable
-fun ModalSheetNavigator(content: @Composable () -> Unit) = ModalNavigator(content)
-
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ModalNavigator(
     content: @Composable () -> Unit
