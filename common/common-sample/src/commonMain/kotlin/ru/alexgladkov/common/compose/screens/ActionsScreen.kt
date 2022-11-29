@@ -47,7 +47,7 @@ fun ActionsScreen(count: Int?) {
                 }
 
                 item {
-                    val modalSheetConfiguration = ModalSheetConfiguration(maxHeight = 0.7f, cornerRadius = 16, alpha = 0.8f)
+                    val modalSheetConfiguration = ModalSheetConfiguration(maxHeight = 0.7f, cornerRadius = 16)
                     ActionCell("Present Modal Screen", icon = Icons.Filled.ArrowCircleUp) {
                         modalController.present(modalSheetConfiguration) { key ->
                             ModalSheetScreen {

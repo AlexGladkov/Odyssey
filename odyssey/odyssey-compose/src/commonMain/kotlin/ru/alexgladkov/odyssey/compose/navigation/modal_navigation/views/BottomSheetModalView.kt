@@ -33,7 +33,6 @@ internal fun BoxScope.BottomModalSheet(
 
     val density = LocalDensity.current
 
-
     if (bundle.maxHeight != null)
         modifier = modifier
             .padding(top = with(density) { (height - viewHeight).toDp() })
