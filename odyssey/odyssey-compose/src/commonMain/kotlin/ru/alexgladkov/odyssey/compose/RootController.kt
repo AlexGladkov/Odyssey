@@ -77,12 +77,22 @@ open class RootController(
 
     // Get screen render compose function
     fun getScreenRender(screenName: String?): RenderWithParams<Any?>? {
-        return _screenMap[screenName]
+        return when {
+            screenName?.contains(multiStackKey) == true -> _screenMap[multiStackKey]
+            screenName?.contains(flowKey) == true -> _screenMap[flowKey]
+            else -> _screenMap[screenName]
+        }
     }
 
     // Render screen with params
+    @Deprecated("Use renderScreen function instead", ReplaceWith("renderScreen(screenName, params)"))
     @Composable
     fun RenderScreen(screenName: String?, params: Any?) {
+        renderScreen(screenName, params)
+    }
+
+    @Composable
+    fun renderScreen(screenName: String?, params: Any?) {
         _screenMap[screenName]?.invoke(params)
     }
 
@@ -163,6 +173,7 @@ open class RootController(
 
             is ScreenType.Simple -> launchSimpleScreen(screen, params, animationType, launchFlag)
             is ScreenType.MultiStack<*> -> launchMultiStackScreen(
+                screenName = screen,
                 animationType = animationType,
                 multiStackBuilderModel = screenType.multiStackBuilderModel,
                 tabsNavModel = screenType.tabsNavModel,
@@ -181,9 +192,10 @@ open class RootController(
             return
         }
 
-        when (_backstack.last().realKey) {
-            flowKey -> removeTopScreen(_childrenRootController.last())
-            multiStackKey -> _childrenRootController.last().popBackStack()
+        val realKey = _backstack.last().realKey
+        when {
+            realKey.contains(flowKey) -> removeTopScreen(_childrenRootController.last())
+            realKey.contains(multiStackKey) -> _childrenRootController.last().popBackStack()
             else -> removeTopScreen(this)
         }
     }
@@ -194,9 +206,10 @@ open class RootController(
     fun backToScreen(screenName: String) {
         _modalController?.clearBackStack()
 
-        when (_backstack.last().key) {
-            flowKey -> backToScreen(_childrenRootController.last(), screenName)
-            multiStackKey -> backToScreen(_childrenRootController.last(), screenName)
+        val realKey = _backstack.last().realKey
+        when {
+            realKey.contains(flowKey) -> backToScreen(_childrenRootController.last(), screenName)
+            realKey.contains(multiStackKey) -> backToScreen(_childrenRootController.last(), screenName)
             else -> backToScreen(this, screenName)
         }
     }
@@ -220,8 +233,15 @@ open class RootController(
         }
     }
 
-    @Deprecated("@see findModalController", ReplaceWith("findModalController()"))
-    fun findModalSheetController() = findModalController()
+    // Returns your MultiStack host if it presented
+    fun findHostController(): MultiStackRootController? {
+        if (rootControllerType == RootControllerType.MultiStack) return this as? MultiStackRootController
+        if (rootControllerType == RootControllerType.Tab) {
+            return parentRootController as? MultiStackRootController
+        }
+
+        return null
+    }
 
     /**
      * Attaches Modal Controller to Root Controller
@@ -314,7 +334,9 @@ open class RootController(
                     val last = it._backstack.removeLast()
                     val parentController = it.parentRootController ?: return
                     val current = parentController._backstack.last()
-                    if (current.realKey == screenName) {
+                    val clearedKey = current.realKey.replace(multiStackKey, "")
+                        .replace(flowKey, "").replace("$", "")
+                    if (clearedKey == screenName) {
                         parentController._currentScreen.value = current
                             .copy(animationType = last.animationType, isForward = false)
                             .wrap(with = last)
@@ -325,7 +347,10 @@ open class RootController(
             } else {
                 val last = it._backstack.removeLast()
                 val current = it._backstack.last()
-                if (current.realKey == screenName) {
+                val clearedKey = current.realKey.replace(multiStackKey, "")
+                    .replace(flowKey, "").replace("$", "")
+
+                if (clearedKey == screenName) {
                     it._currentScreen.value = current
                         .copy(animationType = last.animationType, isForward = false)
                         .wrap(with = last)
@@ -416,9 +441,10 @@ open class RootController(
             flowBuilderModel.allowedDestination.firstOrNull { startScreen == it.key }?.key
                 ?: flowBuilderModel.allowedDestination.first().key
 
+        val compositeKey = "$flowKey$$key"
         val screen = Screen(
-            key = randomizeKey(flowKey),
-            realKey = flowKey,
+            key = randomizeKey(compositeKey),
+            realKey = compositeKey,
             animationType = animationType,
             params = FlowBundle(
                 key = targetScreen,
@@ -433,6 +459,7 @@ open class RootController(
     }
 
     private fun launchMultiStackScreen(
+        screenName: String,
         animationType: AnimationType,
         multiStackBuilderModel: MultiStackBuilderModel,
         tabsNavModel: TabsNavModel<*>,
@@ -450,10 +477,18 @@ open class RootController(
         }
 
         val parentRootController = this
+        val multiStackRootController = MultiStackRootController(
+            rootControllerType = RootControllerType.MultiStack,
+            tabsNavModel = tabsNavModel,
+        )
+
+        multiStackRootController.setDeepLinkUri(_deepLinkUri)
+        multiStackRootController.parentRootController = parentRootController
+
         val configurations = multiStackBuilderModel.tabItems.map {
             val rootController = RootController(RootControllerType.Tab)
             rootController.backgroundColor = backgroundColor
-            rootController.parentRootController = parentRootController
+            rootController.parentRootController = multiStackRootController
             rootController.debugName = it.tabItem.name
             rootController.setDeepLinkUri(_deepLinkUri)
             rootController.updateScreenMap(it.screenMap)
@@ -461,23 +496,16 @@ open class RootController(
             TabNavigationModel(tabInfo = it, rootController = rootController)
         }
 
-        val rootController = MultiStackRootController(
-            rootControllerType = RootControllerType.MultiStack,
-            tabsNavModel = tabsNavModel,
-            tabItems = configurations,
-            startTabPosition = startTabPosition
-        )
+        multiStackRootController.setupWithTabs(configurations, startTabPosition)
+        _childrenRootController.add(multiStackRootController)
 
-        rootController.setDeepLinkUri(_deepLinkUri)
-        rootController.parentRootController = parentRootController
-        _childrenRootController.add(rootController)
-
+        val multiStackRealKey = "$multiStackKey$$screenName"
         val screen = Screen(
-            key = multiStackKey,
-            realKey = multiStackKey,
+            key = randomizeKey(multiStackRealKey),
+            realKey = multiStackRealKey,
             animationType = animationType,
             params = MultiStackBundle(
-                rootController = rootController,
+                rootController = multiStackRootController,
                 startScreen = startScreen,
                 params = params
             )
@@ -527,7 +555,7 @@ open class RootController(
 
     companion object {
         internal fun randomizeKey(key: String): String = createUniqueKey(key)
-        private const val flowKey = "odyssey_flow_reserved_type"
-        private const val multiStackKey = "odyssey_multi_stack_reserved_type"
+        const val flowKey = "odyssey_flow_reserved_type"
+        const val multiStackKey = "odyssey_multi_stack_reserved_type"
     }
 }

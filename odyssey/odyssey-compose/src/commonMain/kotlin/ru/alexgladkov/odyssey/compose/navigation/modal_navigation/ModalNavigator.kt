@@ -3,24 +3,23 @@ package ru.alexgladkov.odyssey.compose.navigation.modal_navigation
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import ru.alexgladkov.odyssey.compose.controllers.*
 import ru.alexgladkov.odyssey.compose.helpers.noRippleClickable
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
+import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.configuration.DefaultModalConfiguration
+import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.configuration.ModalNavigatorConfiguration
 import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.views.AlertDialog
 import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.views.BottomModalSheet
+import ru.alexgladkov.odyssey.compose.utils.ModalSheetView
 import ru.alexgladkov.odyssey.core.extensions.Closeable
 
-@Deprecated("@see ModalNavigator", ReplaceWith("ModalNavigator(content)"))
-@Composable
-fun ModalSheetNavigator(content: @Composable () -> Unit) = ModalNavigator(content)
-
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ModalNavigator(
+    configuration: ModalNavigatorConfiguration = DefaultModalConfiguration(),
     content: @Composable () -> Unit
 ) {
     val modalController = remember { ModalController() }
@@ -29,23 +28,28 @@ fun ModalNavigator(
     var closeable: Closeable? = null
 
     rootController.attachModalController(modalController)
-    BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
-        content.invoke()
+    ModalSheetView(
+        backgroundColor = configuration.statusBarColor,
+        scrimAlpha = if (modalStack.isEmpty()) 0.0f else 0.5f,
+        modal = {
+            modalStack.forEach { bundle ->
+                when (bundle) {
+                    is ModalSheetBundle -> {
+                        BottomModalSheet(bundle, modalController)
+                    }
 
-        modalStack.forEach { bundle ->
-            when (bundle) {
-                is ModalSheetBundle -> {
-                    BottomModalSheet(bundle, modalController)
-                }
-                is AlertBundle -> {
-                    AlertDialog(bundle, modalController)
-                }
-                is CustomModalBundle -> {
-                    bundle.content(bundle.key)
+                    is AlertBundle -> {
+                        AlertDialog(bundle, modalController)
+                    }
+
+                    is CustomModalBundle -> {
+                        bundle.content(bundle.key)
+                    }
                 }
             }
-        }
-    }
+        },
+        content = content
+    )
 
     LaunchedEffect(Unit) {
         closeable = modalController.currentStack.watch {

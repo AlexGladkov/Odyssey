@@ -19,7 +19,7 @@ import ru.alexgladkov.odyssey.compose.local.LocalRootController
 @Composable
 fun DrawerScreen(params: Any?) {
     val rootController = LocalRootController.current as MultiStackRootController
-    val tabItem = rootController.stackChangeObserver.collectAsState()
+    val tabItem = rootController.stackChangeObserver.collectAsState().value ?: return
     val coroutineScope = rememberCoroutineScope()
     val scaffoldState = rememberScaffoldState(
         drawerState = rememberDrawerState(DrawerValue.Open)
@@ -43,11 +43,13 @@ fun DrawerScreen(params: Any?) {
                 }
 
                 rootController.tabItems.forEach { currentItem ->
+                    val position = rootController.tabItems.indexOf(currentItem)
+
                     Text(
                         modifier = Modifier.height(40.dp).fillMaxWidth()
                             .clickable {
                                 coroutineScope.launch {
-                                    rootController.switchTab(currentItem)
+                                    rootController.switchTab(position)
                                     scaffoldState.drawerState.close()
                                 }
                             },
@@ -60,7 +62,7 @@ fun DrawerScreen(params: Any?) {
             }
         }
     ) {
-        TabNavigator(modifier = Modifier.fillMaxSize(), null, tabItem.value)
+        TabNavigator(modifier = Modifier.fillMaxSize(), null, tabItem)
     }
 
 

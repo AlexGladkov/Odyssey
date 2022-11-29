@@ -35,7 +35,7 @@ fun TabNavigator(
                         onScreenRemove = currentTab.rootController.onScreenRemove
                     ) {
                         val rootController = currentTab.rootController
-                        rootController.RenderScreen(it.realKey, it.params)
+                        rootController.renderScreen(it.realKey, it.params)
                     }
                 }
             }
@@ -50,12 +50,12 @@ fun TabNavigator(
 @Composable
 fun BottomBarNavigator(startScreen: String?) {
     val rootController = LocalRootController.current as MultiStackRootController
-    val tabItem = rootController.stackChangeObserver.collectAsState()
+    val tabItem = rootController.stackChangeObserver.collectAsState().value ?: return
     val bottomNavConfiguration =
         rootController.tabsNavModel.navConfiguration as BottomNavConfiguration
 
     Column(modifier = Modifier.fillMaxSize()) {
-        TabNavigator(modifier = Modifier.weight(1f), startScreen, tabItem.value)
+        TabNavigator(modifier = Modifier.weight(1f), startScreen, tabItem)
 
         BottomNavigation(
             backgroundColor = bottomNavConfiguration.backgroundColor,
@@ -63,7 +63,8 @@ fun BottomBarNavigator(startScreen: String?) {
         ) {
             rootController.tabItems.forEach { currentItem ->
                 val configuration = currentItem.tabInfo.tabItem.configuration
-                val isSelected = tabItem.value == currentItem
+                val position = rootController.tabItems.indexOf(currentItem)
+                val isSelected = tabItem == currentItem
 
                 BottomNavigationItem(
                     selected = isSelected,
@@ -96,7 +97,7 @@ fun BottomBarNavigator(startScreen: String?) {
                         )
                     },
                     onClick = {
-                        rootController.switchTab(currentItem)
+                        rootController.switchTab(position)
                     })
             }
         }
@@ -108,22 +109,23 @@ fun BottomBarNavigator(startScreen: String?) {
 @Composable
 fun TopBarNavigator(startScreen: String?) {
     val rootController = LocalRootController.current as MultiStackRootController
-    val tabItem = rootController.stackChangeObserver.collectAsState()
+    val tabItem = rootController.stackChangeObserver.collectAsState().value ?: return
     val bottomNavConfiguration = rootController.tabsNavModel.navConfiguration as TopNavConfiguration
 
     Column(modifier = Modifier.fillMaxSize()) {
         TabRow(
             backgroundColor = bottomNavConfiguration.backgroundColor,
             contentColor = bottomNavConfiguration.contentColor,
-            selectedTabIndex = rootController.tabItems.indexOfFirst { it == tabItem.value }
+            selectedTabIndex = rootController.tabItems.indexOfFirst { it == tabItem }
                 .coerceAtLeast(0)
         ) {
             rootController.tabItems.forEach { currentItem ->
                 val configuration = currentItem.tabInfo.tabItem.configuration
-                val isSelected = tabItem.value == currentItem
+                val position = rootController.tabItems.indexOf(currentItem)
+                val isSelected = tabItem == currentItem
                 Tab(
                     selected = isSelected,
-                    onClick = { rootController.switchTab(currentItem) },
+                    onClick = { rootController.switchTab(position) },
                     text = {
                         Text(
                             text = configuration.title,
@@ -134,7 +136,7 @@ fun TopBarNavigator(startScreen: String?) {
             }
         }
 
-        TabNavigator(modifier = Modifier.weight(1f), startScreen, tabItem.value)
+        TabNavigator(modifier = Modifier.weight(1f), startScreen, tabItem)
     }
 
     rootController.tabsNavModel.launchedEffect.invoke()

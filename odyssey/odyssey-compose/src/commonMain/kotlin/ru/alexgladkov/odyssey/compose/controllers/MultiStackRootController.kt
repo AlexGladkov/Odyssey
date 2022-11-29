@@ -1,6 +1,5 @@
 package ru.alexgladkov.odyssey.compose.controllers
 
-import androidx.compose.ui.graphics.Color
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import ru.alexgladkov.odyssey.compose.RootController
@@ -15,20 +14,33 @@ data class TabNavigationModel(
 
 class MultiStackRootController(
     val rootControllerType: RootControllerType,
-    val tabsNavModel: TabsNavModel<*>,
-    val tabItems: List<TabNavigationModel>,
-    startTabPosition: Int
+    val tabsNavModel: TabsNavModel<*>
 ) : RootController(rootControllerType) {
-    private val _stackChangeObserver: MutableStateFlow<TabNavigationModel> =
-        MutableStateFlow(tabItems[startTabPosition])
+    private val _tabItems: MutableList<TabNavigationModel> = mutableListOf()
+    private val _stackChangeObserver: MutableStateFlow<TabNavigationModel?> =
+        MutableStateFlow(null)
     val stackChangeObserver = _stackChangeObserver.asStateFlow()
+    val tabItems = _tabItems
 
-    fun switchTab(tabConfiguration: TabNavigationModel) {
-        _stackChangeObserver.value = tabConfiguration
+    fun setupWithTabs(tabItems: List<TabNavigationModel>, startPosition: Int = 0) {
+        if (startPosition >= tabItems.size) throw IllegalStateException("Setup error: Position must be less than tab items count")
+        _tabItems.clear()
+        _tabItems.addAll(tabItems)
+        _stackChangeObserver.value = tabItems[startPosition]
+    }
+
+    @Deprecated("Use switchTab with position instead")
+    fun switchTab(tabNavigationModel: TabNavigationModel) {
+        _stackChangeObserver.value = tabNavigationModel
+    }
+
+    fun switchTab(position: Int) {
+        if (position >= _tabItems.size) throw IllegalStateException("Position must be less than tab items count")
+        _stackChangeObserver.value = _tabItems[position]
     }
 
     override fun popBackStack() {
-        val rootController = _stackChangeObserver.value.rootController
-        rootController.popBackStack()
+        val rootController = _stackChangeObserver.value?.rootController
+        rootController?.popBackStack()
     }
 }

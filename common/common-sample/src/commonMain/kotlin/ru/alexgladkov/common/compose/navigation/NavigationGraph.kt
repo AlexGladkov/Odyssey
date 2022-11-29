@@ -3,7 +3,6 @@ package ru.alexgladkov.common.compose.navigation
 import ru.alexgladkov.common.compose.NavigationTree
 import ru.alexgladkov.common.compose.screens.*
 import ru.alexgladkov.common.compose.tabs.*
-import ru.alexgladkov.odyssey.compose.base.Navigator
 import ru.alexgladkov.odyssey.compose.extensions.*
 import ru.alexgladkov.odyssey.compose.navigation.RootComposeBuilder
 
@@ -19,6 +18,12 @@ fun RootComposeBuilder.navigationGraph() {
     flow(NavigationTree.Present.name) {
         screen(NavigationTree.PresentScreen.name) {
             PresentedActionsScreen(count = (it as? Int) ?: 0)
+        }
+    }
+
+    flow(NavigationTree.TabPresent.name) {
+        screen(NavigationTree.TabPresentScreen.name) {
+            TabPresentedActionsScreen(count = (it as? Int) ?: 0)
         }
     }
 
@@ -68,9 +73,10 @@ fun RootComposeBuilder.topNavScreen() {
 }
 
 fun RootComposeBuilder.customNavScreen() {
-    customNavigation(name = NavigationTree.Drawer.name, tabsNavModel = CustomConfiguration(
-        content = { params -> DrawerScreen(params) }
-    )) {
+    customNavigation(name = NavigationTree.Drawer.name,
+        tabsNavModel = CustomConfiguration(
+            content = { params -> DrawerScreen(params) }
+        )) {
         tab(FeedTab()) {
             screen(name = NavigationTree.Tab.name) {
                 TabScreen(it as? Int)
