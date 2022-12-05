@@ -49,6 +49,18 @@ feel free to open new issue in Issues section
 [<img src="screenshots/android-screen-favorite.png" width="250" height = "551" />](screenshots/android-screen-favorite.png)
 [<img src="screenshots/desktop-screen-favorite.png" width="500" height = "375" />](screenshots/desktop-screen-favorite.png)
 
+### Building and publishing locally
+
+The project doesn't require any additional setup to be modified and consumed locally. To publish the library with your 
+modifications to your local Maven repository, run the following command:
+
+```sh
+./gradlew publishToMavenLocal -Psigning.skip
+```
+
+Don't forget to either put `mavenLocal()` higher in `repositories` block or increase library version. This way your 
+local modifications would be prioritized over official version from Maven Central repository.
+
 ### License
 ```
 MIT License

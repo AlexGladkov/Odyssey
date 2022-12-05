@@ -88,5 +88,6 @@ publishing {
 
 // Signing artifacts. Signing.* extra properties values will be used
 signing {
+    setRequired { !hasProperty("signing.skip") }
     sign(publishing.publications)
 }
