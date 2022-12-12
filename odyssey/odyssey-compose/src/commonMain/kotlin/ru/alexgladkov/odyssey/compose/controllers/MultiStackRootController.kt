@@ -26,21 +26,35 @@ class MultiStackRootController(
         if (startPosition >= tabItems.size) throw IllegalStateException("Setup error: Position must be less than tab items count")
         _tabItems.clear()
         _tabItems.addAll(tabItems)
-        _stackChangeObserver.value = tabItems[startPosition]
+        updateTab(tabItems[startPosition])
     }
 
     @Deprecated("Use switchTab with position instead")
     fun switchTab(tabNavigationModel: TabNavigationModel) {
-        _stackChangeObserver.value = tabNavigationModel
+        updateTab(tabNavigationModel)
     }
 
     fun switchTab(position: Int) {
         if (position >= _tabItems.size) throw IllegalStateException("Position must be less than tab items count")
-        _stackChangeObserver.value = _tabItems[position]
+        updateTab(_tabItems[position])
     }
 
     override fun popBackStack() {
         val rootController = _stackChangeObserver.value?.rootController
         rootController?.popBackStack()
+    }
+
+    private fun updateTab(tabModel: TabNavigationModel) {
+        val screenKey = tabModel.rootController
+            .parentRootController // multistack controller
+            ?.parentRootController // actual parent controller
+            ?.currentScreen?.value // current transaction
+            ?.screen // owning screen
+            ?.realKey
+            ?.substringAfter('$')
+        val tabName = tabModel.tabInfo.tabItem.name// + " @@@ " + tabItem.tabInfo.tabItem.configuration.title)
+        val breadcrumb = if (screenKey != null) "$screenKey>$tabName" else tabName
+        onBreadcrumb(breadcrumb)
+        _stackChangeObserver.value = tabModel
     }
 }

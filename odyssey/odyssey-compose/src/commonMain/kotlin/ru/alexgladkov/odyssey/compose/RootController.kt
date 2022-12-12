@@ -23,6 +23,7 @@ import ru.alexgladkov.odyssey.core.backpress.BackPressedCallback
 import ru.alexgladkov.odyssey.core.backpress.OnBackPressedDispatcher
 import ru.alexgladkov.odyssey.core.screen.Screen
 import ru.alexgladkov.odyssey.core.screen.ScreenBundle
+import ru.alexgladkov.odyssey.core.toScreenBundle
 import ru.alexgladkov.odyssey.core.wrap
 import kotlin.collections.HashMap
 
@@ -61,6 +62,10 @@ open class RootController(
     var onApplicationFinish: (() -> Unit)? = null
     var onScreenRemove: (ScreenBundle) -> Unit =
         { parentRootController?.onScreenRemove?.invoke(it) }
+
+    var onBreadcrumb: (screenKey: String) -> Unit = {
+        parentRootController?.onBreadcrumb?.invoke(it)
+    }
 
     var currentScreen: StateFlow<NavConfiguration?> = _currentScreen.asStateFlow()
 
@@ -153,6 +158,19 @@ open class RootController(
         launchFlag: LaunchFlag? = null,
         deepLink: Boolean = false
     ) {
+        doLaunch(screen, startScreen, startTabPosition, params, animationType, launchFlag, deepLink)
+    }
+
+    private fun doLaunch(
+        screen: String,
+        startScreen: String? = null,
+        startTabPosition: Int = 0,
+        params: Any? = null,
+        animationType: AnimationType = AnimationType.None,
+        launchFlag: LaunchFlag? = null,
+        deepLink: Boolean = false,
+        supplyBreadcrumb: Boolean = true,
+    ) {
         if (deepLink && _deepLinkUri?.isNotBlank() == true) {
             proceedDeepLink(animationType = animationType, launchFlag = launchFlag)
             return
@@ -168,10 +186,12 @@ open class RootController(
                 params,
                 animationType,
                 screenType.flowBuilderModel,
-                launchFlag
+                launchFlag,
+                supplyBreadcrumb,
             )
 
-            is ScreenType.Simple -> launchSimpleScreen(screen, params, animationType, launchFlag)
+            is ScreenType.Simple ->
+                launchSimpleScreen(screen, params, animationType, launchFlag, supplyBreadcrumb)
             is ScreenType.MultiStack<*> -> launchMultiStackScreen(
                 screenName = screen,
                 animationType = animationType,
@@ -180,7 +200,8 @@ open class RootController(
                 launchFlag = launchFlag,
                 startScreen = startScreen,
                 startTabPosition = startTabPosition,
-                params = params
+                params = params,
+                supplyBreadcrumb = supplyBreadcrumb,
             )
         }
     }
@@ -258,14 +279,18 @@ open class RootController(
      */
     fun drawCurrentScreen(startScreen: String? = null, startParams: Any? = null) {
         if (_backstack.isEmpty()) {
-            launch(
+            doLaunch(
                 screen = _allowedDestinations.firstOrNull { it.key == startScreen }?.key
                     ?: _allowedDestinations.first().key,
-                params = startParams
+                params = startParams,
+                supplyBreadcrumb = false,
             )
         } else {
             val current = _backstack.last()
-            _currentScreen.value = current.copy(animationType = AnimationType.None).wrap()
+            updateCurrentScreen(
+                current.copy(animationType = AnimationType.None).wrap(),
+                supplyBreadcrumb = false,
+            )
         }
     }
 
@@ -275,6 +300,14 @@ open class RootController(
      */
     fun setDeepLinkUri(path: String?) {
         this._deepLinkUri = path
+    }
+
+    private fun updateCurrentScreen(screen: NavConfiguration, supplyBreadcrumb: Boolean = true) {
+        val screenKey = screen.screen.toScreenBundle().realKey
+        if (screenKey != null && supplyBreadcrumb) {
+            onBreadcrumb(screenKey.substringAfter('$'))
+        }
+        _currentScreen.value = screen
     }
 
     private fun proceedDeepLink(animationType: AnimationType, launchFlag: LaunchFlag?) {
@@ -337,9 +370,10 @@ open class RootController(
                     val clearedKey = current.realKey.replace(multiStackKey, "")
                         .replace(flowKey, "").replace("$", "")
                     if (clearedKey == screenName) {
-                        parentController._currentScreen.value = current
+                        updateCurrentScreen(current
                             .copy(animationType = last.animationType, isForward = false)
                             .wrap(with = last)
+                        )
                     } else {
                         backToScreen(it.parentRootController, screenName)
                     }
@@ -351,9 +385,10 @@ open class RootController(
                     .replace(flowKey, "").replace("$", "")
 
                 if (clearedKey == screenName) {
-                    it._currentScreen.value = current
+                    updateCurrentScreen(current
                         .copy(animationType = last.animationType, isForward = false)
                         .wrap(with = last)
+                    )
                 } else {
                     backToScreen(rootController, screenName)
                 }
@@ -375,9 +410,10 @@ open class RootController(
                 val last = it._backstack.removeLast()
                 val current = it._backstack.last()
 
-                it._currentScreen.value = current
+                updateCurrentScreen(current
                     .copy(animationType = last.animationType, isForward = false)
                     .wrap(with = last)
+                )
             }
         }
     }
@@ -386,7 +422,8 @@ open class RootController(
         key: String,
         params: Any?,
         animationType: AnimationType,
-        launchFlag: LaunchFlag?
+        launchFlag: LaunchFlag?,
+        supplyBreadcrumb: Boolean = true,
     ) {
         val screen = if (_backstack.isEmpty() && launchFlag == null) {
             Screen(key = randomizeKey(key), realKey = key, params = params)
@@ -405,7 +442,7 @@ open class RootController(
         }
 
         _backstack.add(screen)
-        _currentScreen.value = screen.wrap()
+        updateCurrentScreen(screen.wrap(), supplyBreadcrumb)
     }
 
     private fun launchFlowScreen(
@@ -414,7 +451,8 @@ open class RootController(
         params: Any?,
         animationType: AnimationType,
         flowBuilderModel: FlowBuilderModel,
-        launchFlag: LaunchFlag?
+        launchFlag: LaunchFlag?,
+        supplyBreadcrumb: Boolean = true,
     ) {
         if (rootControllerType == RootControllerType.Flow) throw IllegalStateException("Don't use flow inside flow, call findRootController() instead")
 
@@ -455,7 +493,7 @@ open class RootController(
         )
 
         _backstack.add(screen)
-        _currentScreen.value = screen.wrap()
+        updateCurrentScreen(screen.wrap(), supplyBreadcrumb)
     }
 
     private fun launchMultiStackScreen(
@@ -467,6 +505,7 @@ open class RootController(
         startTabPosition: Int = 0,
         launchFlag: LaunchFlag?,
         params: Any? = null,
+        supplyBreadcrumb: Boolean = true,
     ) {
         if (rootControllerType == RootControllerType.Flow || rootControllerType == RootControllerType.MultiStack)
             throw IllegalStateException("Don't use flow inside flow, call findRootController instead")
@@ -512,7 +551,7 @@ open class RootController(
         )
 
         _backstack.add(screen)
-        _currentScreen.value = screen.wrap()
+        updateCurrentScreen(screen.wrap(), supplyBreadcrumb)
     }
 
     private fun initServiceScreens() {
