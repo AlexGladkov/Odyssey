@@ -32,7 +32,7 @@ fun TabPresentedActionsScreen(count: Int?) {
             LazyColumn {
                 item {
                     ActionCell(text = "Push Screen", icon = Icons.Filled.ArrowForward) {
-                        rootController.push(NavigationTree.PresentScreen.name, (count ?: 0) + 1)
+                        rootController.push(NavigationTree.Push.name, (count ?: 0) + 1)
                     }
                 }
 

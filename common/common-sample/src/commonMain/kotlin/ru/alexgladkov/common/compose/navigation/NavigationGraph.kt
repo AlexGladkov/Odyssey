@@ -25,6 +25,10 @@ fun RootComposeBuilder.navigationGraph() {
         screen(NavigationTree.TabPresentScreen.name) {
             TabPresentedActionsScreen(count = (it as? Int) ?: 0)
         }
+
+        screen(NavigationTree.Push.name) {
+            TabPresentedActionsScreen(count = it as? Int)
+        }
     }
 
     mainScreen()

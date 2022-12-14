@@ -3,6 +3,7 @@ include(
 
     ":odyssey:odyssey-core",
     ":odyssey:odyssey-compose",
+    ":odyssey:odyssey-android",
 
     ":android",
     ":desktop",

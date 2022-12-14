@@ -307,19 +307,17 @@ open class RootController(
                     containsScreen
                 }
             }
-        }
-
-        destination?.let {
-            launch(
-                screen = destination.key,
-                startScreen = searchKey,
-                startTabPosition = startTabPosition,
-                params = params,
-                animationType = animationType,
-                launchFlag = launchFlag,
-                deepLink = false
-            )
         } ?: throw IllegalStateException("Can't launch $_deepLinkUri to unknown screen")
+
+        launch(
+            screen = destination.key,
+            startScreen = searchKey,
+            startTabPosition = startTabPosition,
+            params = params,
+            animationType = animationType,
+            launchFlag = launchFlag,
+            deepLink = false
+        )
 
         _deepLinkUri = null
     }
@@ -363,8 +361,7 @@ open class RootController(
 
     private fun removeTopScreen(rootController: RootController?) {
         rootController?.let {
-            val isLastScreen = it._backstack.size <= 1
-            if (isLastScreen) {
+            if (it._backstack.size <= 1) {
                 if (it.debugName == "Root") {
                     it.onApplicationFinish?.invoke()
                 } else {
@@ -388,21 +385,14 @@ open class RootController(
         animationType: AnimationType,
         launchFlag: LaunchFlag?
     ) {
-        val screen = if (_backstack.isEmpty() && launchFlag == null) {
-            Screen(key = randomizeKey(key), realKey = key, params = params)
-        } else {
-            Screen(
-                key = randomizeKey(key),
-                realKey = key,
-                params = params,
-                animationType = animationType
-            )
-        }
+        val screen = Screen(
+            key = randomizeKey(key),
+            realKey = key,
+            params = params,
+            animationType = if (_backstack.isEmpty() && launchFlag == null) animationType else AnimationType.None
+        )
 
-        when (launchFlag) {
-            LaunchFlag.SingleNewTask -> _backstack.clear()
-            null -> {}
-        }
+        handleLaunchFlag(launchFlag)
 
         _backstack.add(screen)
         _currentScreen.value = screen.wrap()
@@ -418,10 +408,7 @@ open class RootController(
     ) {
         if (rootControllerType == RootControllerType.Flow) throw IllegalStateException("Don't use flow inside flow, call findRootController() instead")
 
-        when (launchFlag) {
-            LaunchFlag.SingleNewTask -> _backstack.clear()
-            null -> {}
-        }
+        handleLaunchFlag(launchFlag)
 
         val rootController = RootController(RootControllerType.Flow)
         rootController.backgroundColor = backgroundColor
@@ -471,10 +458,7 @@ open class RootController(
         if (rootControllerType == RootControllerType.Flow || rootControllerType == RootControllerType.MultiStack)
             throw IllegalStateException("Don't use flow inside flow, call findRootController instead")
 
-        when (launchFlag) {
-            LaunchFlag.SingleNewTask -> _backstack.clear()
-            null -> {}
-        }
+        handleLaunchFlag(launchFlag)
 
         val parentRootController = this
         val multiStackRootController = MultiStackRootController(
@@ -550,6 +534,16 @@ open class RootController(
                     }
                 }
             }
+        }
+    }
+
+    private fun handleLaunchFlag(launchFlag: LaunchFlag?) {
+        when (launchFlag) {
+            LaunchFlag.SingleNewTask -> _backstack.clear()
+            LaunchFlag.SingleInstance -> {}
+            LaunchFlag.TopInstance -> {}
+            LaunchFlag.ClearPrevious -> {}
+            null -> {}
         }
     }
 
