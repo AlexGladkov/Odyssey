@@ -17,6 +17,11 @@ import androidx.savedstate.SavedStateRegistryController
 import androidx.savedstate.SavedStateRegistryOwner
 import dagger.hilt.android.internal.lifecycle.HiltViewModelFactory
 
+/**
+ * Class bridge between Android ViewModelStoreOwner and Odyssey
+ * @param activityContext - Android Context
+ * Credits: @puritanin
+ */
 class SimpleViewModelStoreOwner(
     activityContext: Context
 ) : ViewModelStoreOwner,

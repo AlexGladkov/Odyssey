@@ -7,7 +7,8 @@ include(
 
     ":android",
     ":desktop",
-    ":uikit"
+    ":uikit",
+    ":hilt",
 )
 
 //includeBuild("convention-plugins")
