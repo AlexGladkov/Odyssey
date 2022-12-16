@@ -16,6 +16,7 @@ import ru.alexgladkov.odyssey.compose.extensions.createUniqueKey
 import ru.alexgladkov.odyssey.compose.helpers.*
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
 import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.*
+import ru.alexgladkov.odyssey.core.CoreRootController
 import ru.alexgladkov.odyssey.core.LaunchFlag
 import ru.alexgladkov.odyssey.core.NavConfiguration
 import ru.alexgladkov.odyssey.core.animations.AnimationType
@@ -43,11 +44,10 @@ data class AllowedDestination(
     val screenType: ScreenType
 )
 
-open class RootController(
-    private val rootControllerType: RootControllerType = RootControllerType.Root
-) {
+open class RootController(private val rootControllerType: RootControllerType = RootControllerType.Root) :
+    CoreRootController<Screen>() {
     private val _allowedDestinations: MutableList<AllowedDestination> = mutableListOf()
-    private val _backstack = mutableListOf<Screen>()
+    override val _backstack = mutableListOf<Screen>()
     private val _currentScreen: MutableStateFlow<NavConfiguration?> =
         MutableStateFlow(null)
     private var _childrenRootController: MutableList<RootController> = mutableListOf()
@@ -56,6 +56,7 @@ open class RootController(
     private var _modalController: ModalController? = null
     private var _deepLinkUri: String? = null
 
+    override var onScreenNavigate: ((String, String) -> Unit)? = null
     var parentRootController: RootController? = null
     var backgroundColor: Color = Color.White
     var onApplicationFinish: (() -> Unit)? = null
@@ -68,8 +69,8 @@ open class RootController(
      * Debug name need to debug :) if you like console debugging
      * Setup automatically
      */
-    var debugName: String? = if (parentRootController == null) "Root" else null
-        private set
+    open var debugName: String? = if (parentRootController == null) "Root" else null
+        protected set
 
     init {
         initServiceScreens()
@@ -157,6 +158,8 @@ open class RootController(
             proceedDeepLink(animationType = animationType, launchFlag = launchFlag)
             return
         }
+
+        handleScreenBreadcrumbs()
 
         val screenType = _allowedDestinations.find { it.key == screen }?.screenType
             ?: throw IllegalStateException("Can't find screen in destination. Did you provide this screen?")
@@ -366,7 +369,6 @@ open class RootController(
                     it.onApplicationFinish?.invoke()
                 } else {
                     removeTopScreen(it.parentRootController)
-                    it.parentRootController?._childrenRootController?.removeLast()
                 }
             } else {
                 val last = it._backstack.removeLast()
@@ -389,10 +391,10 @@ open class RootController(
             key = randomizeKey(key),
             realKey = key,
             params = params,
-            animationType = if (_backstack.isEmpty() && launchFlag == null) animationType else AnimationType.None
+            animationType = if (_backstack.isEmpty() && launchFlag == null) AnimationType.None else animationType
         )
 
-        handleLaunchFlag(launchFlag)
+        handleLaunchFlag(key, launchFlag)
 
         _backstack.add(screen)
         _currentScreen.value = screen.wrap()
@@ -408,7 +410,8 @@ open class RootController(
     ) {
         if (rootControllerType == RootControllerType.Flow) throw IllegalStateException("Don't use flow inside flow, call findRootController() instead")
 
-        handleLaunchFlag(launchFlag)
+        val compositeKey = "$flowKey$$key"
+        handleLaunchFlag(compositeKey, launchFlag)
 
         val rootController = RootController(RootControllerType.Flow)
         rootController.backgroundColor = backgroundColor
@@ -428,7 +431,7 @@ open class RootController(
             flowBuilderModel.allowedDestination.firstOrNull { startScreen == it.key }?.key
                 ?: flowBuilderModel.allowedDestination.first().key
 
-        val compositeKey = "$flowKey$$key"
+
         val screen = Screen(
             key = randomizeKey(compositeKey),
             realKey = compositeKey,
@@ -458,7 +461,8 @@ open class RootController(
         if (rootControllerType == RootControllerType.Flow || rootControllerType == RootControllerType.MultiStack)
             throw IllegalStateException("Don't use flow inside flow, call findRootController instead")
 
-        handleLaunchFlag(launchFlag)
+        val multiStackRealKey = "$multiStackKey$$screenName"
+        handleLaunchFlag(multiStackRealKey, launchFlag)
 
         val parentRootController = this
         val multiStackRootController = MultiStackRootController(
@@ -483,7 +487,6 @@ open class RootController(
         multiStackRootController.setupWithTabs(configurations, startTabPosition)
         _childrenRootController.add(multiStackRootController)
 
-        val multiStackRealKey = "$multiStackKey$$screenName"
         val screen = Screen(
             key = randomizeKey(multiStackRealKey),
             realKey = multiStackRealKey,
@@ -537,12 +540,15 @@ open class RootController(
         }
     }
 
-    private fun handleLaunchFlag(launchFlag: LaunchFlag?) {
+    private fun handleScreenBreadcrumbs() {
+
+    }
+
+    private fun handleLaunchFlag(screenKey: String, launchFlag: LaunchFlag?) {
         when (launchFlag) {
             LaunchFlag.SingleNewTask -> _backstack.clear()
-            LaunchFlag.SingleInstance -> {}
-            LaunchFlag.TopInstance -> {}
-            LaunchFlag.ClearPrevious -> {}
+            LaunchFlag.SingleInstance -> _backstack.removeAll { it.realKey == screenKey }
+            LaunchFlag.ClearPrevious -> _backstack.removeLastOrNull()
             null -> {}
         }
     }

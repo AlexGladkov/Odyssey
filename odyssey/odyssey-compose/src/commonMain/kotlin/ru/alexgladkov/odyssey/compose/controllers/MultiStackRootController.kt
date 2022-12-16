@@ -19,6 +19,8 @@ class MultiStackRootController(
     private val _tabItems: MutableList<TabNavigationModel> = mutableListOf()
     private val _stackChangeObserver: MutableStateFlow<TabNavigationModel?> =
         MutableStateFlow(null)
+
+    override var debugName: String? = "MultiStackRootController"
     val stackChangeObserver = _stackChangeObserver.asStateFlow()
     val tabItems = _tabItems
 

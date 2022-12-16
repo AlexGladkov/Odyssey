@@ -84,6 +84,15 @@ fun TabPresentedActionsScreen(count: Int?) {
 
                 item {
                     ActionCell(
+                        text = "Start New Instance",
+                        icon = Icons.Filled.OpenInNewOff,
+                    ) {
+                        rootController.findRootController().present(screen = NavigationTree.Present.name, launchFlag = LaunchFlag.SingleInstance)
+                    }
+                }
+
+                item {
+                    ActionCell(
                         "Back",
                         icon = if (count == 0 || count == null) Icons.Filled.ArrowDownward
                         else Icons.Filled.ArrowBack
