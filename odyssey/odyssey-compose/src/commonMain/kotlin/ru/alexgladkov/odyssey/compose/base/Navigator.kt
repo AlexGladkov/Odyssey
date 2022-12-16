@@ -9,6 +9,7 @@ import androidx.compose.ui.graphics.Color
 import ru.alexgladkov.odyssey.compose.RootController
 import ru.alexgladkov.odyssey.compose.helpers.BottomSheetBundle
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
+import ru.alexgladkov.odyssey.core.CoreRootController
 import ru.alexgladkov.odyssey.core.NavConfiguration
 import ru.alexgladkov.odyssey.core.screen.ScreenInteractor
 import ru.alexgladkov.odyssey.core.toScreenBundle
@@ -46,8 +47,8 @@ private fun NavigatorAnimated(
         onScreenRemove = rootController.onScreenRemove
     ) { currentScreen ->
         val renderKey = when {
-            currentScreen.realKey?.contains(RootController.multiStackKey) == true -> RootController.multiStackKey
-            currentScreen.realKey?.contains(RootController.flowKey) == true -> RootController.flowKey
+            currentScreen.realKey?.contains(CoreRootController.multiStackKey) == true -> CoreRootController.multiStackKey
+            currentScreen.realKey?.contains(CoreRootController.flowKey) == true -> CoreRootController.flowKey
             else -> currentScreen.realKey
         }
         val render = rootController.getScreenRender(renderKey)

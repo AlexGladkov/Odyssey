@@ -22,6 +22,7 @@ import ru.alexgladkov.odyssey.core.NavConfiguration
 import ru.alexgladkov.odyssey.core.animations.AnimationType
 import ru.alexgladkov.odyssey.core.backpress.BackPressedCallback
 import ru.alexgladkov.odyssey.core.backpress.OnBackPressedDispatcher
+import ru.alexgladkov.odyssey.core.breadcrumbs.Breadcrumb
 import ru.alexgladkov.odyssey.core.screen.Screen
 import ru.alexgladkov.odyssey.core.screen.ScreenBundle
 import ru.alexgladkov.odyssey.core.wrap
@@ -56,7 +57,7 @@ open class RootController(private val rootControllerType: RootControllerType = R
     private var _modalController: ModalController? = null
     private var _deepLinkUri: String? = null
 
-    override var onScreenNavigate: ((String, String) -> Unit)? = null
+    override var onScreenNavigate: ((Breadcrumb) -> Unit)? = null
     var parentRootController: RootController? = null
     var backgroundColor: Color = Color.White
     var onApplicationFinish: (() -> Unit)? = null
@@ -159,10 +160,10 @@ open class RootController(private val rootControllerType: RootControllerType = R
             return
         }
 
-        handleScreenBreadcrumbs()
-
         val screenType = _allowedDestinations.find { it.key == screen }?.screenType
             ?: throw IllegalStateException("Can't find screen in destination. Did you provide this screen?")
+
+        handleScreenBreadcrumbs(targetKey = screen)
 
         when (screenType) {
             is ScreenType.Flow -> launchFlowScreen(
@@ -335,8 +336,7 @@ open class RootController(private val rootControllerType: RootControllerType = R
                     val last = it._backstack.removeLast()
                     val parentController = it.parentRootController ?: return
                     val current = parentController._backstack.last()
-                    val clearedKey = current.realKey.replace(multiStackKey, "")
-                        .replace(flowKey, "").replace("$", "")
+                    val clearedKey = cleanRealKeyFromType(current.realKey)
                     if (clearedKey == screenName) {
                         parentController._currentScreen.value = current
                             .copy(animationType = last.animationType, isForward = false)
@@ -348,8 +348,7 @@ open class RootController(private val rootControllerType: RootControllerType = R
             } else {
                 val last = it._backstack.removeLast()
                 val current = it._backstack.last()
-                val clearedKey = current.realKey.replace(multiStackKey, "")
-                    .replace(flowKey, "").replace("$", "")
+                val clearedKey = cleanRealKeyFromType(current.realKey)
 
                 if (clearedKey == screenName) {
                     it._currentScreen.value = current
@@ -418,6 +417,7 @@ open class RootController(private val rootControllerType: RootControllerType = R
 
         rootController.debugName = key
         rootController.parentRootController = this
+        rootController.onScreenNavigate = onScreenNavigate
         rootController.onApplicationFinish = {
             rootController.parentRootController?.popBackStack()
         }
@@ -472,12 +472,14 @@ open class RootController(private val rootControllerType: RootControllerType = R
 
         multiStackRootController.setDeepLinkUri(_deepLinkUri)
         multiStackRootController.parentRootController = parentRootController
+        multiStackRootController.onScreenNavigate = onScreenNavigate
 
         val configurations = multiStackBuilderModel.tabItems.map {
             val rootController = RootController(RootControllerType.Tab)
             rootController.backgroundColor = backgroundColor
             rootController.parentRootController = multiStackRootController
             rootController.debugName = it.tabItem.name
+            rootController.onScreenNavigate = onScreenNavigate
             rootController.setDeepLinkUri(_deepLinkUri)
             rootController.updateScreenMap(it.screenMap)
             rootController.setNavigationGraph(it.allowedDestination)
@@ -540,8 +542,21 @@ open class RootController(private val rootControllerType: RootControllerType = R
         }
     }
 
-    private fun handleScreenBreadcrumbs() {
+    private fun handleScreenBreadcrumbs(targetKey: String) {
+        val currentScreen = _backstack.lastOrNull()?.realKey ?: run {
+            onScreenNavigate?.invoke(if (rootControllerType != RootControllerType.Tab) {
+                Breadcrumb.SimpleNavigation("Start", targetKey)
+            } else {
+                Breadcrumb.TabNavigation(debugName ?: "", "Start", targetKey)
+            })
+            return
+        }
 
+        onScreenNavigate?.invoke(if (rootControllerType != RootControllerType.Tab) {
+            Breadcrumb.SimpleNavigation(cleanRealKeyFromType(currentScreen), targetKey)
+        } else {
+            Breadcrumb.TabNavigation(debugName ?: "", cleanRealKeyFromType(currentScreen), targetKey)
+        })
     }
 
     private fun handleLaunchFlag(screenKey: String, launchFlag: LaunchFlag?) {
@@ -555,7 +570,5 @@ open class RootController(private val rootControllerType: RootControllerType = R
 
     companion object {
         internal fun randomizeKey(key: String): String = createUniqueKey(key)
-        const val flowKey = "odyssey_flow_reserved_type"
-        const val multiStackKey = "odyssey_multi_stack_reserved_type"
     }
 }
