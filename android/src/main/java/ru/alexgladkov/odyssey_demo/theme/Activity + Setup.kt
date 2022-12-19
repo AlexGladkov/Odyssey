@@ -18,6 +18,8 @@ import ru.alexgladkov.odyssey.compose.navigation.RootComposeBuilder
 import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.ModalNavigator
 import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.configuration.DefaultModalConfiguration
 import ru.alexgladkov.odyssey.core.breadcrumbs.Breadcrumb
+import ru.alexgladkov.odyssey.core.configuration.DisplayType
+import ru.alexgladkov.odyssey.core.configuration.RootConfiguration
 
 fun ComponentActivity.setupThemedNavigation(
     startScreen: String,
@@ -27,17 +29,9 @@ fun ComponentActivity.setupThemedNavigation(
     setContent {
         OdysseyTheme {
             val backgroundColor = Odyssey.color.primaryBackground
-            val rootController = RootComposeBuilder()
+            val rootController = RootComposeBuilder(configuration = RootConfiguration(displayType = DisplayType.EdgeToEdge))
                 .apply(navigationGraph).build()
             rootController.backgroundColor = backgroundColor
-            rootController.onScreenNavigate = { breadcrumb ->
-                when (breadcrumb) {
-                    is Breadcrumb.ModalNavigation -> println("Modal ${breadcrumb.screenKey}")
-                    is Breadcrumb.SimpleNavigation -> println("Simple Navigation start ${breadcrumb.startScreen}, target ${breadcrumb.targetScreen}")
-                    is Breadcrumb.TabSwitch -> println("Tab Switch current ${breadcrumb.startPosition}, next ${breadcrumb.targetPosition}")
-                    is Breadcrumb.TabNavigation -> println("Tab Name ${breadcrumb.tabName}, start ${breadcrumb.startScreen}, next ${breadcrumb.targetScreen}")
-                }
-            }
             rootController.setupWithActivity(this)
 
             CompositionLocalProvider(

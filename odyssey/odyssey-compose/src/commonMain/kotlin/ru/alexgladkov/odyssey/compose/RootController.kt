@@ -23,6 +23,9 @@ import ru.alexgladkov.odyssey.core.animations.AnimationType
 import ru.alexgladkov.odyssey.core.backpress.BackPressedCallback
 import ru.alexgladkov.odyssey.core.backpress.OnBackPressedDispatcher
 import ru.alexgladkov.odyssey.core.breadcrumbs.Breadcrumb
+import ru.alexgladkov.odyssey.core.configuration.DisplayType
+import ru.alexgladkov.odyssey.core.configuration.RootConfiguration
+import ru.alexgladkov.odyssey.core.configuration.RootControllerType
 import ru.alexgladkov.odyssey.core.screen.Screen
 import ru.alexgladkov.odyssey.core.screen.ScreenBundle
 import ru.alexgladkov.odyssey.core.wrap
@@ -45,8 +48,12 @@ data class AllowedDestination(
     val screenType: ScreenType
 )
 
-open class RootController(private val rootControllerType: RootControllerType = RootControllerType.Root) :
-    CoreRootController<Screen>() {
+open class RootController(
+    configuration: RootConfiguration = RootConfiguration(
+        rootControllerType = RootControllerType.Root,
+        displayType = DisplayType.FullScreen
+    )
+) : CoreRootController<Screen>(configuration = configuration) {
     private val _allowedDestinations: MutableList<AllowedDestination> = mutableListOf()
     override val _backstack = mutableListOf<Screen>()
     private val _currentScreen: MutableStateFlow<NavConfiguration?> =
@@ -87,7 +94,10 @@ open class RootController(private val rootControllerType: RootControllerType = R
     }
 
     // Render screen with params
-    @Deprecated("Use renderScreen function instead", ReplaceWith("renderScreen(screenName, params)"))
+    @Deprecated(
+        "Use renderScreen function instead",
+        ReplaceWith("renderScreen(screenName, params)")
+    )
     @Composable
     fun RenderScreen(screenName: String?, params: Any?) {
         renderScreen(screenName, params)
@@ -213,7 +223,11 @@ open class RootController(private val rootControllerType: RootControllerType = R
         val realKey = _backstack.last().realKey
         when {
             realKey.contains(flowKey) -> backToScreen(_childrenRootController.last(), screenName)
-            realKey.contains(multiStackKey) -> backToScreen(_childrenRootController.last(), screenName)
+            realKey.contains(multiStackKey) -> backToScreen(
+                _childrenRootController.last(),
+                screenName
+            )
+
             else -> backToScreen(this, screenName)
         }
     }
@@ -239,8 +253,8 @@ open class RootController(private val rootControllerType: RootControllerType = R
 
     // Returns your MultiStack host if it presented
     fun findHostController(): MultiStackRootController? {
-        if (rootControllerType == RootControllerType.MultiStack) return this as? MultiStackRootController
-        if (rootControllerType == RootControllerType.Tab) {
+        if (configuration.rootControllerType == RootControllerType.MultiStack) return this as? MultiStackRootController
+        if (configuration.rootControllerType == RootControllerType.Tab) {
             return parentRootController as? MultiStackRootController
         }
 
@@ -407,12 +421,15 @@ open class RootController(private val rootControllerType: RootControllerType = R
         flowBuilderModel: FlowBuilderModel,
         launchFlag: LaunchFlag?
     ) {
-        if (rootControllerType == RootControllerType.Flow) throw IllegalStateException("Don't use flow inside flow, call findRootController() instead")
+        if (configuration.rootControllerType == RootControllerType.Flow) throw IllegalStateException(
+            "Don't use flow inside flow, call findRootController() instead"
+        )
 
         val compositeKey = "$flowKey$$key"
         handleLaunchFlag(compositeKey, launchFlag)
 
-        val rootController = RootController(RootControllerType.Flow)
+        val rootController =
+            RootController(RootConfiguration(rootControllerType = RootControllerType.Flow))
         rootController.backgroundColor = backgroundColor
 
         rootController.debugName = key
@@ -458,7 +475,7 @@ open class RootController(private val rootControllerType: RootControllerType = R
         launchFlag: LaunchFlag?,
         params: Any? = null,
     ) {
-        if (rootControllerType == RootControllerType.Flow || rootControllerType == RootControllerType.MultiStack)
+        if (configuration.rootControllerType == RootControllerType.Flow || configuration.rootControllerType == RootControllerType.MultiStack)
             throw IllegalStateException("Don't use flow inside flow, call findRootController instead")
 
         val multiStackRealKey = "$multiStackKey$$screenName"
@@ -475,7 +492,8 @@ open class RootController(private val rootControllerType: RootControllerType = R
         multiStackRootController.onScreenNavigate = onScreenNavigate
 
         val configurations = multiStackBuilderModel.tabItems.map {
-            val rootController = RootController(RootControllerType.Tab)
+            val rootController =
+                RootController(RootConfiguration(rootControllerType = RootControllerType.Tab))
             rootController.backgroundColor = backgroundColor
             rootController.parentRootController = multiStackRootController
             rootController.debugName = it.tabItem.name
@@ -505,7 +523,7 @@ open class RootController(private val rootControllerType: RootControllerType = R
     }
 
     private fun initServiceScreens() {
-        if (rootControllerType == RootControllerType.Root) {
+        if (configuration.rootControllerType == RootControllerType.Root) {
             _screenMap[flowKey] = {
                 val bundle = it as FlowBundle
                 CompositionLocalProvider(
@@ -526,11 +544,13 @@ open class RootController(private val rootControllerType: RootControllerType = R
                                 startScreen = bundle.startScreen
                             )
                         }
+
                         TabsNavType.Top -> {
                             TopBarNavigator(
                                 startScreen = bundle.startScreen
                             )
                         }
+
                         TabsNavType.Custom -> {
                             val customNavConfiguration =
                                 bundle.rootController.tabsNavModel.navConfiguration as CustomNavConfiguration
@@ -544,19 +564,27 @@ open class RootController(private val rootControllerType: RootControllerType = R
 
     private fun handleScreenBreadcrumbs(targetKey: String) {
         val currentScreen = _backstack.lastOrNull()?.realKey ?: run {
-            onScreenNavigate?.invoke(if (rootControllerType != RootControllerType.Tab) {
-                Breadcrumb.SimpleNavigation("Start", targetKey)
-            } else {
-                Breadcrumb.TabNavigation(debugName ?: "", "Start", targetKey)
-            })
+            onScreenNavigate?.invoke(
+                if (configuration.rootControllerType != RootControllerType.Tab) {
+                    Breadcrumb.SimpleNavigation("Start", targetKey)
+                } else {
+                    Breadcrumb.TabNavigation(debugName ?: "", "Start", targetKey)
+                }
+            )
             return
         }
 
-        onScreenNavigate?.invoke(if (rootControllerType != RootControllerType.Tab) {
-            Breadcrumb.SimpleNavigation(cleanRealKeyFromType(currentScreen), targetKey)
-        } else {
-            Breadcrumb.TabNavigation(debugName ?: "", cleanRealKeyFromType(currentScreen), targetKey)
-        })
+        onScreenNavigate?.invoke(
+            if (configuration.rootControllerType != RootControllerType.Tab) {
+                Breadcrumb.SimpleNavigation(cleanRealKeyFromType(currentScreen), targetKey)
+            } else {
+                Breadcrumb.TabNavigation(
+                    debugName ?: "",
+                    cleanRealKeyFromType(currentScreen),
+                    targetKey
+                )
+            }
+        )
     }
 
     private fun handleLaunchFlag(screenKey: String, launchFlag: LaunchFlag?) {

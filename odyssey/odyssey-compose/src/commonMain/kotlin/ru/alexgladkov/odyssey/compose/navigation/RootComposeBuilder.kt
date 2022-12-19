@@ -8,12 +8,13 @@ import ru.alexgladkov.odyssey.compose.ScreenType
 import ru.alexgladkov.odyssey.compose.helpers.FlowBuilderModel
 import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.MultiStackBuilderModel
 import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.TabsNavModel
+import ru.alexgladkov.odyssey.core.configuration.RootConfiguration
 
 /**
  * Base builder, declarative helper for navigation graph builder
  * @see RootController
  */
-class RootComposeBuilder {
+class RootComposeBuilder(val configuration: RootConfiguration = RootConfiguration()) {
     private val _screens: MutableList<AllowedDestination> = mutableListOf()
     private val _screenMap: HashMap<String, RenderWithParams<Any?>> = hashMapOf()
 
@@ -50,8 +51,9 @@ class RootComposeBuilder {
         )
     }
 
-    fun build(): RootController = RootController().apply {
-        updateScreenMap(_screenMap)
-        setNavigationGraph(_screens)
-    }
+    fun build(): RootController = RootController(configuration = configuration)
+        .apply {
+            updateScreenMap(_screenMap)
+            setNavigationGraph(_screens)
+        }
 }
