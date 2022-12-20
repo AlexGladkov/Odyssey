@@ -3,7 +3,6 @@ package ru.alexgladkov.odyssey.compose.navigation.modal_navigation
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,6 +29,7 @@ fun ModalNavigator(
     rootController.attachModalController(modalController)
     ModalSheetView(
         backgroundColor = configuration.statusBarColor,
+        displayType = configuration.displayType,
         scrimAlpha = if (modalStack.isEmpty()) 0.0f else 0.5f,
         modal = {
             modalStack.forEach { bundle ->

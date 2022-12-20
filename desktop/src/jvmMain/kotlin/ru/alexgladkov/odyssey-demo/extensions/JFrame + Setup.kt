@@ -9,6 +9,7 @@ import ru.alexgladkov.odyssey.compose.base.Navigator
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
 import ru.alexgladkov.odyssey.compose.navigation.RootComposeBuilder
 import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.ModalNavigator
+import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.configuration.DefaultModalConfiguration
 import java.awt.BorderLayout
 import javax.swing.JFrame
 import javax.swing.WindowConstants
@@ -32,7 +33,7 @@ fun JFrame.setupThemedNavigation(
                 *providers,
                 LocalRootController provides rootController
             ) {
-                ModalNavigator {
+                ModalNavigator(configuration = DefaultModalConfiguration().copy(displayType = rootController.configuration.displayType)) {
                     Navigator(startScreen)
                 }
             }
