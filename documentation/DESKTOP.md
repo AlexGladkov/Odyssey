@@ -39,7 +39,7 @@ fun JFrame.setupThemedNavigation(
                 LocalRootController provides rootController
             ) {
                 ModalNavigator {
-                    Navigator(startScreen)
+                    Navigator(startScreen = startScreen)
                 }
             }
         }

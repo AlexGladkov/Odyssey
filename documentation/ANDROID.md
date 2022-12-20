@@ -49,7 +49,7 @@ fun ComponentActivity.setupThemedNavigation(
         ) {
             // Here you can provide your own composables
             ModalSheetNavigator {
-                Navigator(startScreen) 
+                Navigator(startScreen = startScreen) 
             }
         }
     }

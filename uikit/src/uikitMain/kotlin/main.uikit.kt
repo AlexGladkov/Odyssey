@@ -61,7 +61,7 @@ class SkikoAppDelegate : UIResponder, UIApplicationDelegateProtocol {
                         LocalRootController provides rootController
                     ) {
                         ModalNavigator {
-                            Navigator(NavigationTree.Actions.name)
+                            Navigator(startScreen = NavigationTree.Actions.name)
                         }
                     }
                 }

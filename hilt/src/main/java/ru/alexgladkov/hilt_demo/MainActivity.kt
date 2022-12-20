@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
                 LocalHiltViewModelStoreOwnerManager provides storeOwnerManager,
                 LocalRootController provides rootController
             ) {
-                Navigator("one")
+                Navigator(startScreen = "one")
             }
         }
     }

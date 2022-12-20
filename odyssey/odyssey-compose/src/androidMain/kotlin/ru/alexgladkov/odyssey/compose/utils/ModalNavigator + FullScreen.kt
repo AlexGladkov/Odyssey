@@ -20,22 +20,7 @@ actual fun ModalSheetView(
             .background(backgroundColor)
             .fillMaxSize()
     ) {
-        val modifier = when (displayType) {
-            DisplayType.EdgeToEdge -> Modifier.fillMaxSize()
-            DisplayType.FullScreen -> Modifier
-                .fillMaxSize()
-                .navigationBarsPadding()
-                .captionBarPadding()
-                .imePadding()
-                .statusBarsPadding()
-        }
-
-        BoxWithConstraints(
-            modifier = modifier
-        ) {
-            content.invoke()
-        }
-
+        content.invoke()
         modal.invoke(this)
     }
 }

@@ -34,7 +34,7 @@ fun JFrame.setupThemedNavigation(
                 LocalRootController provides rootController
             ) {
                 ModalNavigator(configuration = DefaultModalConfiguration().copy(displayType = rootController.configuration.displayType)) {
-                    Navigator(startScreen)
+                    Navigator(startScreen = startScreen)
                 }
             }
         }

@@ -26,7 +26,7 @@ fun JFrame.setupNavigation(
             LocalRootController provides rootController
         ) {
             ModalNavigator {
-                Navigator(startScreen)
+                Navigator(startScreen = startScreen)
             }
         }
     }

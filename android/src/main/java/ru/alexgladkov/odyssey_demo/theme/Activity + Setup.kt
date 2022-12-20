@@ -2,8 +2,14 @@ package ru.alexgladkov.odyssey_demo.theme
 
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.captionBarPadding
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ProvidedValue
+import androidx.compose.ui.Modifier
+import androidx.core.view.WindowCompat
 import ru.alexgladkov.common.compose.theme.Odyssey
 import ru.alexgladkov.common.compose.theme.OdysseyTheme
 import ru.alexgladkov.odyssey.compose.base.Navigator
@@ -20,6 +26,11 @@ fun ComponentActivity.setupThemedNavigation(
     vararg providers: ProvidedValue<*>,
     navigationGraph: RootComposeBuilder.() -> Unit
 ) {
+
+    WindowCompat.setDecorFitsSystemWindows(window, false)
+    window.statusBarColor = android.graphics.Color.TRANSPARENT
+    window.navigationBarColor = android.graphics.Color.TRANSPARENT
+
     setContent {
         OdysseyTheme {
             val backgroundColor = Odyssey.color.primaryBackground
@@ -33,7 +44,14 @@ fun ComponentActivity.setupThemedNavigation(
                 LocalRootController provides rootController
             ) {
                 ModalNavigator(configuration = DefaultModalConfiguration().copy(statusBarColor = backgroundColor)) {
-                    Navigator(startScreen)
+                    Navigator(
+                        modifier = Modifier
+                            .navigationBarsPadding()
+                            .captionBarPadding()
+                            .imePadding()
+                            .statusBarsPadding(),
+                        startScreen = startScreen
+                    )
                 }
             }
         }
