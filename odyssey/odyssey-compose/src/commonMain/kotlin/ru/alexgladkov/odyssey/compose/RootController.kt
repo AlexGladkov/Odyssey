@@ -589,9 +589,18 @@ open class RootController(
 
     private fun handleLaunchFlag(screenKey: String, launchFlag: LaunchFlag?) {
         when (launchFlag) {
-            LaunchFlag.SingleNewTask -> _backstack.clear()
-            LaunchFlag.SingleInstance -> _backstack.removeAll { it.realKey == screenKey }
-            LaunchFlag.ClearPrevious -> _backstack.removeLastOrNull()
+            LaunchFlag.SingleNewTask -> {
+                _modalController?.clearBackStack()
+                _backstack.clear()
+            }
+            LaunchFlag.SingleInstance -> {
+                _modalController?.clearBackStack()
+                _backstack.removeAll { it.realKey == screenKey }
+            }
+            LaunchFlag.ClearPrevious -> {
+                _modalController?.clearBackStack()
+                _backstack.removeLastOrNull()
+            }
             null -> {}
         }
     }
