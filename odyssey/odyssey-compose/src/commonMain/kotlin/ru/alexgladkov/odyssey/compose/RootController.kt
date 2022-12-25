@@ -380,7 +380,7 @@ open class RootController(
                         .copy(animationType = last.animationType, isForward = false)
                         .wrap(with = last)
                 }
-                else -> it
+                else -> it.onApplicationFinish?.invoke()
             }
         }
     }
