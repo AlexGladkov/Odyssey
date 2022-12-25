@@ -24,7 +24,6 @@ import ru.alexgladkov.odyssey.core.backpress.OnBackPressedDispatcher
 import ru.alexgladkov.odyssey.core.screen.Screen
 import ru.alexgladkov.odyssey.core.screen.ScreenBundle
 import ru.alexgladkov.odyssey.core.wrap
-import kotlin.collections.HashMap
 
 typealias RenderWithParams<T> = @Composable (T) -> Unit
 typealias Render = @Composable (key: String) -> Unit
@@ -363,21 +362,25 @@ open class RootController(
 
     private fun removeTopScreen(rootController: RootController?) {
         rootController?.let {
-            val isLastScreen = it._backstack.size <= 1
-            if (isLastScreen) {
-                if (it.debugName == "Root") {
-                    it.onApplicationFinish?.invoke()
-                } else {
-                    removeTopScreen(it.parentRootController)
-                    it.parentRootController?._childrenRootController?.removeLast()
+            val backstackSize = it._backstack.size
+            when {
+                backstackSize == 1 -> {
+                    if (it.debugName == "Root") {
+                        it.onApplicationFinish?.invoke()
+                    } else {
+                        removeTopScreen(it.parentRootController)
+                        it.parentRootController?._childrenRootController?.removeLast()
+                    }
                 }
-            } else {
-                val last = it._backstack.removeLast()
-                val current = it._backstack.last()
+                backstackSize > 1 -> {
+                    val last = it._backstack.removeLast()
+                    val current = it._backstack.last()
 
-                it._currentScreen.value = current
-                    .copy(animationType = last.animationType, isForward = false)
-                    .wrap(with = last)
+                    it._currentScreen.value = current
+                        .copy(animationType = last.animationType, isForward = false)
+                        .wrap(with = last)
+                }
+                else -> it
             }
         }
     }
