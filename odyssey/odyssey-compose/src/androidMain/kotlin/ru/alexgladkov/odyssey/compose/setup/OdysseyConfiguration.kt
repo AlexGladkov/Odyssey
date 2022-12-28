@@ -8,5 +8,7 @@ actual class OdysseyConfiguration(
     val canvas: ComponentActivity,
     val startScreen: StartScreen = StartScreen.First,
     val backgroundColor: Color = Color.White,
+    val navigationBarColor: Int = 0x00FFFFFF.toInt(),
+    val statusBarColor: Int = 0x00FFFFFF.toInt(),
     val displayType: DisplayType = DisplayType.EdgeToEdge
 )

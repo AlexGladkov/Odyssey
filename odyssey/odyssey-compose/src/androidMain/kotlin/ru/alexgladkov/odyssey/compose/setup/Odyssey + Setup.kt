@@ -12,7 +12,7 @@ import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.configuration.
 import ru.alexgladkov.odyssey.core.configuration.DisplayType
 
 @Composable
-actual fun setNavigationContent(configuration: OdysseyConfiguration, onApplicationFinish: (() -> Unit)?, navigationGraph: RootComposeBuilder.() -> Unit) {
+actual fun setNavigationContent(configuration: OdysseyConfiguration, onApplicationFinish: () -> Unit, navigationGraph: RootComposeBuilder.() -> Unit) {
     val rootController = RootComposeBuilder().apply(navigationGraph).build()
     rootController.backgroundColor = configuration.backgroundColor
     rootController.setupWithActivity(configuration.canvas)
@@ -21,7 +21,8 @@ actual fun setNavigationContent(configuration: OdysseyConfiguration, onApplicati
     when (configuration.displayType) {
         is DisplayType.FullScreen -> {
             WindowCompat.setDecorFitsSystemWindows(configuration.canvas.window, false)
-            configuration.canvas.window.statusBarColor = android.graphics.Color.TRANSPARENT
+            configuration.canvas.window.statusBarColor = configuration.statusBarColor
+            configuration.canvas.window.navigationBarColor = configuration.navigationBarColor
         }
         else -> {}
     }
