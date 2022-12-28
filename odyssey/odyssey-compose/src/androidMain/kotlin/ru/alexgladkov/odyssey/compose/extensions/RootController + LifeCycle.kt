@@ -10,14 +10,6 @@ import ru.alexgladkov.odyssey.core.configuration.DisplayType
 fun RootController.setupWithActivity(activity: ComponentActivity) {
     setDeepLinkUri(activity.intent?.data?.path)
 
-    when (configuration.displayType) {
-        DisplayType.EdgeToEdge -> { }
-        DisplayType.FullScreen -> {
-            WindowCompat.setDecorFitsSystemWindows(activity.window, false)
-            activity.window.statusBarColor = android.graphics.Color.TRANSPARENT
-        }
-    }
-
     val dispatcher = activity.onBackPressedDispatcher
     val rootDispatcher = OnBackPressedDispatcher()
     dispatcher.addCallback(object : OnBackPressedCallback(true) {
@@ -26,8 +18,5 @@ fun RootController.setupWithActivity(activity: ComponentActivity) {
         }
     })
 
-    onApplicationFinish = {
-        activity.finish()
-    }
     setupBackPressedDispatcher(rootDispatcher)
 }

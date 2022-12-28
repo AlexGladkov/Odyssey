@@ -1,6 +1,6 @@
 package ru.alexgladkov.odyssey.core.configuration
 
-class RootConfiguration(
-    val displayType: DisplayType = DisplayType.FullScreen,
+data class RootConfiguration(
+    val displayType: DisplayType,
     val rootControllerType: RootControllerType = RootControllerType.Root
 )

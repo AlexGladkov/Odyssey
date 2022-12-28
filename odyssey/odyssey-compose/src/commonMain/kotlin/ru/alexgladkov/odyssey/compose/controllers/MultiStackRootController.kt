@@ -15,9 +15,9 @@ data class TabNavigationModel(
 )
 
 class MultiStackRootController(
-    val rootControllerType: RootControllerType,
+    rootControllerType: RootControllerType,
     val tabsNavModel: TabsNavModel<*>
-) : RootController(configuration = RootConfiguration(rootControllerType = rootControllerType)) {
+) : RootController(rootControllerType) {
     private val _tabItems: MutableList<TabNavigationModel> = mutableListOf()
     private var currentTabPosition: Int = -1
     private val _stackChangeObserver: MutableStateFlow<TabNavigationModel?> =

@@ -48,12 +48,7 @@ data class AllowedDestination(
     val screenType: ScreenType
 )
 
-open class RootController(
-    configuration: RootConfiguration = RootConfiguration(
-        rootControllerType = RootControllerType.Root,
-        displayType = DisplayType.FullScreen
-    )
-) : CoreRootController<Screen>(configuration = configuration) {
+open class RootController(rootControllerType: RootControllerType): CoreRootController<Screen>(rootControllerType) {
     private val _allowedDestinations: MutableList<AllowedDestination> = mutableListOf()
     override val _backstack = mutableListOf<Screen>()
     private val _currentScreen: MutableStateFlow<NavConfiguration?> =
@@ -257,8 +252,8 @@ open class RootController(
 
     // Returns your MultiStack host if it presented
     fun findHostController(): MultiStackRootController? {
-        if (configuration.rootControllerType == RootControllerType.MultiStack) return this as? MultiStackRootController
-        if (configuration.rootControllerType == RootControllerType.Tab) {
+        if (rootControllerType == RootControllerType.MultiStack) return this as? MultiStackRootController
+        if (rootControllerType == RootControllerType.Tab) {
             return parentRootController as? MultiStackRootController
         }
 
@@ -425,15 +420,14 @@ open class RootController(
         flowBuilderModel: FlowBuilderModel,
         launchFlag: LaunchFlag?
     ) {
-        if (configuration.rootControllerType == RootControllerType.Flow) throw IllegalStateException(
+        if (rootControllerType == RootControllerType.Flow) throw IllegalStateException(
             "Don't use flow inside flow, call findRootController() instead"
         )
 
         val compositeKey = "$flowKey$$key"
         handleLaunchFlag(compositeKey, launchFlag)
 
-        val rootController =
-            RootController(RootConfiguration(rootControllerType = RootControllerType.Flow))
+        val rootController = RootController(RootControllerType.Flow)
         rootController.backgroundColor = backgroundColor
 
         rootController.debugName = key
@@ -479,7 +473,7 @@ open class RootController(
         launchFlag: LaunchFlag?,
         params: Any? = null,
     ) {
-        if (configuration.rootControllerType == RootControllerType.Flow || configuration.rootControllerType == RootControllerType.MultiStack)
+        if (rootControllerType == RootControllerType.Flow || rootControllerType == RootControllerType.MultiStack)
             throw IllegalStateException("Don't use flow inside flow, call findRootController instead")
 
         val multiStackRealKey = "$multiStackKey$$screenName"
@@ -497,7 +491,7 @@ open class RootController(
 
         val configurations = multiStackBuilderModel.tabItems.map {
             val rootController =
-                RootController(RootConfiguration(rootControllerType = RootControllerType.Tab))
+                RootController(RootControllerType.Tab)
             rootController.backgroundColor = backgroundColor
             rootController.parentRootController = multiStackRootController
             rootController.debugName = it.tabItem.name
@@ -527,7 +521,7 @@ open class RootController(
     }
 
     private fun initServiceScreens() {
-        if (configuration.rootControllerType == RootControllerType.Root) {
+        if (rootControllerType == RootControllerType.Root) {
             _screenMap[flowKey] = {
                 val bundle = it as FlowBundle
                 CompositionLocalProvider(
@@ -569,7 +563,7 @@ open class RootController(
     private fun handleScreenBreadcrumbs(targetKey: String) {
         val currentScreen = _backstack.lastOrNull()?.realKey ?: run {
             onScreenNavigate?.invoke(
-                if (configuration.rootControllerType != RootControllerType.Tab) {
+                if (rootControllerType != RootControllerType.Tab) {
                     Breadcrumb.SimpleNavigation("Start", targetKey)
                 } else {
                     Breadcrumb.TabNavigation(debugName ?: "", "Start", targetKey)
@@ -579,7 +573,7 @@ open class RootController(
         }
 
         onScreenNavigate?.invoke(
-            if (configuration.rootControllerType != RootControllerType.Tab) {
+            if (rootControllerType != RootControllerType.Tab) {
                 Breadcrumb.SimpleNavigation(cleanRealKeyFromType(currentScreen), targetKey)
             } else {
                 Breadcrumb.TabNavigation(

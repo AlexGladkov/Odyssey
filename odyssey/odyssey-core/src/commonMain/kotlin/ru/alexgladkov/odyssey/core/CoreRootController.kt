@@ -2,9 +2,10 @@ package ru.alexgladkov.odyssey.core
 
 import ru.alexgladkov.odyssey.core.breadcrumbs.Breadcrumb
 import ru.alexgladkov.odyssey.core.configuration.RootConfiguration
+import ru.alexgladkov.odyssey.core.configuration.RootControllerType
 
 abstract class CoreRootController<T>(
-    val configuration: RootConfiguration
+    val rootControllerType: RootControllerType
 ) {
     abstract var onScreenNavigate: ((Breadcrumb) -> Unit)?
     protected abstract val _backstack: MutableList<T>

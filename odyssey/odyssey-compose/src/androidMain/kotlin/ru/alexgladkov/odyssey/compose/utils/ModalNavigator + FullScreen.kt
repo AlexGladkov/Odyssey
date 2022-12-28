@@ -15,7 +15,7 @@ actual fun ModalSheetView(
     modal: @Composable BoxScope.() -> Unit,
     content: @Composable () -> Unit
 ) {
-    BoxWithConstraints(
+    Box(
         modifier = Modifier
             .background(backgroundColor)
             .fillMaxSize()

@@ -1,6 +1,7 @@
 package ru.alexgladkov.odyssey.compose.utils
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,7 +19,7 @@ actual fun ModalSheetView(
     modal: @Composable BoxScope.() -> Unit,
     content: @Composable () -> Unit
 ) {
-    BoxWithConstraints(
+    Box(
         modifier = Modifier
             .background(backgroundColor)
             .fillMaxSize()
