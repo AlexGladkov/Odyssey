@@ -17,8 +17,8 @@ import ru.alexgladkov.odyssey.compose.utils.ModalSheetView
 import ru.alexgladkov.odyssey.core.extensions.Closeable
 
 @Composable
-fun ModalNavigator(
-    configuration: ModalNavigatorConfiguration = DefaultModalConfiguration(),
+internal fun ModalNavigator(
+    configuration: ModalNavigatorConfiguration,
     content: @Composable () -> Unit
 ) {
     val modalController = remember { ModalController() }
@@ -28,7 +28,7 @@ fun ModalNavigator(
 
     rootController.attachModalController(modalController)
     ModalSheetView(
-        backgroundColor = configuration.statusBarColor,
+        backgroundColor = configuration.backgroundColor,
         displayType = configuration.displayType,
         scrimAlpha = if (modalStack.isEmpty()) 0.0f else 0.5f,
         modal = {

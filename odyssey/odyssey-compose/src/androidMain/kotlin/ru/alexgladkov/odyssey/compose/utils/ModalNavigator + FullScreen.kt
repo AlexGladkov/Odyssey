@@ -22,7 +22,7 @@ actual fun ModalSheetView(
     ) {
         val modifier = when (displayType) {
             DisplayType.EdgeToEdge -> Modifier.fillMaxSize()
-            DisplayType.FullScreen -> Modifier
+            is DisplayType.FullScreen -> Modifier
                 .fillMaxSize()
                 .navigationBarsPadding()
                 .captionBarPadding()

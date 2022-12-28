@@ -59,7 +59,7 @@ open class RootController(
     private val _currentScreen: MutableStateFlow<NavConfiguration?> =
         MutableStateFlow(null)
     private var _childrenRootController: MutableList<RootController> = mutableListOf()
-    private val _screenMap = mutableMapOf<String, RenderWithParams<Any?>>()
+    private val _screenMap = LinkedHashMap<String, RenderWithParams<Any?>>()
     private var _onBackPressedDispatcher: OnBackPressedDispatcher? = null
     private var _modalController: ModalController? = null
     private var _deepLinkUri: String? = null
@@ -109,6 +109,11 @@ open class RootController(
     }
 
     /**
+     * Returns first key from navigation graph
+     */
+    fun getFirstScreenName(): String? = _screenMap.keys.firstOrNull()
+
+    /**
      * Update root controller screen map to find composables
      * @param screenMap - generated screen map
      */
@@ -142,7 +147,6 @@ open class RootController(
 
     /** Measure deep of root controller */
     fun measureLevel(): Int = findRootController()._backstack.size
-
 
     /**
      * Send command to controller to launch new scenario

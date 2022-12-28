@@ -4,12 +4,12 @@ import androidx.compose.ui.graphics.Color
 import ru.alexgladkov.odyssey.core.configuration.DisplayType
 
 interface ModalNavigatorConfiguration {
-    val statusBarColor: Color
+    val backgroundColor: Color
     val displayType: DisplayType
 }
 
 
 data class DefaultModalConfiguration(
-    override val statusBarColor: Color = Color.Black,
-    override val displayType: DisplayType = DisplayType.FullScreen
+    override val backgroundColor: Color,
+    override val displayType: DisplayType
 ) : ModalNavigatorConfiguration

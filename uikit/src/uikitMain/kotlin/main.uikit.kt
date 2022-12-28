@@ -17,6 +17,8 @@ import ru.alexgladkov.odyssey.compose.base.Navigator
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
 import ru.alexgladkov.odyssey.compose.navigation.RootComposeBuilder
 import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.ModalNavigator
+import ru.alexgladkov.odyssey.compose.setup.OdysseyConfiguration
+import ru.alexgladkov.odyssey.compose.setup.setNavigationContent
 
 fun main() {
     val args = emptyArray<String>()
@@ -54,15 +56,9 @@ class SkikoAppDelegate : UIResponder, UIApplicationDelegateProtocol {
                         modifier = Modifier.height(56.dp)
                     )
 
-                    val rootController = RootComposeBuilder().apply { navigationGraph() }.build()
-                    rootController.backgroundColor = Odyssey.color.primaryBackground
-
-                    CompositionLocalProvider(
-                        LocalRootController provides rootController
-                    ) {
-                        ModalNavigator {
-                            Navigator(NavigationTree.Actions.name)
-                        }
+                    val configuration = OdysseyConfiguration(backgroundColor = Odyssey.color.primaryBackground)
+                    setNavigationContent(configuration) {
+                        navigationGraph()
                     }
                 }
             }
