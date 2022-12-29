@@ -1,5 +1,9 @@
 Flow is a chain of screens connected with one root controller with his own backstack
 
+**How to read example**
+- [Navigation Graph](/common/common-sample/src/commonMain/kotlin/ru/alexgladkov/common/compose/navigation/NavigationGraph.kt)
+- [Navigation Example](/common/common-sample/src/commonMain/kotlin/ru/alexgladkov/common/compose/screens/ActionsScreen.kt)
+
 ```kotlin
 fun RootComposeBuilder.generateGraph() {
     // Previous screens ...

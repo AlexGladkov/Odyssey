@@ -3,6 +3,7 @@ package ru.alexgladkov.odyssey_demo
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.ui.graphics.toArgb
 import ru.alexgladkov.common.compose.navigation.navigationGraph
 import ru.alexgladkov.common.compose.theme.Odyssey
 import ru.alexgladkov.common.compose.theme.OdysseyTheme
@@ -20,7 +21,8 @@ class MainActivity : AppCompatActivity() {
                 val configuration = OdysseyConfiguration(
                     canvas = this,
                     displayType = DisplayType.FullScreen(Odyssey.color.primaryBackground),
-                    backgroundColor = Odyssey.color.primaryBackground
+                    backgroundColor = Odyssey.color.primaryBackground,
+                    navigationBarColor = Odyssey.color.primaryBackground.toArgb()
                 )
 
                 setNavigationContent(configuration) {

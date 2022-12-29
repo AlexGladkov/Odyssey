@@ -6,28 +6,13 @@
 
 Odyssey it's a declarative multiplatform navigation library for Multiplatform Compose
 
-```kotlin
-fun RootComposeBuilder.splashScreen() {
-    screen("splash") { SplashScreen() }
-}
-
-class MainActivity : AppCompatActivity() {
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        setupNavigation("splash") {
-            splashScreen()
-        }
-    }
-}
-```
-
 ### Documentation
-[Getting Started](documentation/GETTING_STARTED.md)
+- [Getting Started](documentation/GETTING_STARTED.md)
+- [Android Setup](documentation/ANDROID.md)
+- [Desktop Setup](documentation/DESKTOP.md)
+- [iOS Setup](documentation/IOS.md)
 
 ### Supported Features
- - Platforms: [Android](documentation/ANDROID.md), [Desktop](documentation/DESKTOP.md)
  - [Simple navigation](documentation/SINGLE_SCREEN.md)
  - [Nested navigation](documentation/FLOW_SCREEN.md)
  - [Params support](documentation/PARAMS_SUPPORT.md)
@@ -38,16 +23,22 @@ class MainActivity : AppCompatActivity() {
  - [State Saving](documentation/STATE_SAVING.md)
  - [Beautiful Transition Animations](documentation/ANIMATIONS.md)
  - [Back Press Handling](documentation/BACK_PRESS.md)
- - Deep Links
- - Easy Multi Module Integration
 
 ### Example
 
-Inside this project you can find example and of course if you have an issue or a question 
-feel free to open new issue in Issues section
+Every available feature in this library can be found in [example](common/common-sample/src/commonMain/kotlin/ru/alexgladkov/common/compose/)
 
-[<img src="screenshots/android-screen-favorite.png" width="250" height = "551" />](screenshots/android-screen-favorite.png)
-[<img src="screenshots/desktop-screen-favorite.png" width="500" height = "375" />](screenshots/desktop-screen-favorite.png)
+**Alert Dialog**
+[<img src="documentation/screenshots/alert_dialog.png" width="250" height = "551" />](documentation/screenshots/alert_dialog.png)
+
+**Bottom Navigation**
+[<img src="documentation/screenshots/bottom_navigation.png" width="250" height = "551" />](documentation/screenshots/bottom_navigation.png)
+
+**Top Navigation**
+[<img src="documentation/screenshots/view_pager.png" width="500" height = "375" />](documentation/screenshots/view_pager.png)
+
+**Drawer Navigation**
+[<img src="documentation/screenshots/drawer_navigation.png" width="500" height = "375" />](documentation/screenshots/drawer_navigation.png)
 
 ### License
 ```
