@@ -7,26 +7,29 @@
 Odyssey it's a declarative multiplatform navigation library for Multiplatform Compose
 
 ### Documentation
+
 - [Getting Started](documentation/GETTING_STARTED.md)
 - [Android Setup](documentation/ANDROID.md)
 - [Desktop Setup](documentation/DESKTOP.md)
 - [iOS Setup](documentation/IOS.md)
 
 ### Supported Features
- - [Simple navigation](documentation/SINGLE_SCREEN.md)
- - [Nested navigation](documentation/FLOW_SCREEN.md)
- - [Params support](documentation/PARAMS_SUPPORT.md)
- - [Bottom Navigation View](documentation/BOTTOM_NAVIGATION.md)
- - [Multiple Modal Sheets](documentation/BOTTOM_SHEET.md)
- - [Tab Navigation](documentation/TAB_NAVIGATION.md)
- - [Side Drawer](documentation/SIDE_DRAWER.md)
- - [State Saving](documentation/STATE_SAVING.md)
- - [Beautiful Transition Animations](documentation/ANIMATIONS.md)
- - [Back Press Handling](documentation/BACK_PRESS.md)
+
+- [Simple navigation](documentation/SINGLE_SCREEN.md)
+- [Nested navigation](documentation/FLOW_SCREEN.md)
+- [Params support](documentation/PARAMS_SUPPORT.md)
+- [Bottom Navigation View](documentation/BOTTOM_NAVIGATION.md)
+- [Multiple Modal Sheets](documentation/BOTTOM_SHEET.md)
+- [Tab Navigation](documentation/TAB_NAVIGATION.md)
+- [Side Drawer](documentation/SIDE_DRAWER.md)
+- [State Saving](documentation/STATE_SAVING.md)
+- [Beautiful Transition Animations](documentation/ANIMATIONS.md)
+- [Back Press Handling](documentation/BACK_PRESS.md)
 
 ### Example
 
-Every available feature in this library can be found in [example](common/common-sample/src/commonMain/kotlin/ru/alexgladkov/common/compose/)
+Every available feature in this library can be found
+in [example](common/common-sample/src/commonMain/kotlin/ru/alexgladkov/common/compose/)
 
 | **Simple Navigation**                                                                                                                       | **Present Navigation**                                                                                                                      | **Modal Navigation**                                                                                                                    |
 |---------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------|
@@ -34,9 +37,18 @@ Every available feature in this library can be found in [example](common/common-
 | **Alert Dialog**                                                                                                                            | **Bottom Navigation**                                                                                                                       | **Top Navigation**                                                                                                                      |
 | [<img src="documentation/screenshots/alert_dialog.png" width="200" height = "431" />](documentation/screenshots/alert_dialog.png)           | [<img src="documentation/screenshots/bottom_navigation.png" width="200" height = "431" />](documentation/screenshots/bottom_navigation.png) | [<img src="documentation/screenshots/view_pager.png" width="200" height = "431" />](documentation/screenshots/view_pager.png)           |
 | **Drawer Navigation**                                                                                                                       |                                                                                                                                             |                                                                                                                                         |
-| [<img src="documentation/screenshots/drawer_navigation.png" width="250" height = "551" />](documentation/screenshots/drawer_navigation.png) |                                                                                                                                             |                                                                                                                                         |
+| [<img src="documentation/screenshots/drawer_navigation.png" width="200" height = "431" />](documentation/screenshots/drawer_navigation.png) |                                                                                                                                             |                                                                                                                                         |
+
+### Users
+
+Projects/Companies using this library:
+
+- [Leroy Merlin](https://play.google.com/store/apps/details?id=ru.leroymerlin.employee&hl=ru&gl=US)
+- [1Coin](https://github.com/VitalyPeryatin/1Coin)
+- Trinity Monsters
 
 ### License
+
 ```
 MIT License
 
