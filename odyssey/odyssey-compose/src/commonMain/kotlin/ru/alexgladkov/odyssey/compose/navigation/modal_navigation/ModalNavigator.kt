@@ -17,7 +17,7 @@ import ru.alexgladkov.odyssey.compose.utils.ModalSheetView
 import ru.alexgladkov.odyssey.core.extensions.Closeable
 
 @Composable
-internal fun ModalNavigator(
+fun ModalNavigator(
     configuration: ModalNavigatorConfiguration,
     content: @Composable () -> Unit
 ) {

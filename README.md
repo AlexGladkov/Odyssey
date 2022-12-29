@@ -12,6 +12,7 @@ Odyssey it's a declarative multiplatform navigation library for Multiplatform Co
 - [Android Setup](documentation/ANDROID.md)
 - [Desktop Setup](documentation/DESKTOP.md)
 - [iOS Setup](documentation/IOS.md)
+- [Hilt Setup](documentation/HILT.md)
 
 ### Supported Features
 
