@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
             OdysseyTheme {
                 val configuration = OdysseyConfiguration(
                     canvas = this,
-                    displayType = DisplayType.FullScreen(Odyssey.color.primaryBackground),
+                    displayType = DisplayType.EdgeToEdge,
                     backgroundColor = Odyssey.color.primaryBackground,
                     navigationBarColor = Odyssey.color.primaryBackground.toArgb()
                 )
