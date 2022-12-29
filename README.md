@@ -39,11 +39,11 @@ Every available feature in this library can be found in [example](common/common-
 
 **Top Navigation**
 
-[<img src="documentation/screenshots/view_pager.png" width="500" height = "375" />](documentation/screenshots/view_pager.png)
+[<img src="documentation/screenshots/view_pager.png" width="250" height = "551" />](documentation/screenshots/view_pager.png)
 
 **Drawer Navigation**
 
-[<img src="documentation/screenshots/drawer_navigation.png" width="500" height = "375" />](documentation/screenshots/drawer_navigation.png)
+[<img src="documentation/screenshots/drawer_navigation.png" width="250" height = "551" />](documentation/screenshots/drawer_navigation.png)
 
 ### License
 ```
