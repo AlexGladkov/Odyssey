@@ -28,20 +28,13 @@ Odyssey it's a declarative multiplatform navigation library for Multiplatform Co
 
 Every available feature in this library can be found in [example](common/common-sample/src/commonMain/kotlin/ru/alexgladkov/common/compose/)
 
-| **Alert Dialog**  | **Bottom Navigation**                                                                                                                       |
-|---|---------------------------------------------------------------------------------------------------------------------------------------------|
-| [<img src="documentation/screenshots/alert_dialog.png" width="250" height = "551" />](documentation/screenshots/alert_dialog.png) | [<img src="documentation/screenshots/bottom_navigation.png" width="250" height = "551" />](documentation/screenshots/bottom_navigation.png) |
-|   |                                                                                                                                             |
-
-
-
-**Top Navigation**
-
-[<img src="documentation/screenshots/view_pager.png" width="250" height = "551" />](documentation/screenshots/view_pager.png)
-
-**Drawer Navigation**
-
-[<img src="documentation/screenshots/drawer_navigation.png" width="250" height = "551" />](documentation/screenshots/drawer_navigation.png)
+|                       |  |                                                                                                                              |
+|-----------------------|---|------------------------------------------------------------------------------------------------------------------------------|
+|                       |   |                                                                                                                              |
+| **Alert Dialog**      | **Bottom Navigation** | **Top Navigation**                                                                                                           |
+|[<img src="documentation/screenshots/alert_dialog.png" width="200" height = "431" />](documentation/screenshots/alert_dialog.png)|[<img src="documentation/screenshots/bottom_navigation.png" width="200" height = "431" />](documentation/screenshots/bottom_navigation.png)| [<img src="documentation/screenshots/view_pager.png" width="200" height = "431" />](documentation/screenshots/view_pager.png)|
+| **Drawer Navigation** |   |                                                                                                                              |
+|[<img src="documentation/screenshots/drawer_navigation.png" width="250" height = "551" />](documentation/screenshots/drawer_navigation.png)|   |                                                                                                                              |
 
 ### License
 ```
