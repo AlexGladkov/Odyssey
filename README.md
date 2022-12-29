@@ -28,11 +28,16 @@ Odyssey it's a declarative multiplatform navigation library for Multiplatform Co
 
 Every available feature in this library can be found in [example](common/common-sample/src/commonMain/kotlin/ru/alexgladkov/common/compose/)
 
-**Alert Dialog**
+| **Alert Dialog**  | **Bottom Navigation** |
+|---|---|
+|   |   |
+|   |   |
+
+
 
 [<img src="documentation/screenshots/alert_dialog.png" width="250" height = "551" />](documentation/screenshots/alert_dialog.png)
 
-**Bottom Navigation**
+
 
 [<img src="documentation/screenshots/bottom_navigation.png" width="250" height = "551" />](documentation/screenshots/bottom_navigation.png)
 
