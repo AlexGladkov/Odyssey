@@ -5,26 +5,33 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import ru.alexgladkov.odyssey.core.configuration.DisplayType
 
 @Composable
 actual fun ModalSheetView(
     backgroundColor: Color,
     scrimAlpha: Float,
+    displayType: DisplayType,
     modal: @Composable BoxScope.() -> Unit,
     content: @Composable () -> Unit
 ) {
-    BoxWithConstraints(
+    Box(
         modifier = Modifier
             .background(backgroundColor)
             .fillMaxSize()
     ) {
-        BoxWithConstraints(
-            modifier = Modifier
+        val modifier = when (displayType) {
+            DisplayType.EdgeToEdge -> Modifier.fillMaxSize()
+            is DisplayType.FullScreen -> Modifier
                 .fillMaxSize()
                 .navigationBarsPadding()
                 .captionBarPadding()
                 .imePadding()
                 .statusBarsPadding()
+        }
+
+        BoxWithConstraints(
+            modifier = modifier
         ) {
             content.invoke()
         }

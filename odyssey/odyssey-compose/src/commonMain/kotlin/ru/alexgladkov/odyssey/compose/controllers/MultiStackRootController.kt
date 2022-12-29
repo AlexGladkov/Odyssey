@@ -3,9 +3,11 @@ package ru.alexgladkov.odyssey.compose.controllers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import ru.alexgladkov.odyssey.compose.RootController
-import ru.alexgladkov.odyssey.compose.RootControllerType
 import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.TabInfo
 import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.TabsNavModel
+import ru.alexgladkov.odyssey.core.breadcrumbs.Breadcrumb
+import ru.alexgladkov.odyssey.core.configuration.RootConfiguration
+import ru.alexgladkov.odyssey.core.configuration.RootControllerType
 
 data class TabNavigationModel(
     val tabInfo: TabInfo,
@@ -13,12 +15,15 @@ data class TabNavigationModel(
 )
 
 class MultiStackRootController(
-    val rootControllerType: RootControllerType,
+    rootControllerType: RootControllerType,
     val tabsNavModel: TabsNavModel<*>
 ) : RootController(rootControllerType) {
     private val _tabItems: MutableList<TabNavigationModel> = mutableListOf()
+    private var currentTabPosition: Int = -1
     private val _stackChangeObserver: MutableStateFlow<TabNavigationModel?> =
         MutableStateFlow(null)
+
+    override var debugName: String? = "MultiStackRootController"
     val stackChangeObserver = _stackChangeObserver.asStateFlow()
     val tabItems = _tabItems
 
@@ -31,11 +36,13 @@ class MultiStackRootController(
 
     @Deprecated("Use switchTab with position instead")
     fun switchTab(tabNavigationModel: TabNavigationModel) {
-        _stackChangeObserver.value = tabNavigationModel
+        switchTab(_tabItems.indexOf(tabNavigationModel))
     }
 
     fun switchTab(position: Int) {
         if (position >= _tabItems.size) throw IllegalStateException("Position must be less than tab items count")
+        onScreenNavigate?.invoke(Breadcrumb.TabSwitch(currentTabPosition, position))
+        currentTabPosition = position
         _stackChangeObserver.value = _tabItems[position]
     }
 

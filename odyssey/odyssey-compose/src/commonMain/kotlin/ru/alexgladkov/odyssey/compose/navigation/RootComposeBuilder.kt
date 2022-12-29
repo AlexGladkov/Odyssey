@@ -8,6 +8,8 @@ import ru.alexgladkov.odyssey.compose.ScreenType
 import ru.alexgladkov.odyssey.compose.helpers.FlowBuilderModel
 import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.MultiStackBuilderModel
 import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.TabsNavModel
+import ru.alexgladkov.odyssey.core.configuration.RootConfiguration
+import ru.alexgladkov.odyssey.core.configuration.RootControllerType
 
 /**
  * Base builder, declarative helper for navigation graph builder
@@ -50,8 +52,9 @@ class RootComposeBuilder {
         )
     }
 
-    fun build(): RootController = RootController().apply {
-        updateScreenMap(_screenMap)
-        setNavigationGraph(_screens)
-    }
+    fun build(): RootController = RootController(RootControllerType.Root)
+        .apply {
+            updateScreenMap(_screenMap)
+            setNavigationGraph(_screens)
+        }
 }

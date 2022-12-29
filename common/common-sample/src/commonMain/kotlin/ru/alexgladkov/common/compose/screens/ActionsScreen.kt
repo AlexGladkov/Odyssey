@@ -106,6 +106,15 @@ fun ActionsScreen(count: Int?) {
 
                 item {
                     ActionCell(
+                        text = "Clear Previous Screen",
+                        icon = Icons.Filled.Clear
+                    ) {
+                        rootController.push(screen = NavigationTree.Push.name, launchFlag = LaunchFlag.ClearPrevious, params = (count ?: 0) + 1)
+                    }
+                }
+
+                item {
+                    ActionCell(
                         "Back",
                         icon = if (count == 0 || count == null) Icons.Filled.Close else Icons.Filled.ArrowBack
                     ) {

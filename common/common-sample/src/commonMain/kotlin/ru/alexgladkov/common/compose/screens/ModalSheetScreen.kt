@@ -5,8 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowCircleUp
-import androidx.compose.material.icons.filled.ArrowDownward
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -16,6 +15,10 @@ import ru.alexgladkov.odyssey.compose.extensions.present
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
 import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.ModalSheetConfiguration
 import kotlin.random.Random
+import ru.alexgladkov.common.compose.NavigationTree
+import ru.alexgladkov.odyssey.core.LaunchFlag
+import ru.alexgladkov.odyssey.compose.extensions.present
+import ru.alexgladkov.odyssey.compose.extensions.push
 
 
 @Composable
@@ -63,5 +66,21 @@ fun ModalSheetScreen(onCloseClick: () -> Unit) {
                 }
             }
         }
+
+        ActionCell("Start New Chain", icon = Icons.Filled.OpenInNew) {
+            rootController.present(
+                screen = NavigationTree.Present.name,
+                launchFlag = LaunchFlag.SingleNewTask
+            )
+        }
+
+        ActionCell(text = "Clear Previous Screen", icon = Icons.Filled.Clear) {
+            rootController.push(
+                screen = NavigationTree.Push.name,
+                launchFlag = LaunchFlag.ClearPrevious,
+                params = 0
+            )
+        }
+
     }
 }

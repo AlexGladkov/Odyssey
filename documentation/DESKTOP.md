@@ -1,53 +1,73 @@
 ### How to use it with desktop
 
-For working with Android I've created helper class DesktopScreenHost and now to setup Application you just need to use this
-in your `main()` function
+First, you need to setup your navigation graph (check getting started section), and then setup it in `main` function
 
 ```kotlin
-val window = JFrame()
-window.title = "Odyssey Demo"
-window.setSize(800, 600)
-
-window.setupNavigation("actions") {
-    screen("actions") {
-        ActionsScreen(count = 0)
+fun main() = application {
+    Window(
+        onCloseRequest = ::exitApplication,
+        title = "Odyssey Desktop Example",
+        state = rememberWindowState(
+            width = 1024.dp,
+            height = 800.dp,
+            position = WindowPosition.Aligned(Alignment.Center)
+        )
+    ) {
+        setNavigationContent(OdysseyConfiguration(), onApplicationFinish = {
+            exitApplication()
+        }) {
+            navigationGraph()
+        }
     }
-
-    // Here you can place other graph
 }
 ```
 
-Sometimes you need to add compose wrapper for your navigator for this you can write your own function like this
+**Navigation Configuration**
+
+`setNavigationContent` function is expect/actual and contains `OdysseyConfiguration` class which is expect/actual
+too, so for every platform
+it contains different implementations. For desktop it has following parameters
+
 ```kotlin
-fun JFrame.setupThemedNavigation(
-    startScreen: String,
-    vararg providers: ProvidedValue<*>,
-    navigationGraph: RootComposeBuilder.() -> Unit
-) {
+/**
+ * @param startScreen (optional) - sealed class with two types of params First and Custom.
+ * if you check first, which is by default, it will take first screen from your navigation graph, otherwise
+ * it takes as entry point screen with provided name
+ * @param backgroundColor (optional) - color for animation background. For example if you have dark theme you may want
+ * provide your theme color to avoid blink effect in animations
+ */
+actual class OdysseyConfiguration(
+    val startScreen: StartScreen = StartScreen.First,
+    val backgroundColor: Color = Color.White
+)
+```
 
-    val composePanel = ComposePanel()
+**Theme, LocalCompositionProvider**
 
-    // Below function setup drawing, you can extend it
-    // by adding CompositionLocalProviders or something else
-    composePanel.setContent {
+If you need add theme or any composition local provider you can wrap setNavigationContent in any Composable function
+
+```kotlin
+fun main() = application {
+    Window(
+        onCloseRequest = ::exitApplication,
+        title = "Odyssey Desktop Example",
+        state = rememberWindowState(
+            width = 1024.dp,
+            height = 800.dp,
+            position = WindowPosition.Aligned(Alignment.Center)
+        )
+    ) {
         OdysseyTheme {
-            val rootController = RootComposeBuilder(backgroundColor = Odyssey.color.primaryBackground)
-                .apply(navigationGraph).build()
+            val configuration = OdysseyConfiguration(
+                backgroundColor = Odyssey.color.primaryBackground
+            )
 
-            CompositionLocalProvider(
-                *providers,
-                LocalRootController provides rootController
-            ) {
-                ModalNavigator {
-                    Navigator(startScreen)
-                }
+            setNavigationContent(configuration, onApplicationFinish = {
+                exitApplication()
+            }) {
+                navigationGraph()
             }
         }
     }
-
-    defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-    contentPane.add(composePanel, BorderLayout.CENTER)
-    setLocationRelativeTo(null)
-    isVisible = true
 }
 ```

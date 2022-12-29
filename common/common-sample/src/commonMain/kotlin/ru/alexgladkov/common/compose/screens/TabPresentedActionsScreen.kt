@@ -32,7 +32,7 @@ fun TabPresentedActionsScreen(count: Int?) {
             LazyColumn {
                 item {
                     ActionCell(text = "Push Screen", icon = Icons.Filled.ArrowForward) {
-                        rootController.push(NavigationTree.PresentScreen.name, (count ?: 0) + 1)
+                        rootController.push(NavigationTree.Push.name, (count ?: 0) + 1)
                     }
                 }
 
@@ -79,6 +79,15 @@ fun TabPresentedActionsScreen(count: Int?) {
                         icon = Icons.Filled.OpenInNew
                     ) {
                         rootController.findRootController().present(screen = NavigationTree.Present.name, launchFlag = LaunchFlag.SingleNewTask)
+                    }
+                }
+
+                item {
+                    ActionCell(
+                        text = "Start New Instance",
+                        icon = Icons.Filled.OpenInNewOff,
+                    ) {
+                        rootController.findRootController().present(screen = NavigationTree.Present.name, launchFlag = LaunchFlag.SingleInstance)
                     }
                 }
 

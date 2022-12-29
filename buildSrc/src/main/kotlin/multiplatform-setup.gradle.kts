@@ -11,6 +11,7 @@ kotlin {
     android()
 
     ios()
+    iosSimulatorArm64()
 
     sourceSets {
         named("commonTest") {

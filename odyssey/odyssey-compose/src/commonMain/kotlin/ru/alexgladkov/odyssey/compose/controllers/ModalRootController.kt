@@ -173,6 +173,7 @@ open class ModalController {
 
     fun clearBackStack() {
         _backStack.clear()
+        redrawStack()
     }
 
     fun isEmpty() = _backStack.none { it.dialogState !is ModalDialogState.Close }
