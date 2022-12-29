@@ -47,6 +47,8 @@ Projects/Companies using this library:
 - [1Coin](https://github.com/VitalyPeryatin/1Coin)
 - Trinity Monsters
 
+If you use Odyssey in your project please contact me with [telegram](https://t.me/neuradev)
+
 ### License
 
 ```
