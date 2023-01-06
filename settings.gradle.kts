@@ -5,6 +5,7 @@ include(
     ":odyssey:odyssey-compose",
     ":odyssey:odyssey-android",
 
+    ":android",
     ":desktop",
     ":uikit",
     ":hilt",
