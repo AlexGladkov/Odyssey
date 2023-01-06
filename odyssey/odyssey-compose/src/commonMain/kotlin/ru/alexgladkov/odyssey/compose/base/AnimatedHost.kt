@@ -37,7 +37,6 @@ fun AnimatedHost(
         screensToRemove?.forEach { screensToRemove ->
             saveableStateHolder.removeState(screensToRemove.key)
             onScreenRemove?.invoke(screensToRemove)
-            println("current screen-${currentScreen.realKey}, screen to remove-${screensToRemove.realKey}")
         }
     }
 }

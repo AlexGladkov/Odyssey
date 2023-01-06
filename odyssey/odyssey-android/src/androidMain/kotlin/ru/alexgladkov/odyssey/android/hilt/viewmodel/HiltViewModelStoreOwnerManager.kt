@@ -23,7 +23,6 @@ class HiltViewModelStoreOwnerManager(
             it.realKey?.let { key ->
                 ownersLevels[key]?.let {
                     // mark for deletion
-                    println("mark for deletion - $key")
                     ownersLevels[key] = Int.MAX_VALUE
                 }
             }

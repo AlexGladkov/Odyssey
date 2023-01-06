@@ -53,9 +53,7 @@ fun HiltScreenThree() {
     Row {
         TextButton(
             onClick = {
-                println("Back to one clicked from 3")
                 rootController.backToScreen("one")
-                //rootController.popBackStack()
             }
         ) {
             Text("Back to one")
@@ -79,7 +77,6 @@ fun HiltScreenFour() {
     Row {
         TextButton(
             onClick = {
-                println("Back to one clicked from 4")
                 rootController.backToScreen("one")
             }
         ) {
