@@ -360,12 +360,9 @@ open class RootController(rootControllerType: RootControllerType): CoreRootContr
 
                 val screensToRemove = it._currentScreen.value?.screenToRemove?.toMutableList() ?: mutableListOf()
                 screensToRemove.add(current.copy(animationType = last.animationType, isForward = false))
-
                 it._currentScreen.value = current.replaceMultipleScreens(screensToRemove)
-                if (clearedKey == screenName) {
-                } else {
-                    backToScreen(rootController, screenName)
-                }
+
+                if (clearedKey != screenName) backToScreen(rootController, screenName) else {}
             }
         }
     }
