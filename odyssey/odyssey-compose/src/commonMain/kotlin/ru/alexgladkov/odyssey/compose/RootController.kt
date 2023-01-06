@@ -358,8 +358,8 @@ open class RootController(rootControllerType: RootControllerType): CoreRootContr
                 val current = it._backstack.last()
                 val clearedKey = cleanRealKeyFromType(current.realKey)
 
-                val replaceScreen = current.copy(animationType = last.animationType, isForward = false)
-                it._currentScreen.value = it._currentScreen.value?.replaceScreensWith(replaceScreen)
+                val replaceWithScreen = current.copy(animationType = last.animationType, isForward = false)
+                it._currentScreen.value = it._currentScreen.value?.replaceWithAddToBuffer(previous = last, replaceWith = replaceWithScreen)
 
                 if (clearedKey != screenName) backToScreen(rootController, screenName) else {}
             }

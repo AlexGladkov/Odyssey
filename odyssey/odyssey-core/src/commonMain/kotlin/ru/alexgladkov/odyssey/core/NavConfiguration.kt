@@ -13,8 +13,8 @@ fun ScreenInteractor.replaceSingle(with: ScreenInteractor): NavConfiguration = N
 fun ScreenInteractor.replaceMultipleScreens(withScreens: List<ScreenInteractor>): NavConfiguration = NavConfiguration(this, withScreens)
 fun ScreenInteractor.toScreenBundle(): ScreenBundle = ScreenBundle(key, realKey, params)
 
-fun NavConfiguration.replaceScreensWith(current: ScreenInteractor): NavConfiguration {
+fun NavConfiguration.replaceWithAddToBuffer(previous: ScreenInteractor, replaceWith: ScreenInteractor): NavConfiguration {
     val screensToRemove = this.screenToRemove?.toMutableList() ?: mutableListOf()
-    screensToRemove.add(current)
-    return current.replaceMultipleScreens(screensToRemove)
+    screensToRemove.add(previous)
+    return replaceWith.replaceMultipleScreens(screensToRemove)
 }
