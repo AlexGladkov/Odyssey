@@ -1,5 +1,6 @@
 package ru.alexgladkov.hilt_demo.ui
 
+import androidx.compose.foundation.layout.Row
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
@@ -17,6 +18,80 @@ fun HiltScreenOne() {
         }
     ) {
         Text("Push")
+    }
+    NumberLabel(viewModel.randomLifecycleValue)
+}
+
+@Composable
+fun HiltScreenTwo() {
+    val viewModel: ViewModelTwo = hiltViewModel()
+    val rootController = LocalRootController.current
+    Row {
+        TextButton(
+            onClick = {
+                rootController.popBackStack()
+            }
+        ) {
+            Text("Back")
+        }
+        TextButton(
+            onClick = {
+                rootController.push("three")
+            }
+        ) {
+            Text("Push")
+        }
+    }
+
+    NumberLabel(viewModel.randomLifecycleValue)
+}
+
+@Composable
+fun HiltScreenThree() {
+    val viewModel: ViewModelTwo = hiltViewModel()
+    val rootController = LocalRootController.current
+    Row {
+        TextButton(
+            onClick = {
+                println("Back to one clicked from 3")
+                rootController.backToScreen("one")
+                //rootController.popBackStack()
+            }
+        ) {
+            Text("Back to one")
+        }
+        TextButton(
+            onClick = {
+                rootController.push("four")
+            }
+        ) {
+            Text("Push")
+        }
+    }
+    NumberLabel(viewModel.randomLifecycleValue)
+}
+
+@Composable
+fun HiltScreenFour() {
+    val viewModel: ViewModelTwo = hiltViewModel()
+    val rootController = LocalRootController.current
+
+    Row {
+        TextButton(
+            onClick = {
+                println("Back to one clicked from 4")
+                rootController.backToScreen("one")
+            }
+        ) {
+            Text("Back to one")
+        }
+        TextButton(
+            onClick = {
+                rootController.push("four")
+            }
+        ) {
+            Text("Push")
+        }
     }
     NumberLabel(viewModel.randomLifecycleValue)
 }

@@ -6,7 +6,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.runtime.CompositionLocalProvider
 import dagger.hilt.android.AndroidEntryPoint
+import ru.alexgladkov.hilt_demo.ui.HiltScreenFour
 import ru.alexgladkov.hilt_demo.ui.HiltScreenOne
+import ru.alexgladkov.hilt_demo.ui.HiltScreenThree
 import ru.alexgladkov.hilt_demo.ui.HiltScreenTwo
 import ru.alexgladkov.odyssey.android.hilt.builder.hiltScreen
 import ru.alexgladkov.odyssey.android.hilt.local.LocalHiltViewModelStoreOwnerManager
@@ -45,7 +47,10 @@ private fun RootComposeBuilder.generateGraph(): RootComposeBuilder {
         HiltScreenTwo()
     }
     hiltScreen(name = "three") {
-        HiltScreenTwo()
+        HiltScreenThree()
+    }
+    hiltScreen(name = "four") {
+        HiltScreenFour()
     }
     return this
 }
