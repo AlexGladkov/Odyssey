@@ -12,7 +12,7 @@ import ru.alexgladkov.odyssey.core.screen.ScreenBundle
 @Composable
 fun AnimatedHost(
     currentScreen: ScreenBundle,
-    screenToRemove: ScreenBundle?,
+    screensToRemove: List<ScreenBundle>?,
     animationType: AnimationType,
     isForward: Boolean,
     modifier: Modifier = Modifier,
@@ -33,12 +33,11 @@ fun AnimatedHost(
         }
     }
 
-
-    LaunchedEffect(currentScreen, screenToRemove) {
-        screenToRemove?.let {
-            saveableStateHolder.removeState(it.key)
-            onScreenRemove?.invoke(it)
-            println("current screen-${currentScreen.realKey}, screen to remove-${screenToRemove.realKey}")
+    LaunchedEffect(currentScreen, screensToRemove) {
+        screensToRemove?.forEach { screensToRemove ->
+            saveableStateHolder.removeState(screensToRemove.key)
+            onScreenRemove?.invoke(screensToRemove)
+            println("current screen-${currentScreen.realKey}, screen to remove-${screensToRemove.realKey}")
         }
     }
 }

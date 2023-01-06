@@ -30,7 +30,7 @@ fun TabNavigator(
                     AnimatedHost(
                         currentScreen = navConfig.screen.toScreenBundle(),
                         animationType = navConfig.screen.animationType,
-                        screenToRemove = navConfig.screenToRemove?.toScreenBundle(),
+                        screensToRemove = navConfig.screenToRemove?.map { it.toScreenBundle() },
                         isForward = navConfig.screen.isForward,
                         onScreenRemove = currentTab.rootController.onScreenRemove
                     ) {

@@ -16,19 +16,14 @@ import ru.alexgladkov.odyssey.compose.extensions.createUniqueKey
 import ru.alexgladkov.odyssey.compose.helpers.*
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
 import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.*
-import ru.alexgladkov.odyssey.core.CoreRootController
-import ru.alexgladkov.odyssey.core.LaunchFlag
-import ru.alexgladkov.odyssey.core.NavConfiguration
+import ru.alexgladkov.odyssey.core.*
 import ru.alexgladkov.odyssey.core.animations.AnimationType
 import ru.alexgladkov.odyssey.core.backpress.BackPressedCallback
 import ru.alexgladkov.odyssey.core.backpress.OnBackPressedDispatcher
 import ru.alexgladkov.odyssey.core.breadcrumbs.Breadcrumb
-import ru.alexgladkov.odyssey.core.configuration.DisplayType
-import ru.alexgladkov.odyssey.core.configuration.RootConfiguration
 import ru.alexgladkov.odyssey.core.configuration.RootControllerType
 import ru.alexgladkov.odyssey.core.screen.Screen
 import ru.alexgladkov.odyssey.core.screen.ScreenBundle
-import ru.alexgladkov.odyssey.core.wrap
 import kotlin.collections.HashMap
 
 typealias RenderWithParams<T> = @Composable (T) -> Unit
@@ -353,7 +348,7 @@ open class RootController(rootControllerType: RootControllerType): CoreRootContr
                     if (clearedKey == screenName) {
                         parentController._currentScreen.value = current
                             .copy(animationType = last.animationType, isForward = false)
-                            .wrap(with = last)
+                            .replaceSingle(with = last)
                     } else {
                         backToScreen(it.parentRootController, screenName)
                     }
@@ -363,10 +358,11 @@ open class RootController(rootControllerType: RootControllerType): CoreRootContr
                 val current = it._backstack.last()
                 val clearedKey = cleanRealKeyFromType(current.realKey)
 
+                val screensToRemove = it._currentScreen.value?.screenToRemove?.toMutableList() ?: mutableListOf()
+                screensToRemove.add(current.copy(animationType = last.animationType, isForward = false))
+
+                it._currentScreen.value = current.replaceMultipleScreens(screensToRemove)
                 if (clearedKey == screenName) {
-                    it._currentScreen.value = current
-                        .copy(animationType = last.animationType, isForward = false)
-                        .wrap(with = last)
                 } else {
                     backToScreen(rootController, screenName)
                 }
@@ -388,7 +384,7 @@ open class RootController(rootControllerType: RootControllerType): CoreRootContr
 
                 it._currentScreen.value = current
                     .copy(animationType = last.animationType, isForward = false)
-                    .wrap(with = last)
+                    .replaceSingle(with = last)
             }
         }
     }

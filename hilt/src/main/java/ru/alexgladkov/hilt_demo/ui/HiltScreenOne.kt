@@ -19,7 +19,7 @@ fun HiltScreenOne() {
     ) {
         Text("Push")
     }
-    NumberLabel(viewModel.randomLifecycleValue)
+    Label("screen 1\nrandom number - ${viewModel.randomLifecycleValue}")
 }
 
 @Composable
@@ -43,7 +43,7 @@ fun HiltScreenTwo() {
         }
     }
 
-    NumberLabel(viewModel.randomLifecycleValue)
+    Label("screen 2\nrandom number - ${viewModel.randomLifecycleValue}")
 }
 
 @Composable
@@ -68,7 +68,7 @@ fun HiltScreenThree() {
             Text("Push")
         }
     }
-    NumberLabel(viewModel.randomLifecycleValue)
+    Label("screen 3\nrandom number - ${viewModel.randomLifecycleValue}")
 }
 
 @Composable
@@ -93,5 +93,5 @@ fun HiltScreenFour() {
             Text("Push")
         }
     }
-    NumberLabel(viewModel.randomLifecycleValue)
+    Label("screen 4\nrandom number - ${viewModel.randomLifecycleValue}")
 }

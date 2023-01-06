@@ -9,14 +9,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun NumberLabel(number: Int) {
+fun Label(label: String) {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = "$number",
-            fontSize = 32.sp
+            text = label,
+            fontSize = 32.sp,
         )
     }
 }
