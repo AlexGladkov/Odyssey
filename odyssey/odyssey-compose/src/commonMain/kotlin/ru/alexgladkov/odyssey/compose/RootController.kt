@@ -358,9 +358,8 @@ open class RootController(rootControllerType: RootControllerType): CoreRootContr
                 val current = it._backstack.last()
                 val clearedKey = cleanRealKeyFromType(current.realKey)
 
-                val screensToRemove = it._currentScreen.value?.screenToRemove?.toMutableList() ?: mutableListOf()
-                screensToRemove.add(current.copy(animationType = last.animationType, isForward = false))
-                it._currentScreen.value = current.replaceMultipleScreens(screensToRemove)
+                val replaceScreen = current.copy(animationType = last.animationType, isForward = false)
+                it._currentScreen.value = it._currentScreen.value?.replaceScreensWith(replaceScreen)
 
                 if (clearedKey != screenName) backToScreen(rootController, screenName) else {}
             }
