@@ -44,6 +44,8 @@ private fun RootComposeBuilder.generateGraph(): RootComposeBuilder {
     hiltScreen(name = "two") {
         HiltScreenTwo()
     }
-
+    hiltScreen(name = "three") {
+        HiltScreenTwo()
+    }
     return this
 }
