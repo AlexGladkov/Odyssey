@@ -40,7 +40,7 @@ private fun NavigatorAnimated(
 ) {
     AnimatedHost(
         currentScreen = screen.toScreenBundle(),
-        screensToRemove = configuration.screenToRemove?.map { it.toScreenBundle() },
+        screensToRemove = configuration.screensToRemove?.map { it.toScreenBundle() },
         animationType = screen.animationType,
         isForward = screen.isForward,
         modifier = Modifier.background(backgroundColor).fillMaxSize(),

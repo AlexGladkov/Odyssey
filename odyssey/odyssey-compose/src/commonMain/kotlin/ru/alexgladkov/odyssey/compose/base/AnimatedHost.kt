@@ -34,9 +34,9 @@ fun AnimatedHost(
     }
 
     LaunchedEffect(currentScreen, screensToRemove) {
-        screensToRemove?.forEach { screensToRemove ->
-            saveableStateHolder.removeState(screensToRemove.key)
-            onScreenRemove?.invoke(screensToRemove)
+        screensToRemove?.forEach { screen ->
+            saveableStateHolder.removeState(screen.key)
+            onScreenRemove?.invoke(screen)
         }
     }
 }

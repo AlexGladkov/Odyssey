@@ -359,7 +359,8 @@ open class RootController(rootControllerType: RootControllerType): CoreRootContr
                 val clearedKey = cleanRealKeyFromType(current.realKey)
 
                 val replaceWithScreen = current.copy(animationType = last.animationType, isForward = false)
-                it._currentScreen.value = it._currentScreen.value?.replaceWithAddToBuffer(previous = last, replaceWith = replaceWithScreen)
+                val stackToClear = it._currentScreen.value?.screensToRemove ?: emptyList()
+                it._currentScreen.value = stackToClear.toNavConfigWithScreenReplace(previous = last, replaceWith = replaceWithScreen)
 
                 if (clearedKey != screenName) backToScreen(rootController, screenName) else {}
             }
