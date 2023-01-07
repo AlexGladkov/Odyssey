@@ -46,7 +46,7 @@ class MultiStackRootController(
         _stackChangeObserver.value = _tabItems[position]
     }
 
-    override fun popBackStack() {
+    override fun popBackStack(onBackPressed: Boolean) {
         val rootController = _stackChangeObserver.value?.rootController
         rootController?.popBackStack()
     }

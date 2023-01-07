@@ -24,6 +24,7 @@ sealed class ModalDialogState {
  * @param threshold - threshold for closing modal bottom sheet
  * @param alpha - screamer alpha
  * @param closeOnBackdropClick - true if you want to close on backdrop click
+ * @param closeOnBackPressed - true if you want to close on back pressed
  * @param closeOnSwipe - true if you want to close on swipe
  * @param content - composable content
  */

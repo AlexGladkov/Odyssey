@@ -7,8 +7,9 @@ import ru.alexgladkov.odyssey.compose.Render
  * @param maxHeight - maxHeight in Float. use null for wrap by content
  * @param threshold - threshold to close modal bottom sheet by swipe
  * @param cornerRadius - card corner radius in dp
- * @param alpha - scrimer alpha
+ * @param alpha - screamer alpha
  * @param closeOnBackdropClick - true if you want to close on backdrop click
+ * @param closeOnBackPressed - true if you want to close on back pressed
  * @param backContent - draw behind modal view (composable)
  */
 data class ModalSheetConfiguration(

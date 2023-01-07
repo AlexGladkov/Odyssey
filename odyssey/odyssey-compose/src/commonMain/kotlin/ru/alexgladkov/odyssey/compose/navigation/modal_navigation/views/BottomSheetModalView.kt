@@ -55,6 +55,9 @@ internal fun BoxScope.BottomModalSheet(
                 ModalDialogState.Idle -> modalController.setTopDialogState(ModalDialogState.Open, bundle.key)
                 is ModalDialogState.Close -> modalController.finishCloseAction(bundle.key)
                 ModalDialogState.Open -> {}
+                is ModalDialogState.OnBackPressed -> {
+                    if (bundle.closeOnBackPressed) modalController.finishCloseAction(bundle.key)
+                }
             }
         }
     )

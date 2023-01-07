@@ -201,7 +201,7 @@ open class RootController(rootControllerType: RootControllerType): CoreRootContr
     // Returns to previous screen
     open fun popBackStack(onBackPressed: Boolean = false) {
         if (_modalController?.isEmpty() == false) {
-            _modalController?.popBackStack(onBackPressed)
+            _modalController?.popBackStack(onBackPressed = onBackPressed)
             return
         }
 
