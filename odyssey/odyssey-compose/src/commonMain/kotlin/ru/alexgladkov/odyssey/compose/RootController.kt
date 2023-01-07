@@ -135,7 +135,7 @@ open class RootController(rootControllerType: RootControllerType): CoreRootContr
         _onBackPressedDispatcher = onBackPressedDispatcher
         _onBackPressedDispatcher?.backPressedCallback = object : BackPressedCallback() {
             override fun onBackPressed() {
-                popBackStack()
+                popBackStack(onBackPressed = true)
             }
         }
     }
@@ -199,9 +199,9 @@ open class RootController(rootControllerType: RootControllerType): CoreRootContr
     }
 
     // Returns to previous screen
-    open fun popBackStack() {
+    open fun popBackStack(onBackPressed: Boolean = false) {
         if (_modalController?.isEmpty() == false) {
-            _modalController?.popBackStack()
+            _modalController?.popBackStack(onBackPressed)
             return
         }
 

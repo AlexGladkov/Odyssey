@@ -18,6 +18,7 @@ data class ModalSheetConfiguration(
     val cornerRadius: Int = 0,
     val alpha: Float = 0.2f,
     val closeOnBackdropClick: Boolean = true,
+    val closeOnBackPressed: Boolean = true,
     val closeOnSwipe: Boolean = true,
     val backContent: Render? = null,
 ) : ModalConfiguration

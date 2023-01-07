@@ -1,6 +1,7 @@
 package ru.alexgladkov.odyssey.compose.controllers
 
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.firstOrNull
 import ru.alexgladkov.odyssey.compose.Render
 import ru.alexgladkov.odyssey.compose.RootController
 import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.AlertConfiguration
@@ -13,6 +14,7 @@ sealed class ModalDialogState {
     object Idle : ModalDialogState()
     object Open : ModalDialogState()
     data class Close(val animate: Boolean = true) : ModalDialogState()
+    data class OnBackPressed(val animate: Boolean = true) : ModalDialogState()
 }
 
 /**
@@ -33,6 +35,7 @@ internal data class ModalSheetBundle(
     val maxHeight: Float?,
     val threshold: Float,
     val closeOnBackdropClick: Boolean,
+    val closeOnBackPressed: Boolean,
     val alpha: Float,
     val cornerRadius: Int,
     val closeOnSwipe: Boolean = true,
@@ -129,12 +132,13 @@ open class ModalController {
     }
 
     @Deprecated("@see popBackStack with key param", ReplaceWith("popBackStack(key = KEY)"))
-    fun popBackStack(animate: Boolean = true) {
-        popBackStack(key = null, animate = animate)
+    fun popBackStack(animate: Boolean = true, onBackPressed: Boolean = false) {
+        popBackStack(key = null, animate = animate, onBackPressed = onBackPressed)
     }
 
-    fun popBackStack(key: String? = null, animate: Boolean = true) {
-        setTopDialogState(modalDialogState = ModalDialogState.Close(animate), key)
+    fun popBackStack(key: String? = null, animate: Boolean = true, onBackPressed: Boolean = false) {
+        val state = if (onBackPressed) ModalDialogState.OnBackPressed(animate) else ModalDialogState.Close(animate)
+        setTopDialogState(modalDialogState = state, key)
     }
 
     internal fun setTopDialogState(modalDialogState: ModalDialogState, key: String? = null) {
@@ -193,6 +197,7 @@ internal fun ModalSheetConfiguration.wrap(key: String, with: Render): ModalBundl
     key = key,
     maxHeight = maxHeight,
     closeOnBackdropClick = closeOnBackdropClick,
+    closeOnBackPressed = closeOnBackPressed,
     closeOnSwipe = closeOnSwipe,
     threshold = threshold,
     animationTime = animationTime,
