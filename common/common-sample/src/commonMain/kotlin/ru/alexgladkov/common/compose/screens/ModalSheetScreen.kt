@@ -28,10 +28,10 @@ fun ModalSheetScreen(onCloseClick: () -> Unit) {
 
     Column(modifier = Modifier.background(Odyssey.color.primaryBackground)) {
         Text(modifier = Modifier.padding(16.dp), text = "Modal Sheet", fontSize = 24.sp, color = Odyssey.color.primaryText)
-        ActionCell(text = "Close", icon = Icons.Filled.ArrowDownward) {
+        ActionCell(text = "Close", icon = Icons.Filled.ArrowDropDown) {
             onCloseClick.invoke()
         }
-        ActionCell(text = "Show one more Modal", icon = Icons.Filled.ArrowCircleUp) {
+        ActionCell(text = "Show one more Modal", icon = Icons.Filled.KeyboardArrowUp) {
             val modalSheetConfiguration = ModalSheetConfiguration(maxHeight = Random.nextFloat(), cornerRadius = 16)
             modalController.present(modalSheetConfiguration) { key ->
                 ModalSheetScreen {
@@ -39,7 +39,7 @@ fun ModalSheetScreen(onCloseClick: () -> Unit) {
                 }
             }
         }
-        ActionCell(text = "Double-Modal show/close", icon = Icons.Filled.ArrowCircleUp) {
+        ActionCell(text = "Double-Modal show/close", icon = Icons.Filled.ThumbUp) {
             val height = Random.nextFloat().coerceAtLeast(0.4f)
             val modalSheetConfiguration = ModalSheetConfiguration(
                 maxHeight = height,
@@ -58,7 +58,7 @@ fun ModalSheetScreen(onCloseClick: () -> Unit) {
             }
         }
 
-        ActionCell(text = "Modal screen without closing animation", icon = Icons.Filled.ArrowCircleUp) {
+        ActionCell(text = "Modal screen without closing animation", icon = Icons.Filled.ThumbUp) {
             val modalSheetConfiguration = ModalSheetConfiguration(maxHeight = Random.nextFloat(), cornerRadius = 16)
             modalController.present(modalSheetConfiguration) { key ->
                 ModalSheetScreen {
@@ -67,7 +67,7 @@ fun ModalSheetScreen(onCloseClick: () -> Unit) {
             }
         }
 
-        ActionCell("Start New Chain", icon = Icons.Filled.OpenInNew) {
+        ActionCell("Start New Chain", icon = Icons.Filled.Done) {
             rootController.present(
                 screen = NavigationTree.Present.name,
                 launchFlag = LaunchFlag.SingleNewTask

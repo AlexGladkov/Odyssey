@@ -7,8 +7,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material.icons.filled.ArrowUpward
-import androidx.compose.material.icons.filled.SwitchRight
+import androidx.compose.material.icons.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import ru.alexgladkov.common.compose.NavigationTree
@@ -37,13 +37,13 @@ fun TabScreen(count: Int?) {
                 }
 
                 item {
-                    ActionCell("Present Flow", icon = Icons.Filled.ArrowUpward) {
+                    ActionCell("Present Flow", icon = Icons.Filled.KeyboardArrowUp) {
                         rootController.findRootController().present(NavigationTree.TabPresent.name)
                     }
                 }
 
                 item {
-                    ActionCell("Switch Tab", icon = Icons.Filled.SwitchRight) {
+                    ActionCell("Switch Tab", icon = Icons.Filled.KeyboardArrowRight) {
                         val parent = rootController.findHostController()
                         parent?.switchTab(2)
                     }

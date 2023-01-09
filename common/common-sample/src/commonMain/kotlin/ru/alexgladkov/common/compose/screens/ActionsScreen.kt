@@ -41,14 +41,14 @@ fun ActionsScreen(count: Int?) {
                 }
 
                 item {
-                    ActionCell("Present Flow", icon = Icons.Filled.ArrowUpward) {
+                    ActionCell("Present Flow", icon = Icons.Filled.ArrowForward) {
                         rootController.present(NavigationTree.Present.name)
                     }
                 }
 
                 item {
                     val modalSheetConfiguration = ModalSheetConfiguration(maxHeight = 0.7f, cornerRadius = 16)
-                    ActionCell("Present Modal Screen", icon = Icons.Filled.ArrowCircleUp) {
+                    ActionCell("Present Modal Screen", icon = Icons.Filled.KeyboardArrowUp) {
                         modalController.present(modalSheetConfiguration) { key ->
                             ModalSheetScreen {
                                 modalController.popBackStack(key)
@@ -58,7 +58,7 @@ fun ActionsScreen(count: Int?) {
                 }
 
                 item {
-                    ActionCell("Show Alert Dialog", icon = Icons.Filled.AddAlert) {
+                    ActionCell("Show Alert Dialog", icon = Icons.Filled.Warning) {
                         val alertConfiguration = AlertConfiguration(maxHeight = 0.7f, maxWidth = 0.8f, cornerRadius = 4)
                         modalController.present(alertConfiguration) { key ->
                             AlertDialogScreen {
@@ -71,7 +71,7 @@ fun ActionsScreen(count: Int?) {
                 item {
                     ActionCell(
                         "Show Bottom Navigation",
-                        icon = Icons.Filled.Dashboard
+                        icon = Icons.Filled.Create
                     ) {
                         rootController.present(NavigationTree.Main.name)
                     }
@@ -80,7 +80,7 @@ fun ActionsScreen(count: Int?) {
                 item {
                     ActionCell(
                         "Show Top Navigation",
-                        icon = Icons.Filled.SpaceDashboard
+                        icon = Icons.Filled.Create
                     ) {
                         rootController.present(NavigationTree.Top.name)
                     }
@@ -89,7 +89,7 @@ fun ActionsScreen(count: Int?) {
                 item {
                     ActionCell(
                         "Show Drawer Navigation",
-                        icon = Icons.Filled.DashboardCustomize
+                        icon = Icons.Filled.Create
                     ) {
                         rootController.present(NavigationTree.Drawer.name, params = "Custom Title from params")
                     }
@@ -98,7 +98,7 @@ fun ActionsScreen(count: Int?) {
                 item {
                     ActionCell(
                         "Start New Chain",
-                        icon = Icons.Filled.OpenInNew
+                        icon = Icons.Filled.Done
                     ) {
                         rootController.present(screen = NavigationTree.Present.name, launchFlag = LaunchFlag.SingleNewTask)
                     }
