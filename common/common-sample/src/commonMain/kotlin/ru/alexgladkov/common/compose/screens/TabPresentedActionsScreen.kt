@@ -37,14 +37,14 @@ fun TabPresentedActionsScreen(count: Int?) {
                 }
 
                 item {
-                    ActionCell("Present Flow", icon = Icons.Filled.ArrowUpward) {
+                    ActionCell("Present Flow", icon = Icons.Filled.KeyboardArrowUp) {
                         rootController.findRootController().present(NavigationTree.TabPresent.name)
                     }
                 }
 
                 item {
                     val modalSheetConfiguration = ModalSheetConfiguration(maxHeight = 0.7f, cornerRadius = 16)
-                    ActionCell("Present Modal Screen", icon = Icons.Filled.ArrowCircleUp) {
+                    ActionCell("Present Modal Screen", icon = Icons.Filled.ThumbUp) {
                         modalController.present(modalSheetConfiguration) { key ->
                             ModalSheetScreen {
                                 modalController.popBackStack(key)
@@ -54,7 +54,7 @@ fun TabPresentedActionsScreen(count: Int?) {
                 }
 
                 item {
-                    ActionCell("Show Alert Dialog", icon = Icons.Filled.AddAlert) {
+                    ActionCell("Show Alert Dialog", icon = Icons.Filled.Warning) {
                         val alertConfiguration = AlertConfiguration(maxHeight = 0.7f, maxWidth = 0.8f, cornerRadius = 4)
                         modalController.present(alertConfiguration) { key ->
                             AlertDialogScreen {
@@ -67,7 +67,7 @@ fun TabPresentedActionsScreen(count: Int?) {
                 item {
                     ActionCell(
                         "Show Bottom Navigation",
-                        icon = Icons.Filled.Dashboard
+                        icon = Icons.Filled.Create
                     ) {
                         rootController.findRootController().present(NavigationTree.Main.name)
                     }
@@ -76,7 +76,7 @@ fun TabPresentedActionsScreen(count: Int?) {
                 item {
                     ActionCell(
                         "Start New Chain",
-                        icon = Icons.Filled.OpenInNew
+                        icon = Icons.Filled.Done
                     ) {
                         rootController.findRootController().present(screen = NavigationTree.Present.name, launchFlag = LaunchFlag.SingleNewTask)
                     }
@@ -85,7 +85,7 @@ fun TabPresentedActionsScreen(count: Int?) {
                 item {
                     ActionCell(
                         text = "Start New Instance",
-                        icon = Icons.Filled.OpenInNewOff,
+                        icon = Icons.Filled.Create,
                     ) {
                         rootController.findRootController().present(screen = NavigationTree.Present.name, launchFlag = LaunchFlag.SingleInstance)
                     }
@@ -94,7 +94,7 @@ fun TabPresentedActionsScreen(count: Int?) {
                 item {
                     ActionCell(
                         "Back",
-                        icon = if (count == 0 || count == null) Icons.Filled.ArrowDownward
+                        icon = if (count == 0 || count == null) Icons.Filled.KeyboardArrowDown
                         else Icons.Filled.ArrowBack
                     ) {
                         rootController.popBackStack()
@@ -104,7 +104,7 @@ fun TabPresentedActionsScreen(count: Int?) {
                 item {
                     ActionCell(
                         "Back to Dashboard",
-                        icon = Icons.Filled.ArrowDownward
+                        icon = Icons.Filled.KeyboardArrowDown
                     ) {
                         rootController.findRootController().backToScreen(NavigationTree.Main.name)
                     }

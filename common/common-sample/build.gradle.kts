@@ -7,7 +7,6 @@ kotlin {
     sourceSets {
         named("commonMain") {
             dependencies {
-                api(compose.materialIconsExtended)
                 implementation(project(":odyssey:odyssey-compose"))
                 implementation(project(":odyssey:odyssey-core"))
             }
