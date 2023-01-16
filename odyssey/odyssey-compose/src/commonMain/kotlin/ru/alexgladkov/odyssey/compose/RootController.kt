@@ -346,9 +346,9 @@ open class RootController(rootControllerType: RootControllerType): CoreRootContr
                     val current = parentController._backstack.last()
                     val clearedKey = cleanRealKeyFromType(current.realKey)
                     if (clearedKey == screenName) {
-                        parentController._currentScreen.value = current
-                            .copy(animationType = last.animationType, isForward = false)
-                            .replaceSingle(with = last)
+                        val replaceWithScreen = current.copy(animationType = last.animationType, isForward = false)
+                        val stackToClear = it._currentScreen.value?.screensToRemove ?: emptyList()
+                        parentController._currentScreen.value = stackToClear.toNavConfigWithScreenReplace(previous = last, replaceWith = replaceWithScreen)
                     } else {
                         backToScreen(it.parentRootController, screenName)
                     }
