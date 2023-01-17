@@ -11,9 +11,11 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.alexgladkov.common.compose.NavigationTree
+import ru.alexgladkov.common.compose.tests.TestTags
 import ru.alexgladkov.common.compose.theme.Odyssey
 import ru.alexgladkov.odyssey.compose.extensions.present
 import ru.alexgladkov.odyssey.compose.extensions.push
@@ -35,20 +37,22 @@ fun ActionsScreen(count: Int?) {
         ) {
             LazyColumn {
                 item {
-                    ActionCell(text = "Push Screen", icon = Icons.Filled.ArrowForward) {
+                    ActionCell(modifier = Modifier.testTag(TestTags.actionScreenPush), text = "Push Screen", icon = Icons.Filled.ArrowForward) {
+                        println("Push Action Called")
                         rootController.push(NavigationTree.Push.name, (count ?: 0) + 1)
                     }
                 }
 
                 item {
-                    ActionCell("Present Flow", icon = Icons.Filled.ArrowForward) {
+                    ActionCell(modifier = Modifier.testTag(TestTags.actionScreenPresent), text = "Present Flow", icon = Icons.Filled.ArrowForward) {
+                        println("Present Action Called")
                         rootController.present(NavigationTree.Present.name)
                     }
                 }
 
                 item {
                     val modalSheetConfiguration = ModalSheetConfiguration(maxHeight = 0.7f, cornerRadius = 16)
-                    ActionCell("Present Modal Screen", icon = Icons.Filled.KeyboardArrowUp) {
+                    ActionCell(text = "Present Modal Screen", icon = Icons.Filled.KeyboardArrowUp) {
                         modalController.present(modalSheetConfiguration) { key ->
                             ModalSheetScreen {
                                 modalController.popBackStack(key)
@@ -58,7 +62,7 @@ fun ActionsScreen(count: Int?) {
                 }
 
                 item {
-                    ActionCell("Show Alert Dialog", icon = Icons.Filled.Warning) {
+                    ActionCell(text = "Show Alert Dialog", icon = Icons.Filled.Warning) {
                         val alertConfiguration = AlertConfiguration(maxHeight = 0.7f, maxWidth = 0.8f, cornerRadius = 4)
                         modalController.present(alertConfiguration) { key ->
                             AlertDialogScreen {
@@ -70,7 +74,8 @@ fun ActionsScreen(count: Int?) {
 
                 item {
                     ActionCell(
-                        "Show Bottom Navigation",
+                        modifier = Modifier.testTag(TestTags.actionScreenBottomNavigation),
+                        text = "Show Bottom Navigation",
                         icon = Icons.Filled.Create
                     ) {
                         rootController.present(NavigationTree.Main.name)
@@ -79,7 +84,7 @@ fun ActionsScreen(count: Int?) {
 
                 item {
                     ActionCell(
-                        "Show Top Navigation",
+                        text = "Show Top Navigation",
                         icon = Icons.Filled.Create
                     ) {
                         rootController.present(NavigationTree.Top.name)
@@ -88,7 +93,7 @@ fun ActionsScreen(count: Int?) {
 
                 item {
                     ActionCell(
-                        "Show Drawer Navigation",
+                        text = "Show Drawer Navigation",
                         icon = Icons.Filled.Create
                     ) {
                         rootController.present(NavigationTree.Drawer.name, params = "Custom Title from params")
@@ -97,7 +102,7 @@ fun ActionsScreen(count: Int?) {
 
                 item {
                     ActionCell(
-                        "Start New Chain",
+                        text = "Start New Chain",
                         icon = Icons.Filled.Done
                     ) {
                         rootController.present(screen = NavigationTree.Present.name, launchFlag = LaunchFlag.SingleNewTask)
@@ -115,9 +120,11 @@ fun ActionsScreen(count: Int?) {
 
                 item {
                     ActionCell(
-                        "Back",
+                        modifier = Modifier.testTag(TestTags.actionScreenBack),
+                        text = "Back",
                         icon = if (count == 0 || count == null) Icons.Filled.Close else Icons.Filled.ArrowBack
                     ) {
+                        println("Back Action Called")
                         rootController.popBackStack()
                     }
                 }
@@ -148,8 +155,8 @@ fun CounterView(count: Int?) {
 }
 
 @Composable
-fun ActionCell(text: String, icon: ImageVector, onClick: () -> Unit) {
-    Column(modifier = Modifier
+fun ActionCell(modifier: Modifier = Modifier, text: String, icon: ImageVector, onClick: () -> Unit) {
+    Column(modifier = modifier
         .clickable { onClick.invoke() }
         .fillMaxWidth()
     ) {

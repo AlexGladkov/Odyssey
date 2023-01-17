@@ -37,13 +37,13 @@ fun TabScreen(count: Int?) {
                 }
 
                 item {
-                    ActionCell("Present Flow", icon = Icons.Filled.KeyboardArrowUp) {
+                    ActionCell(text = "Present Flow", icon = Icons.Filled.KeyboardArrowUp) {
                         rootController.findRootController().present(NavigationTree.TabPresent.name)
                     }
                 }
 
                 item {
-                    ActionCell("Switch Tab", icon = Icons.Filled.KeyboardArrowRight) {
+                    ActionCell(text = "Switch Tab", icon = Icons.Filled.KeyboardArrowRight) {
                         val parent = rootController.findHostController()
                         parent?.switchTab(2)
                     }

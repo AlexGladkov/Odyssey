@@ -67,7 +67,7 @@ fun ModalSheetScreen(onCloseClick: () -> Unit) {
             }
         }
 
-        ActionCell("Start New Chain", icon = Icons.Filled.Done) {
+        ActionCell(text = "Start New Chain", icon = Icons.Filled.Done) {
             rootController.present(
                 screen = NavigationTree.Present.name,
                 launchFlag = LaunchFlag.SingleNewTask

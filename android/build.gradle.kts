@@ -40,4 +40,7 @@ dependencies {
     implementation(Dependencies.AndroidX.AppCompat.appCompat)
     implementation(Dependencies.AndroidX.Activity.activityCompose)
     implementation(Dependencies.Images.kamel)
+
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.3.0")
+    debugImplementation("androidx.compose.ui:ui-test-manifest:1.3.0")
 }
