@@ -96,7 +96,7 @@ internal fun BoxScope.BottomModalSheet(
 
     LaunchedEffect(bundle.dialogState, swipeableState.offset.value) {
         if (swipeableState.offset.value == viewHeight && bundle.dialogState !is ModalDialogState.Close) {
-            modalController.setTopDialogState(ModalDialogState.Close(), bundle.key)
+            modalController.setTopDialogState(ModalDialogState.Close(animate = false), bundle.key)
         }
 
         when (bundle.dialogState) {
