@@ -2,6 +2,7 @@ package ru.alexgladkov.odyssey.compose.setup
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.remember
 import ru.alexgladkov.odyssey.compose.base.Navigator
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
 import ru.alexgladkov.odyssey.compose.navigation.RootComposeBuilder
@@ -11,7 +12,7 @@ import ru.alexgladkov.odyssey.core.configuration.DisplayType
 
 @Composable
 actual fun setNavigationContent(configuration: OdysseyConfiguration, onApplicationFinish: () -> Unit, navigationGraph: RootComposeBuilder.() -> Unit) {
-    val rootController = RootComposeBuilder().apply(navigationGraph).build()
+    val rootController = remember { RootComposeBuilder().apply(navigationGraph).build() }
     rootController.backgroundColor = configuration.backgroundColor
     rootController.onApplicationFinish = onApplicationFinish
 

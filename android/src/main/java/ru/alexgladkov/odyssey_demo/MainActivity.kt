@@ -3,10 +3,14 @@ package ru.alexgladkov.odyssey_demo
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.graphics.toArgb
 import ru.alexgladkov.common.compose.navigation.navigationGraph
+import ru.alexgladkov.common.compose.theme.LocalTheme
 import ru.alexgladkov.common.compose.theme.Odyssey
 import ru.alexgladkov.common.compose.theme.OdysseyTheme
+import ru.alexgladkov.common.compose.theme.ThemeEventBus
 import ru.alexgladkov.odyssey.compose.setup.OdysseyConfiguration
 import ru.alexgladkov.odyssey.compose.setup.setNavigationContent
 import ru.alexgladkov.odyssey.core.configuration.DisplayType
@@ -15,9 +19,12 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val themeEventBus = ThemeEventBus()
 
         setContent {
-            OdysseyTheme {
+            val themeState = themeEventBus.themeState.collectAsState()
+
+            OdysseyTheme(isDarkTheme = themeState.value.isDarkTheme) {
                 val configuration = OdysseyConfiguration(
                     canvas = this,
                     displayType = DisplayType.EdgeToEdge,
@@ -25,8 +32,12 @@ class MainActivity : AppCompatActivity() {
                     navigationBarColor = Odyssey.color.primaryBackground.toArgb()
                 )
 
-                setNavigationContent(configuration) {
-                    navigationGraph()
+                CompositionLocalProvider(
+                    LocalTheme provides themeEventBus
+                ) {
+                    setNavigationContent(configuration) {
+                        navigationGraph()
+                    }
                 }
             }
         }

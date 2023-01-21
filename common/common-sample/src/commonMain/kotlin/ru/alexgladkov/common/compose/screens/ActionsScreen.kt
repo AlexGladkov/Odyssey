@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.alexgladkov.common.compose.NavigationTree
+import ru.alexgladkov.common.compose.theme.LocalTheme
 import ru.alexgladkov.common.compose.theme.Odyssey
 import ru.alexgladkov.odyssey.compose.extensions.present
 import ru.alexgladkov.odyssey.compose.extensions.push
@@ -26,6 +27,7 @@ import ru.alexgladkov.odyssey.core.LaunchFlag
 fun ActionsScreen(count: Int?) {
     val rootController = LocalRootController.current
     val modalController = rootController.findModalController()
+    val theme = LocalTheme.current
 
     Column {
         CounterView(count)
@@ -110,6 +112,15 @@ fun ActionsScreen(count: Int?) {
                         icon = Icons.Filled.Clear
                     ) {
                         rootController.push(screen = NavigationTree.Push.name, launchFlag = LaunchFlag.ClearPrevious, params = (count ?: 0) + 1)
+                    }
+                }
+
+                item {
+                    ActionCell(
+                        text = "Switch Dark Mode",
+                        icon = Icons.Filled.Edit
+                    ) {
+                        theme.switchTheme()
                     }
                 }
 

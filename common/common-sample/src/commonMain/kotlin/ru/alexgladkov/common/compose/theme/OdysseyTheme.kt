@@ -5,13 +5,15 @@ import androidx.compose.runtime.CompositionLocalProvider
 import ru.alexgladkov.common.compose.theme.colors.LocalColors
 import ru.alexgladkov.common.compose.theme.colors.OdysseyColors
 import ru.alexgladkov.common.compose.theme.colors.darkPalette
+import ru.alexgladkov.common.compose.theme.colors.lightPalette
 
 @Composable
 fun OdysseyTheme(
+    isDarkTheme: Boolean,
     content: @Composable () -> Unit
 ) {
     CompositionLocalProvider(
-        LocalColors provides darkPalette,
+        LocalColors provides if (!isDarkTheme) lightPalette else darkPalette,
         content = content
     )
 }
