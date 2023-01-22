@@ -2,6 +2,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Application
@@ -9,8 +12,10 @@ import kotlinx.cinterop.*
 import platform.Foundation.NSStringFromClass
 import platform.UIKit.*
 import ru.alexgladkov.common.compose.navigation.navigationGraph
+import ru.alexgladkov.common.compose.theme.LocalTheme
 import ru.alexgladkov.common.compose.theme.Odyssey
 import ru.alexgladkov.common.compose.theme.OdysseyTheme
+import ru.alexgladkov.common.compose.theme.ThemeEventBus
 import ru.alexgladkov.odyssey.compose.setup.OdysseyConfiguration
 import ru.alexgladkov.odyssey.compose.setup.setNavigationContent
 
@@ -43,7 +48,10 @@ class SkikoAppDelegate : UIResponder, UIApplicationDelegateProtocol {
     ): Boolean {
         window = UIWindow(frame = UIScreen.mainScreen.bounds)
         window!!.rootViewController = Application("Odyssey Demo") {
-            OdysseyTheme {
+            val themeEventBus = remember { ThemeEventBus() }
+            val themeSettings = themeEventBus.themeState.collectAsState().value
+
+            OdysseyTheme(isDarkTheme = themeSettings.isDarkTheme) {
                 Column(modifier = Modifier.background(Odyssey.color.primaryBackground)) {
                     // To skip upper part of screen.
                     Box(
@@ -51,8 +59,13 @@ class SkikoAppDelegate : UIResponder, UIApplicationDelegateProtocol {
                     )
 
                     val configuration = OdysseyConfiguration(backgroundColor = Odyssey.color.primaryBackground)
-                    setNavigationContent(configuration) {
-                        navigationGraph()
+
+                    CompositionLocalProvider(
+                        LocalTheme provides themeEventBus
+                    ) {
+                        setNavigationContent(configuration) {
+                            navigationGraph()
+                        }
                     }
                 }
             }
