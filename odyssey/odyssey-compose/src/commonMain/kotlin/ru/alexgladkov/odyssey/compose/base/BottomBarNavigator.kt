@@ -5,6 +5,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import ru.alexgladkov.odyssey.compose.controllers.MultiStackRootController
 import ru.alexgladkov.odyssey.compose.controllers.TabNavigationModel
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
@@ -76,6 +77,7 @@ fun BottomBarNavigator(startScreen: String?) {
                         if (isSelected) {
                             configuration.selectedIcon?.let {
                                 Icon(
+                                    modifier = Modifier.size(24.dp),
                                     painter = it,
                                     contentDescription = configuration.title
                                 )
@@ -83,6 +85,7 @@ fun BottomBarNavigator(startScreen: String?) {
                         } else {
                             configuration.unselectedIcon?.let {
                                 Icon(
+                                    modifier = Modifier.size(24.dp),
                                     painter = it,
                                     contentDescription = configuration.title
                                 )

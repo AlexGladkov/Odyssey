@@ -4,7 +4,7 @@ Full work with hilt example [here](/hilt/src/main/java/ru/alexgladkov/hilt_demo/
 
 First you need to add additional dependency in your android gradle file
 ```kotlin
-implementation("io.github.alexgladkov:odyssey-android:1.3.1") // For android classes
+implementation("io.github.alexgladkov:odyssey-android:1.3.3") // For android classes
 ```
 
 All you need is just use another setup in your activity.
