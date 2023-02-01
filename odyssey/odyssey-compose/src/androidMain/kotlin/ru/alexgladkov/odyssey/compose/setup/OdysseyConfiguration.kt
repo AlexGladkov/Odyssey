@@ -3,6 +3,7 @@ package ru.alexgladkov.odyssey.compose.setup
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import ru.alexgladkov.odyssey.core.breadcrumbs.Breadcrumb
 import ru.alexgladkov.odyssey.core.configuration.DisplayType
 
 /**
@@ -23,5 +24,6 @@ actual class OdysseyConfiguration(
     val backgroundColor: Color = Color.White,
     val navigationBarColor: Int = Color.Transparent.toArgb(),
     val statusBarColor: Int = Color.Transparent.toArgb(),
-    val displayType: DisplayType = DisplayType.EdgeToEdge
+    val displayType: DisplayType = DisplayType.EdgeToEdge,
+    val breadcrumbCallback: ((Breadcrumb) -> Unit)? = null
 )

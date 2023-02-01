@@ -561,28 +561,48 @@ open class RootController(rootControllerType: RootControllerType): CoreRootContr
     }
 
     private fun handleScreenBreadcrumbs(targetKey: String) {
-        val currentScreen = _backstack.lastOrNull()?.realKey ?: run {
-            onScreenNavigate?.invoke(
-                if (rootControllerType != RootControllerType.Tab) {
-                    Breadcrumb.SimpleNavigation("Start", targetKey)
-                } else {
-                    Breadcrumb.TabNavigation(debugName ?: "", "Start", targetKey)
-                }
-            )
-            return
-        }
+        if (onScreenNavigate == null) return
+        val lastScreen = _backstack.lastOrNull() ?: return
+        val cleanedRealKey = cleanRealKeyFromType(lastScreen.realKey)
 
-        onScreenNavigate?.invoke(
-            if (rootControllerType != RootControllerType.Tab) {
-                Breadcrumb.SimpleNavigation(cleanRealKeyFromType(currentScreen), targetKey)
-            } else {
-                Breadcrumb.TabNavigation(
-                    debugName ?: "",
-                    cleanRealKeyFromType(currentScreen),
-                    targetKey
-                )
-            }
+        val breadcrumb = Breadcrumb(
+            absolutePath = "${buildBackstackPath()}.$targetKey",
+            currentScreen = cleanedRealKey,
+            targetScreen = targetKey,
+            controllerName = debugName ?: "Root"
         )
+
+        onScreenNavigate?.invoke(breadcrumb)
+    }
+
+    protected open fun buildBackstackPath(): String {
+        // TODO: Optimize this path
+        if (rootControllerType == RootControllerType.Tab) {
+            val parent = parentRootController as? MultiStackRootController ?: return ""
+            val name = parent.getCurrentTabName()
+            val stringBuilder = StringBuilder()
+            stringBuilder.append("${parentRootController?.buildBackstackPath()}/$name")
+
+            _backstack.forEach {
+                stringBuilder.append(".${cleanRealKeyFromType(it.realKey)}")
+            }
+
+            return stringBuilder.toString()
+        } else {
+            var parent = parentRootController
+            val stringBuilder = StringBuilder()
+            while (parent != null) {
+                stringBuilder.append(parentRootController!!.buildBackstackPath())
+                parent = parent.parentRootController
+            }
+
+            stringBuilder.append("/$debugName")
+            _backstack.forEach {
+                stringBuilder.append(".${cleanRealKeyFromType(it.realKey)}")
+            }
+
+            return stringBuilder.toString()
+        }
     }
 
     private fun handleLaunchFlag(screenKey: String, launchFlag: LaunchFlag?) {

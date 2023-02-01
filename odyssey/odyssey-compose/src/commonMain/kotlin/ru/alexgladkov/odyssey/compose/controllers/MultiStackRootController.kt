@@ -19,7 +19,7 @@ class MultiStackRootController(
     val tabsNavModel: TabsNavModel<*>
 ) : RootController(rootControllerType) {
     private val _tabItems: MutableList<TabNavigationModel> = mutableListOf()
-    private var currentTabPosition: Int = -1
+    private var _currentTabPosition: Int = -1
     private val _stackChangeObserver: MutableStateFlow<TabNavigationModel?> =
         MutableStateFlow(null)
 
@@ -41,9 +41,32 @@ class MultiStackRootController(
 
     fun switchTab(position: Int) {
         if (position >= _tabItems.size) throw IllegalStateException("Position must be less than tab items count")
-        onScreenNavigate?.invoke(Breadcrumb.TabSwitch(currentTabPosition, position))
-        currentTabPosition = position
+        val beforeTabPosition = if (_currentTabPosition >= 0) _currentTabPosition else 0
+
+        _currentTabPosition = position
         _stackChangeObserver.value = _tabItems[position]
+
+        onScreenNavigate?.let { callback ->
+            val previousName = _tabItems[beforeTabPosition].tabInfo.tabItem.name
+
+            val breadcrumb = Breadcrumb(
+                absolutePath = buildBackstackPath(),
+                controllerName = debugName ?: "MultiStackRootController",
+                currentScreen = previousName,
+                targetScreen = getCurrentTabName()
+            )
+
+            callback.invoke(breadcrumb)
+        }
+    }
+
+    fun getCurrentTabName(): String {
+        val currentPosition = if (_currentTabPosition >= 0) _currentTabPosition else 0
+        return _tabItems[currentPosition].tabInfo.tabItem.name
+    }
+
+    override fun buildBackstackPath(): String {
+        return "${super.buildBackstackPath()}/${getCurrentTabName()}"
     }
 
     override fun popBackStack() {

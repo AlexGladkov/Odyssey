@@ -1,6 +1,7 @@
 package ru.alexgladkov.odyssey_demo
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.ui.graphics.toArgb
@@ -22,7 +23,11 @@ class MainActivity : AppCompatActivity() {
                     canvas = this,
                     displayType = DisplayType.EdgeToEdge,
                     backgroundColor = Odyssey.color.primaryBackground,
-                    navigationBarColor = Odyssey.color.primaryBackground.toArgb()
+                    navigationBarColor = Odyssey.color.primaryBackground.toArgb(),
+                    breadcrumbCallback = { breadcrumb ->
+                        Log.e("TAG", "${breadcrumb.controllerName}.${breadcrumb.currentScreen} -> ${breadcrumb.controllerName}.${breadcrumb.targetScreen}")
+                        Log.e("TAG", "Absolute path: ${breadcrumb.absolutePath}")
+                    }
                 )
 
                 setNavigationContent(configuration) {

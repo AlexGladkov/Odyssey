@@ -17,6 +17,7 @@ actual fun setNavigationContent(configuration: OdysseyConfiguration, onApplicati
     rootController.backgroundColor = configuration.backgroundColor
     rootController.setupWithActivity(configuration.canvas)
     rootController.onApplicationFinish = onApplicationFinish
+    rootController.onScreenNavigate = configuration.breadcrumbCallback
 
     when (configuration.displayType) {
         is DisplayType.FullScreen -> {
