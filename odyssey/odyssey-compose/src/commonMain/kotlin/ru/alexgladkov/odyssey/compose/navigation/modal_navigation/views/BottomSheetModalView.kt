@@ -33,7 +33,6 @@ internal fun BoxScope.BottomModalSheet(
 
     val density = LocalDensity.current
 
-
     if (bundle.maxHeight != null)
         modifier = modifier
             .padding(top = with(density) { (height - viewHeight).toDp() })
@@ -55,6 +54,7 @@ internal fun BoxScope.BottomModalSheet(
             when (bundle.dialogState) {
                 ModalDialogState.Idle -> modalController.setTopDialogState(ModalDialogState.Open, bundle.key)
                 is ModalDialogState.Close -> modalController.finishCloseAction(bundle.key)
+                ModalDialogState.Open -> {}
             }
         }
     )

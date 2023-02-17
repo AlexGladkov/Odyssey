@@ -8,4 +8,8 @@ data class Screen(
     override val params:  Any? = null,
     override val animationType: AnimationType = AnimationType.None,
     override val isForward: Boolean = true
-) : ScreenInteractor
+) : ScreenInteractor {
+    override fun toString(): String {
+        return "key $key, realKey $realKey, params $params, animationType $animationType, isForward $isForward"
+    }
+}

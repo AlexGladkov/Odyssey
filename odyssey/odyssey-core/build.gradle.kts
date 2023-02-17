@@ -1,7 +1,7 @@
 import org.jetbrains.compose.compose
 
 plugins {
-    id("multiplatform-setup")
+    id("multiplatform-compose-setup")
     id("android-setup")
     id("maven-publish")
     id("convention.publication")

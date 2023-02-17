@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    compileSdkVersion(31)
+    compileSdkVersion(Dependencies.compileSdk)
 
     defaultConfig {
         minSdkVersion(21)
-        targetSdkVersion(31)
+        targetSdkVersion(Dependencies.targetSdk)
         versionCode = 1
         versionName = "1.0"
 
@@ -22,16 +22,19 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 
+    lintOptions {
+        isCheckReleaseBuilds = false
+    }
+
     packagingOptions {
         exclude("META-INF/*")
     }
 }
 
 dependencies {
-    implementation(project(":common:common-root"))
+    implementation(project(":common:common-sample"))
     implementation(project(":odyssey:odyssey-compose"))
     implementation(project(":odyssey:odyssey-core"))
-    implementation(project(":common:common-compose"))
     implementation(compose.material)
 
     implementation(Dependencies.AndroidX.AppCompat.appCompat)

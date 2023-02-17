@@ -9,6 +9,7 @@ import androidx.compose.ui.graphics.Color
 import ru.alexgladkov.odyssey.compose.RootController
 import ru.alexgladkov.odyssey.compose.helpers.BottomSheetBundle
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
+import ru.alexgladkov.odyssey.core.CoreRootController
 import ru.alexgladkov.odyssey.core.NavConfiguration
 import ru.alexgladkov.odyssey.core.screen.ScreenInteractor
 import ru.alexgladkov.odyssey.core.toScreenBundle
@@ -21,7 +22,7 @@ fun Navigator(
     val backgroundColor = rootController.backgroundColor
     val navConfiguration = rootController.currentScreen.collectAsState()
 
-    navConfiguration.value.let { config ->
+    navConfiguration.value?.let { config ->
         NavigatorAnimated(config.screen, config, rootController, backgroundColor)
     }
 
@@ -45,7 +46,12 @@ private fun NavigatorAnimated(
         modifier = Modifier.background(backgroundColor).fillMaxSize(),
         onScreenRemove = rootController.onScreenRemove
     ) { currentScreen ->
-        val render = rootController.getScreenRender(currentScreen.realKey)
+        val renderKey = when {
+            currentScreen.realKey?.contains(CoreRootController.multiStackKey) == true -> CoreRootController.multiStackKey
+            currentScreen.realKey?.contains(CoreRootController.flowKey) == true -> CoreRootController.flowKey
+            else -> currentScreen.realKey
+        }
+        val render = rootController.getScreenRender(renderKey)
         render?.invoke(currentScreen.params)
             ?: throw IllegalStateException("Screen $currentScreen not found in screenMap")
     }
