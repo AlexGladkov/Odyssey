@@ -17,7 +17,7 @@ object Dependencies {
     object JetBrains {
         object Kotlin {
             // __KOTLIN_COMPOSE_VERSION__
-            private const val VERSION = "1.7.20"
+            private const val VERSION = "1.8.0"
             const val gradlePlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$VERSION"
             const val testCommon = "org.jetbrains.kotlin:kotlin-test-common:$VERSION"
             const val testJunit = "org.jetbrains.kotlin:kotlin-test-junit:$VERSION"
@@ -39,7 +39,7 @@ object Dependencies {
 
         object Compose {
             // __LATEST_COMPOSE_RELEASE_VERSION__
-            private const val VERSION = "1.2.1"
+            private const val VERSION = "1.3.0"
             const val gradlePlugin = "org.jetbrains.compose:compose-gradle-plugin:$VERSION"
         }
     }
