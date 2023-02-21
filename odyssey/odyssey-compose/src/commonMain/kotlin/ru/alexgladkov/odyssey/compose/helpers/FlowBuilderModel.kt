@@ -4,7 +4,7 @@ import ru.alexgladkov.odyssey.compose.AllowedDestination
 import ru.alexgladkov.odyssey.compose.RenderWithParams
 import ru.alexgladkov.odyssey.compose.ScreenType
 
-data class FlowBuilderModel(
+internal data class FlowBuilderModel(
     val key: String,
     val allowedDestination: List<AllowedDestination>,
     val screenMap: HashMap<String, RenderWithParams<Any?>>
@@ -19,7 +19,7 @@ class FlowBuilder(val name: String) {
         _screenMap[name] = content
     }
 
-    fun build(): FlowBuilderModel {
+    internal fun build(): FlowBuilderModel {
         return FlowBuilderModel(
             key = name,
             screenMap = _screenMap,

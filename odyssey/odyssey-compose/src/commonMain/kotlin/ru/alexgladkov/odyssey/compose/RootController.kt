@@ -31,13 +31,13 @@ import ru.alexgladkov.odyssey.core.screen.ScreenBundle
 import ru.alexgladkov.odyssey.core.wrap
 import kotlin.collections.HashMap
 
-typealias RenderWithParams<T> = @Composable (T) -> Unit
-typealias Render = @Composable (key: String) -> Unit
+internal typealias RenderWithParams<T> = @Composable (T) -> Unit
+internal typealias Render = @Composable (key: String) -> Unit
 
 sealed class ScreenType {
     object Simple : ScreenType()
-    data class Flow(val flowBuilderModel: FlowBuilderModel) : ScreenType()
-    data class MultiStack<Cfg : TabsNavConfiguration>(
+    internal data class Flow(val flowBuilderModel: FlowBuilderModel) : ScreenType()
+    internal data class MultiStack<Cfg : TabsNavConfiguration>(
         val multiStackBuilderModel: MultiStackBuilderModel,
         val tabsNavModel: TabsNavModel<Cfg>
     ) : ScreenType()
@@ -94,12 +94,12 @@ open class RootController(rootControllerType: RootControllerType): CoreRootContr
         ReplaceWith("renderScreen(screenName, params)")
     )
     @Composable
-    fun RenderScreen(screenName: String?, params: Any?) {
+    internal fun RenderScreen(screenName: String?, params: Any?) {
         renderScreen(screenName, params)
     }
 
     @Composable
-    fun renderScreen(screenName: String?, params: Any?) {
+    internal fun renderScreen(screenName: String?, params: Any?) {
         _screenMap[screenName]?.invoke(params)
     }
 
@@ -112,7 +112,7 @@ open class RootController(rootControllerType: RootControllerType): CoreRootContr
      * Update root controller screen map to find composables
      * @param screenMap - generated screen map
      */
-    fun updateScreenMap(screenMap: HashMap<String, RenderWithParams<Any?>>) {
+    internal fun updateScreenMap(screenMap: HashMap<String, RenderWithParams<Any?>>) {
         _screenMap.putAll(screenMap)
     }
 

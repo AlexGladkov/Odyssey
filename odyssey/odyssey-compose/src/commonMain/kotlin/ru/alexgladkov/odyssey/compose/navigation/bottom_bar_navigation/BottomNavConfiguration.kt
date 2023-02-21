@@ -13,7 +13,6 @@ abstract class TabsNavModel<Cfg : TabsNavConfiguration> {
      * Contains base UI configuration for bottom bar navigation
      */
     abstract val navConfiguration: Cfg
-        @Composable get
 
     /**
      * Starts when bottom bar shows on the screen

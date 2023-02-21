@@ -13,7 +13,6 @@ abstract class TabItem {
         get() = this::class.simpleName!!
 
     abstract val configuration: TabConfiguration
-        @Composable get
 }
 
 /**

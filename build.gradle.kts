@@ -1,5 +1,3 @@
-import org.gradle.internal.impldep.org.codehaus.plexus.util.Os
-
 plugins {
     `kotlin-dsl`
 }

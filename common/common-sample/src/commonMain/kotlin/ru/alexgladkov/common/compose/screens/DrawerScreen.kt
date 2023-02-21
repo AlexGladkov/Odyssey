@@ -12,7 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
-import ru.alexgladkov.odyssey.compose.base.TabNavigator
+import ru.alexgladkov.odyssey.compose.base.DrawerNavigator
 import ru.alexgladkov.odyssey.compose.controllers.MultiStackRootController
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
 
@@ -62,7 +62,7 @@ fun DrawerScreen(params: Any?) {
             }
         }
     ) {
-        TabNavigator(modifier = Modifier.fillMaxSize(), null, tabItem)
+        DrawerNavigator(modifier = Modifier.fillMaxSize(), null, tabItem)
     }
 
 

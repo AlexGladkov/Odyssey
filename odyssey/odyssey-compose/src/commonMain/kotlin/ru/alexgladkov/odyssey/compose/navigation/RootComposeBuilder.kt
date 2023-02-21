@@ -19,7 +19,7 @@ class RootComposeBuilder {
     private val _screens: MutableList<AllowedDestination> = mutableListOf()
     private val _screenMap: HashMap<String, RenderWithParams<Any?>> = hashMapOf()
 
-    fun addScreen(
+    internal fun addScreen(
         key: String,
         screenMap: Map<String, RenderWithParams<Any?>>,
     ) {
@@ -27,7 +27,7 @@ class RootComposeBuilder {
         _screenMap.putAll(screenMap)
     }
 
-    fun addFlow(
+    internal fun addFlow(
         key: String,
         flowBuilderModel: FlowBuilderModel
     ) {
@@ -39,7 +39,7 @@ class RootComposeBuilder {
         )
     }
 
-    fun addMultiStack(
+    internal fun addMultiStack(
         key: String,
         tabsNavModel: TabsNavModel<*>,
         multiStackBuilderModel: MultiStackBuilderModel

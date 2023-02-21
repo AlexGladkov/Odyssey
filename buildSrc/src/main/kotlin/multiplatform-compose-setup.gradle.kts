@@ -8,105 +8,87 @@ plugins {
 
 kotlin {
     jvm("desktop")
-    android()
+    android {
+        publishLibraryVariants("release")
+    }
+    ios()
+    iosSimulatorArm64()
     js(IR) {
         browser()
-        binaries.executable()
     }
-
-    macosX64 {
-        binaries {
-            executable {
-                entryPoint = "main"
-                freeCompilerArgs += listOf(
-                    "-linker-option", "-framework", "-linker-option", "Metal"
-                )
-            }
-        }
-    }
-    macosArm64 {
-        binaries {
-            executable {
-                entryPoint = "main"
-                freeCompilerArgs += listOf(
-                    "-linker-option", "-framework", "-linker-option", "Metal"
-                )
-            }
-        }
-    }
-
-    iosX64("uikitX64") {
-        binaries {
-            executable() {
-                entryPoint = "main"
-                freeCompilerArgs += listOf(
-                    "-linker-option", "-framework", "-linker-option", "Metal",
-                    "-linker-option", "-framework", "-linker-option", "CoreText",
-                    "-linker-option", "-framework", "-linker-option", "CoreGraphics"
-                )
-            }
-        }
-    }
-    iosArm64("uikitArm64") {
-        binaries {
-            executable() {
-                entryPoint = "main"
-                freeCompilerArgs += listOf(
-                    "-linker-option", "-framework", "-linker-option", "Metal",
-                    "-linker-option", "-framework", "-linker-option", "CoreText",
-                    "-linker-option", "-framework", "-linker-option", "CoreGraphics"
-                )
-                // TODO: the current compose binary surprises LLVM, so disable checks for now.
-                freeCompilerArgs += "-Xdisable-phases=VerifyBitcode"
-            }
-        }
-    }
-    iosSimulatorArm64()
+    macosX64()
+    macosArm64()
 
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(compose.runtime)
-                implementation(compose.foundation)
-                implementation(compose.material)
+                implementation("org.jetbrains.compose.runtime:runtime:1.2.1")
+                implementation("org.jetbrains.compose.foundation:foundation:1.2.1")
+                implementation("org.jetbrains.compose.material:material:1.2.1")
             }
         }
-
-        named("androidMain") {
+        val commonTest by getting {
             dependencies {
-                implementation("androidx.appcompat:appcompat:1.4.0-alpha03")
-                implementation("androidx.core:core-ktx:1.6.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
+                implementation(kotlin("test"))
             }
         }
-
-        named("desktopMain") {
-            dependencies {
-                implementation(compose.desktop.common)
-            }
-        }
-
-        val iosMain by creating {
+        val commonButJSMain by creating {
             dependsOn(commonMain)
         }
+        val skikoMain by creating {
+            dependsOn(commonMain)
+        }
+        val jvmAndAndroidMain by creating {
+            dependsOn(commonMain)
+        }
+        val nativeMain by creating {
+            dependsOn(commonMain)
+        }
+        val desktopMain by getting {
+            dependsOn(skikoMain)
+            dependsOn(jvmAndAndroidMain)
+            dependsOn(commonButJSMain)
+        }
+        val desktopTest by getting {
+            dependencies {
+                implementation(compose.desktop.currentOs)
+                implementation("org.jetbrains.compose.ui:ui-test-junit4:1.2.1")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.6.4")
+            }
+        }
+        val androidMain by getting {
+            dependsOn(jvmAndAndroidMain)
+            dependsOn(commonButJSMain)
+        }
+        val androidTest by getting {
+            dependencies {
 
+            }
+        }
+        val iosMain by getting {
+            dependsOn(skikoMain)
+            dependsOn(commonButJSMain)
+            dependsOn(nativeMain)
+        }
+        val iosTest by getting
+        val iosSimulatorArm64Main by getting
+        iosSimulatorArm64Main.dependsOn(iosMain)
+        val iosSimulatorArm64Test by getting
+        iosSimulatorArm64Test.dependsOn(iosTest)
+        val jsMain by getting {
+            dependsOn(skikoMain)
+        }
         val macosMain by creating {
-            dependsOn(iosMain)
+            dependsOn(skikoMain)
+            dependsOn(commonButJSMain)
+            dependsOn(nativeMain)
         }
         val macosX64Main by getting {
             dependsOn(macosMain)
         }
         val macosArm64Main by getting {
             dependsOn(macosMain)
-        }
-
-        val uikitMain by creating {
-            dependsOn(iosMain)
-        }
-        val uikitX64Main by getting {
-            dependsOn(uikitMain)
-        }
-        val uikitArm64Main by getting {
-            dependsOn(uikitMain)
         }
     }
 

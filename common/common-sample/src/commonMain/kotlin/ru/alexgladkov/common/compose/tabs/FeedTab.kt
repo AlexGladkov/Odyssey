@@ -13,12 +13,11 @@ import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.TabItem
 class FeedTab : TabItem() {
 
     override val configuration: TabConfiguration
-        @Composable
         get() {
             return TabConfiguration(
                 title = "Feed",
-                selectedColor = Odyssey.color.primaryText,
-                unselectedColor = Odyssey.color.controlColor,
+                selectedColor = Color.White,
+                unselectedColor = Color.White,
                 titleStyle = TextStyle(
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Medium

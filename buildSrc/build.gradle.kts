@@ -15,7 +15,6 @@ dependencies {
     implementation(Dependencies.JetBrains.Compose.gradlePlugin)
     implementation(Dependencies.JetBrains.Kotlin.gradlePlugin)
     implementation(Dependencies.Android.Tools.Build.gradlePlugin)
-    implementation(Dependencies.JetBrains.Kotlin.serializationPlugin)
     implementation(Dependencies.Google.Dagger.hiltGradlePlugin)
 }
 

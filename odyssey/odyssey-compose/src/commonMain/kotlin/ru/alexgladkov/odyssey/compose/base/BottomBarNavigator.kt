@@ -13,7 +13,16 @@ import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.TopNavCon
 import ru.alexgladkov.odyssey.core.toScreenBundle
 
 @Composable
-fun TabNavigator(
+fun DrawerNavigator(
+    modifier: Modifier,
+    startScreen: String?,
+    currentTab: TabNavigationModel
+) {
+    TabNavigator(modifier, startScreen, currentTab)
+}
+
+@Composable
+internal fun TabNavigator(
     modifier: Modifier = Modifier,
     startScreen: String?,
     currentTab: TabNavigationModel
@@ -48,7 +57,7 @@ fun TabNavigator(
 }
 
 @Composable
-fun BottomBarNavigator(startScreen: String?) {
+internal fun BottomBarNavigator(startScreen: String?) {
     val rootController = LocalRootController.current as MultiStackRootController
     val tabItem = rootController.stackChangeObserver.collectAsState().value ?: return
     val bottomNavConfiguration =
@@ -107,7 +116,7 @@ fun BottomBarNavigator(startScreen: String?) {
 }
 
 @Composable
-fun TopBarNavigator(startScreen: String?) {
+internal fun TopBarNavigator(startScreen: String?) {
     val rootController = LocalRootController.current as MultiStackRootController
     val tabItem = rootController.stackChangeObserver.collectAsState().value ?: return
     val bottomNavConfiguration = rootController.tabsNavModel.navConfiguration as TopNavConfiguration

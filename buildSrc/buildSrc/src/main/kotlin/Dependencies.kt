@@ -1,6 +1,6 @@
 object Dependencies {
 
-    val odyssey = "1.3.1"
+    val odyssey = "1.3.180-native"
     val odysseyPackage = "io.github.alexgladkov"
 
     val compileSdk = 33
@@ -26,9 +26,6 @@ object Dependencies {
 
             const val dateTime = "org.jetbrains.kotlinx:kotlinx-datetime:0.2.1"
 
-            const val serialization = "org.jetbrains.kotlinx:kotlinx-serialization-core:1.4.0"
-            const val serializationPlugin = "org.jetbrains.kotlin:kotlin-serialization:1.5.31"
-
             private const val coroutinesVersion = "1.6.4"
             const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
             const val coroutinesAndroid = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
@@ -47,7 +44,7 @@ object Dependencies {
     object Android {
         object Tools {
             object Build {
-                const val gradlePlugin = "com.android.tools.build:gradle:4.1.0"
+                const val gradlePlugin = "com.android.tools.build:gradle:7.4.0-beta02"
             }
         }
     }
