@@ -1,27 +1,13 @@
-import org.gradle.internal.impldep.org.codehaus.plexus.util.Os
-
 plugins {
-    `kotlin-dsl`
+    kotlin("multiplatform") apply false
+    id("com.android.library") apply false
 }
 
 allprojects {
     repositories {
         google()
         mavenCentral()
-        mavenLocal()
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
-        maven("https://jitpack.io")
-    }
-}
-
-buildscript {
-    repositories {
         mavenLocal()
-        mavenCentral()
-        google()
-        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
-    }
-    dependencies {
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.0")
     }
 }

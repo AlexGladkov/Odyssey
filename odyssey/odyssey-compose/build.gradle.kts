@@ -1,39 +1,71 @@
 import org.jetbrains.compose.compose
 
 plugins {
-    id("multiplatform-compose-setup")
-    id("android-setup")
+    kotlin("multiplatform")
+    id("org.jetbrains.compose")
     id("maven-publish")
-    id("convention.publication")
+    id("com.android.library")
 }
 
-group = Dependencies.odysseyPackage
-version = Dependencies.odyssey
+group = "io.github.alexgladkov"
+version = "1.4.0"
 
 kotlin {
-    android {
-        publishLibraryVariants("release", "debug")
+    jvm("desktop")
+    android()
+    ios()
+    iosSimulatorArm64()
+    js(IR) {
+        browser()
     }
+    macosX64()
+    macosArm64()
 
     sourceSets {
         named("commonMain") {
             dependencies {
+                implementation(compose.ui)
+                implementation(compose.foundation)
+                implementation(compose.material)
+                implementation(compose.runtime)
+                implementation(libs.uuid)
+
                 implementation(project(":odyssey:odyssey-core"))
-                implementation(Dependencies.Utils.UUID)
             }
         }
         named("commonTest")
         named("androidMain") {
             dependencies {
-                implementation(Dependencies.JetBrains.Kotlin.coroutinesAndroid)
-                implementation(Dependencies.AndroidX.Activity.activityCompose)
+                implementation(libs.coroutines.android)
+                implementation(libs.activity.compose)
             }
         }
 
-        desktopMain {
+        val desktopMain by getting {
             dependencies {
-                implementation(Dependencies.JetBrains.Kotlin.coroutinesSwing)
+                implementation(libs.coroutines.swing)
             }
+        }
+    }
+}
+
+android {
+    compileSdk = libs.versions.compileSdk.get().toInt()
+    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
+
+    defaultConfig {
+        minSdk = libs.versions.minSdk.get().toInt()
+        targetSdk = libs.versions.targetSdk.get().toInt()
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+
+    kotlin {
+        jvmToolchain {
+            languageVersion.set(JavaLanguageVersion.of("11"))
         }
     }
 }

@@ -1,6 +1,5 @@
 package ru.alexgladkov.odyssey.compose.navigation
 
-import androidx.compose.ui.graphics.Color
 import ru.alexgladkov.odyssey.compose.AllowedDestination
 import ru.alexgladkov.odyssey.compose.RootController
 import ru.alexgladkov.odyssey.compose.RenderWithParams
