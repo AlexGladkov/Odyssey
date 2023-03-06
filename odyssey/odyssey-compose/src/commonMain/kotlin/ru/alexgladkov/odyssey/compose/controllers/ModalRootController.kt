@@ -12,7 +12,7 @@ import ru.alexgladkov.odyssey.core.extensions.wrap
 sealed class ModalDialogState {
     object Idle : ModalDialogState()
     object Open : ModalDialogState()
-    data class Close(val animate: Boolean = true) : ModalDialogState()
+    data class Close(val animate: Boolean = true, val byBackPressed: Boolean =  false) : ModalDialogState()
 }
 
 /**
@@ -24,6 +24,7 @@ sealed class ModalDialogState {
  * @param closeOnBackdropClick - true if you want to close on backdrop click
  * @param closeOnSwipe - true if you want to close on swipe
  * @param content - composable content
+ * @param closeOnBackClick - true if you want to close on the hardware back button
  */
 internal data class ModalSheetBundle(
     override val key: String,
@@ -37,6 +38,7 @@ internal data class ModalSheetBundle(
     val cornerRadius: Int,
     val closeOnSwipe: Boolean = true,
     val backContent: Render? = null,
+    val closeOnBackClick: Boolean = true,
 ) : ModalBundle
 
 /**
@@ -47,6 +49,7 @@ internal data class ModalSheetBundle(
  * @param cornerRadius - card corner radius in dp
  * @param alpha - scrimer alpha
  * @param content - composable content
+ * @param closeOnBackClick - true if you want to close on the hardware back button
  */
 internal data class AlertBundle(
     override val key: String,
@@ -58,6 +61,7 @@ internal data class AlertBundle(
     val closeOnBackdropClick: Boolean,
     val alpha: Float,
     val cornerRadius: Int,
+    val closeOnBackClick: Boolean = true,
 ) : ModalBundle
 
 /**
@@ -129,23 +133,28 @@ open class ModalController {
     }
 
     @Deprecated("@see popBackStack with key param", ReplaceWith("popBackStack(key = KEY)"))
-    fun popBackStack(animate: Boolean = true) {
-        popBackStack(key = null, animate = animate)
+    fun popBackStack(animate: Boolean = true, byBackPressed: Boolean = false) {
+        popBackStack(key = null, animate = animate, byBackPressed = byBackPressed)
     }
 
-    fun popBackStack(key: String? = null, animate: Boolean = true) {
-        setTopDialogState(modalDialogState = ModalDialogState.Close(animate), key)
+    fun popBackStack(key: String? = null, animate: Boolean = true, byBackPressed: Boolean = false) {
+        setTopDialogState(modalDialogState = ModalDialogState.Close(animate, byBackPressed = byBackPressed), key)
     }
 
     internal fun setTopDialogState(modalDialogState: ModalDialogState, key: String? = null) {
         if (modalDialogState is ModalDialogState.Close && !modalDialogState.animate) {
-            finishCloseAction(key)
+            finishCloseAction(key, byBackPressed = modalDialogState.byBackPressed)
             return
         }
-        val last = if (key != null) _backStack.firstOrNull { it.key == key }
-        else _backStack
-            .lastOrNull { modalDialogState !is ModalDialogState.Close || it.dialogState != modalDialogState }
-        if (last == null) return
+        val last = when {
+            key != null -> _backStack.firstOrNull { it.key == key }
+            modalDialogState !is ModalDialogState.Close -> _backStack.lastOrNull()
+            else -> _backStack.lastOrNull { it.dialogState != modalDialogState }
+        } ?: return
+
+        if (modalDialogState is ModalDialogState.Close && modalDialogState.byBackPressed && !last.closeOnBackClick)
+            return
+
         val index = _backStack.indexOf(last)
         val newState =
             when (last) {
@@ -159,14 +168,15 @@ open class ModalController {
     }
 
     /** Removes last modal from backstack */
-    internal fun finishCloseAction(key: String?) {
-        when {
-            key != null -> {
-                val index = _backStack.indexOfFirst { it.key == key }
-                if (index != -1)
-                    _backStack.removeAt(index)
+    internal fun finishCloseAction(key: String?, byBackPressed: Boolean = false) {
+        val modalBundle = when {
+            key != null -> _backStack.firstOrNull { it.key == key }
+            else -> _backStack.lastOrNull()
+        }
+        modalBundle?.let { bundle ->
+            if (!byBackPressed || bundle.closeOnBackClick) {
+                _backStack.remove(bundle)
             }
-            _backStack.isNotEmpty() -> _backStack.removeLast()
         }
         redrawStack()
     }
@@ -185,6 +195,11 @@ open class ModalController {
         _currentStack.value = newStack
     }
     companion object{
+        private val ModalBundle.closeOnBackClick get() = when (this) {
+            is ModalSheetBundle -> this.closeOnBackClick
+            is AlertBundle -> this.closeOnBackClick
+            else -> true
+        }
         internal fun randomizeKey() = RootController.randomizeKey("modal_")
     }
 }
@@ -194,6 +209,7 @@ internal fun ModalSheetConfiguration.wrap(key: String, with: Render): ModalBundl
     maxHeight = maxHeight,
     closeOnBackdropClick = closeOnBackdropClick,
     closeOnSwipe = closeOnSwipe,
+    closeOnBackClick = closeOnBackClick,
     threshold = threshold,
     animationTime = animationTime,
     cornerRadius = cornerRadius,
@@ -210,6 +226,7 @@ internal fun AlertConfiguration.wrap(key: String, with: Render): ModalBundle = A
     animationTime = animationTime,
     dialogState = ModalDialogState.Idle,
     closeOnBackdropClick = closeOnBackdropClick,
+    closeOnBackClick = closeOnBackClick,
     cornerRadius = cornerRadius,
     alpha = alpha,
     content = with
