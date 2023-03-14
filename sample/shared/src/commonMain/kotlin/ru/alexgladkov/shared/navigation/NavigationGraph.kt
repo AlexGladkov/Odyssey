@@ -13,6 +13,7 @@ import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.BottomBar
 import ru.alexgladkov.odyssey.compose.navigation.tabs.TabDefaults
 import ru.alexgladkov.odyssey.compose.navigation.top_navigation.TopBarDefaults
 import ru.alexgladkov.shared.screens.ActionsScreen
+import ru.alexgladkov.shared.screens.DrawerScreen
 import ru.alexgladkov.shared.screens.PresentedActionsScreen
 import ru.alexgladkov.shared.screens.TabPresentedActionsScreen
 import ru.alexgladkov.shared.screens.TabScreen
@@ -46,7 +47,7 @@ internal fun RootComposeBuilder.navigationGraph() {
 
     mainScreen()
     topNavScreen()
-//    customNavScreen()
+    customNavScreen()
 }
 
 @Composable
@@ -111,26 +112,31 @@ fun RootComposeBuilder.topNavScreen() {
         }
     }
 }
-//
-//fun RootComposeBuilder.customNavScreen() {
-//    customNavigation(name = NavigationTree.Drawer.name,
-//        tabsNavModel = CustomConfiguration(
-//            content = { params -> DrawerScreen(params) }
-//        )) {
-//        tab(FeedTab()) {
-//            screen(name = NavigationTree.Tab.name) {
-//                TabScreen(it as? Int)
-//            }
-//        }
-//        tab(SearchTab()) {
-//            screen(name = NavigationTree.Tab.name) {
-//                TabScreen(it as? Int)
-//            }
-//        }
-//        tab(CartTab()) {
-//            screen(name = NavigationTree.Tab.name) {
-//                TabScreen(it as? Int)
-//            }
-//        }
-//    }
-//}
+
+@Composable
+fun RootComposeBuilder.customNavScreen() {
+    customNavigation(name = NavigationTree.Drawer.name,
+        content = { params -> DrawerScreen(params) }
+    ) {
+        val colors = TabDefaults.simpleTabColors(
+            selectedColor = Odyssey.color.primaryText,
+            unselectedColor = Odyssey.color.controlColor
+        )
+
+        tab(TabDefaults.content(title = "Feed", vector = null), colors) {
+            screen(name = NavigationTree.Tab.name) {
+                TabScreen(it as? Int)
+            }
+        }
+        tab(TabDefaults.content(title = "Search", vector = null), colors) {
+            screen(name = NavigationTree.Tab.name) {
+                TabScreen(it as? Int)
+            }
+        }
+        tab(TabDefaults.content(title = "Settings", vector = null), colors) {
+            screen(name = NavigationTree.Tab.name) {
+                TabScreen(it as? Int)
+            }
+        }
+    }
+}
