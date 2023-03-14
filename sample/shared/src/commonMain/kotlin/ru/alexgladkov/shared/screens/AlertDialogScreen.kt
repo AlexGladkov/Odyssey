@@ -15,7 +15,7 @@ import ru.alexgladkov.shared.screens.ActionCell
 import ru.alexgladkov.shared.theme.Odyssey
 
 @Composable
-fun AlertDialogScreen(onCloseClick: () -> Unit) {
+internal fun AlertDialogScreen(onCloseClick: () -> Unit) {
     Column(modifier = Modifier.fillMaxSize().background(Odyssey.color.primaryBackground)) {
         Text(modifier = Modifier.padding(16.dp), text = "Modal Sheet", fontSize = 24.sp, color = Odyssey.color.primaryText)
         ActionCell(text = "Close", icon = Icons.Filled.Close) {

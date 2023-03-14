@@ -4,6 +4,6 @@ import androidx.compose.runtime.Composable
 import ru.alexgladkov.odyssey.compose.navigation.RootComposeBuilder
 
 @Composable
-fun setNavigationContent(configuration: OdysseyConfiguration, navigationGraph: RootComposeBuilder.() -> Unit) {
+fun setNavigationContent(configuration: OdysseyConfiguration, navigationGraph: @Composable RootComposeBuilder.() -> Unit) {
     setNavigationContent(configuration, onApplicationFinish = {}, navigationGraph)
 }

@@ -5,8 +5,8 @@ plugins {
     id("com.android.library")
 }
 
-group = libs.versions.packageName
-version = libs.versions.packageVersion
+group = libs.versions.packageName.get()
+version = libs.versions.packageVersion.get()
 
 kotlin {
     jvm("desktop")

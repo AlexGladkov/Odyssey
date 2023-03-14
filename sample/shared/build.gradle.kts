@@ -55,6 +55,14 @@ kotlin {
                 implementation(project(":odyssey:odyssey-compose"))
             }
         }
+
+        val androidMain by getting {
+            dependencies {
+                implementation(libs.activity.appcompat)
+                implementation(libs.activity.compose)
+            }
+        }
+
         val iosMain by getting
         val iosTest by getting
         val iosSimulatorArm64Main by getting {

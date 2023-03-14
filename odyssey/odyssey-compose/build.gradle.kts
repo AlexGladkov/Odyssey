@@ -7,22 +7,23 @@ plugins {
     id("com.android.library")
 }
 
-group = "io.github.alexgladkov"
-version = "1.4.0"
+group = libs.versions.packageName.get()
+version = libs.versions.packageVersion.get()
 
 kotlin {
-    jvm("desktop")
     android()
+    jvm("desktop")
     ios()
     iosSimulatorArm64()
     js(IR) {
         browser()
+        binaries.executable()
     }
     macosX64()
     macosArm64()
 
     sourceSets {
-        named("commonMain") {
+        val commonMain by getting {
             dependencies {
                 implementation(compose.ui)
                 implementation(compose.foundation)
@@ -33,18 +34,36 @@ kotlin {
                 implementation(project(":odyssey:odyssey-core"))
             }
         }
-        named("commonTest")
-        named("androidMain") {
+
+        val androidMain by getting {
             dependencies {
                 implementation(libs.coroutines.android)
                 implementation(libs.activity.compose)
             }
         }
 
+        val iosMain by getting
+        val iosTest by getting
+        val iosSimulatorArm64Main by getting {
+            dependsOn(iosMain)
+        }
+        val iosSimulatorArm64Test by getting {
+            dependsOn(iosTest)
+        }
         val desktopMain by getting {
             dependencies {
                 implementation(libs.coroutines.swing)
+                implementation(compose.desktop.common)
             }
+        }
+        val macosMain by creating {
+            dependsOn(commonMain)
+        }
+        val macosX64Main by getting {
+            dependsOn(macosMain)
+        }
+        val macosArm64Main by getting {
+            dependsOn(macosMain)
         }
     }
 }

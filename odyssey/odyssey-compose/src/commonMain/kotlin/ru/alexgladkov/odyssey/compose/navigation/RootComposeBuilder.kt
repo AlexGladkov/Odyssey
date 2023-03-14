@@ -6,8 +6,7 @@ import ru.alexgladkov.odyssey.compose.RenderWithParams
 import ru.alexgladkov.odyssey.compose.ScreenType
 import ru.alexgladkov.odyssey.compose.helpers.FlowBuilderModel
 import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.MultiStackBuilderModel
-import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.TabsNavModel
-import ru.alexgladkov.odyssey.core.configuration.RootConfiguration
+import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.MultiStackConfiguration
 import ru.alexgladkov.odyssey.core.configuration.RootControllerType
 
 /**
@@ -18,7 +17,7 @@ class RootComposeBuilder {
     private val _screens: MutableList<AllowedDestination> = mutableListOf()
     private val _screenMap: HashMap<String, RenderWithParams<Any?>> = hashMapOf()
 
-    fun addScreen(
+    internal fun addScreen(
         key: String,
         screenMap: Map<String, RenderWithParams<Any?>>,
     ) {
@@ -40,13 +39,13 @@ class RootComposeBuilder {
 
     fun addMultiStack(
         key: String,
-        tabsNavModel: TabsNavModel<*>,
+        displayConfiguration: MultiStackConfiguration,
         multiStackBuilderModel: MultiStackBuilderModel
     ) {
         _screens.add(
             AllowedDestination(
                 key = key,
-                screenType = ScreenType.MultiStack(multiStackBuilderModel, tabsNavModel)
+                screenType = ScreenType.MultiStack(multiStackBuilderModel, displayConfiguration)
             )
         )
     }

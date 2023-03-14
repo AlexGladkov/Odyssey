@@ -7,7 +7,7 @@ import ru.alexgladkov.shared.theme.colors.OdysseyColors
 import ru.alexgladkov.shared.theme.colors.darkPalette
 
 @Composable
-fun OdysseyTheme(
+internal fun OdysseyTheme(
     content: @Composable () -> Unit
 ) {
     CompositionLocalProvider(
@@ -17,7 +17,7 @@ fun OdysseyTheme(
 }
 
 object Odyssey {
-    val color: OdysseyColors
+    internal val color: OdysseyColors
         @Composable
         get() = LocalColors.current
 }

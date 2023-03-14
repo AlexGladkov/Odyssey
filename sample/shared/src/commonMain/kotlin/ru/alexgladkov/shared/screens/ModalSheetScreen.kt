@@ -21,7 +21,7 @@ import ru.alexgladkov.odyssey.compose.extensions.push
 
 
 @Composable
-fun ModalSheetScreen(title: String = "Modal Sheet", onCloseClick: () -> Unit) {
+internal fun ModalSheetScreen(title: String = "Modal Sheet", onCloseClick: () -> Unit) {
     val rootController = LocalRootController.current
     val modalController = rootController.findModalController()
 

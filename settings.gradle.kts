@@ -21,5 +21,6 @@ include(
     ":odyssey:odyssey-android",
     ":sample:shared",
     ":sample:androidApp",
-    ":sample:desktopApp"
+    ":sample:desktopApp",
+    ":sample:jsApp",
 )
