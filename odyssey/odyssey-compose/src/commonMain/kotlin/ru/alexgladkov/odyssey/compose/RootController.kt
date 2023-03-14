@@ -9,8 +9,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import ru.alexgladkov.odyssey.compose.base.BottomBarNavigator
 import ru.alexgladkov.odyssey.compose.base.Navigator
 import ru.alexgladkov.odyssey.compose.base.TopBarNavigator
-import ru.alexgladkov.odyssey.compose.base.local.BottomConfiguration
-import ru.alexgladkov.odyssey.compose.base.local.LocalBottomConfiguration
 import ru.alexgladkov.odyssey.compose.controllers.ModalController
 import ru.alexgladkov.odyssey.compose.controllers.MultiStackRootController
 import ru.alexgladkov.odyssey.compose.controllers.TabNavigationModel
@@ -25,8 +23,6 @@ import ru.alexgladkov.odyssey.core.animations.AnimationType
 import ru.alexgladkov.odyssey.core.backpress.BackPressedCallback
 import ru.alexgladkov.odyssey.core.backpress.OnBackPressedDispatcher
 import ru.alexgladkov.odyssey.core.breadcrumbs.Breadcrumb
-import ru.alexgladkov.odyssey.core.configuration.DisplayType
-import ru.alexgladkov.odyssey.core.configuration.RootConfiguration
 import ru.alexgladkov.odyssey.core.configuration.RootControllerType
 import ru.alexgladkov.odyssey.core.screen.Screen
 import ru.alexgladkov.odyssey.core.screen.ScreenBundle
