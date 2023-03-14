@@ -21,12 +21,12 @@ import ru.alexgladkov.odyssey.compose.extensions.push
 
 
 @Composable
-internal fun ModalSheetScreen(onCloseClick: () -> Unit) {
+internal fun ModalSheetScreen(title: String = "Modal Sheet", onCloseClick: () -> Unit) {
     val rootController = LocalRootController.current
     val modalController = rootController.findModalController()
 
     Column(modifier = Modifier.background(Odyssey.color.primaryBackground)) {
-        Text(modifier = Modifier.padding(16.dp), text = "Modal Sheet", fontSize = 24.sp, color = Odyssey.color.primaryText)
+        Text(modifier = Modifier.padding(16.dp), text = title, fontSize = 24.sp, color = Odyssey.color.primaryText)
         ActionCell(text = "Close", icon = Icons.Filled.ArrowDropDown) {
             onCloseClick.invoke()
         }
@@ -52,6 +52,21 @@ internal fun ModalSheetScreen(onCloseClick: () -> Unit) {
             modalController.present(modalSheetConfiguration.copy(maxHeight = height - 0.1f)) { key ->
                 ModalSheetScreen {
                     modalController.popBackStack(key)
+                    modalController.popBackStack(key)
+                }
+            }
+        }
+        ActionCell(text = "Modal closable only by close button", icon = Icons.Filled.ThumbUp) {
+            val height = Random.nextFloat().coerceAtLeast(0.4f)
+            val modalSheetConfiguration = ModalSheetConfiguration(
+                maxHeight = height,
+                cornerRadius = 16,
+                closeOnBackClick = false,
+                closeOnBackdropClick = false,
+                closeOnSwipe = false
+            )
+            modalController.present(modalSheetConfiguration.copy(maxHeight = height - 0.1f)) { key ->
+                ModalSheetScreen(title = "Modal closable only by close button") {
                     modalController.popBackStack(key)
                 }
             }

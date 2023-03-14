@@ -9,6 +9,8 @@ import ru.alexgladkov.odyssey.compose.Render
  * @param cornerRadius - card corner radius in dp
  * @param alpha - scrimer alpha
  * @param closeOnBackdropClick - true if you want to close on backdrop click
+ * @param closeOnSwipe - true if you want to close on swipe
+ * @param closeOnBackClick - true if you want to close on the hardware back button
  * @param backContent - draw behind modal view (composable)
  */
 data class ModalSheetConfiguration(
@@ -19,6 +21,7 @@ data class ModalSheetConfiguration(
     val alpha: Float = 0.2f,
     val closeOnBackdropClick: Boolean = true,
     val closeOnSwipe: Boolean = true,
+    val closeOnBackClick: Boolean = true,
     val backContent: Render? = null,
 ) : ModalConfiguration
 
@@ -28,7 +31,8 @@ data class AlertConfiguration(
     val maxWidth: Float? = null,
     val cornerRadius: Int = 0,
     val alpha: Float = 0.2f,
-    val closeOnBackdropClick: Boolean = true
+    val closeOnBackdropClick: Boolean = true,
+    val closeOnBackClick: Boolean = true,
 ) : ModalConfiguration
 
 data class CustomModalConfiguration(
