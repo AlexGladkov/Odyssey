@@ -3,10 +3,9 @@ package ru.alexgladkov.odyssey.compose.controllers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import ru.alexgladkov.odyssey.compose.RootController
+import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.MultiStackConfiguration
 import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.TabInfo
-import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.TabsNavModel
 import ru.alexgladkov.odyssey.core.breadcrumbs.Breadcrumb
-import ru.alexgladkov.odyssey.core.configuration.RootConfiguration
 import ru.alexgladkov.odyssey.core.configuration.RootControllerType
 
 data class TabNavigationModel(
@@ -16,7 +15,7 @@ data class TabNavigationModel(
 
 class MultiStackRootController(
     rootControllerType: RootControllerType,
-    val tabsNavModel: TabsNavModel<*>
+    val displayConfiguration: MultiStackConfiguration
 ) : RootController(rootControllerType) {
     private val _tabItems: MutableList<TabNavigationModel> = mutableListOf()
     private var _currentTabPosition: Int = -1
@@ -47,7 +46,7 @@ class MultiStackRootController(
         _stackChangeObserver.value = _tabItems[position]
 
         onScreenNavigate?.let { callback ->
-            val previousName = _tabItems[beforeTabPosition].tabInfo.tabItem.name
+            val previousName = _tabItems[beforeTabPosition].tabInfo.tabConfiguration.title
 
             val breadcrumb = Breadcrumb(
                 absolutePath = buildBackstackPath(),
@@ -62,7 +61,7 @@ class MultiStackRootController(
 
     fun getCurrentTabName(): String {
         val currentPosition = if (_currentTabPosition >= 0) _currentTabPosition else 0
-        return _tabItems[currentPosition].tabInfo.tabItem.name
+        return _tabItems[currentPosition].tabInfo.tabConfiguration.title
     }
 
     override fun buildBackstackPath(): String {

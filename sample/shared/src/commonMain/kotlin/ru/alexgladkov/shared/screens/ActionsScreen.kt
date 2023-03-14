@@ -25,7 +25,7 @@ import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.ModalSheetConf
 import ru.alexgladkov.odyssey.core.LaunchFlag
 
 @Composable
-fun ActionsScreen(count: Int?) {
+internal fun ActionsScreen(count: Int?) {
     val rootController = LocalRootController.current
     val modalController = rootController.findModalController()
 
@@ -134,7 +134,7 @@ fun ActionsScreen(count: Int?) {
 }
 
 @Composable
-fun CounterView(count: Int?) {
+internal fun CounterView(count: Int?) {
     val rootController = LocalRootController.current
     val level = rootController.measureLevel()
 
@@ -155,7 +155,7 @@ fun CounterView(count: Int?) {
 }
 
 @Composable
-fun ActionCell(modifier: Modifier = Modifier, text: String, icon: ImageVector, onClick: () -> Unit) {
+internal fun ActionCell(modifier: Modifier = Modifier, text: String, icon: ImageVector, onClick: () -> Unit) {
     Column(modifier = modifier
         .clickable { onClick.invoke() }
         .fillMaxWidth()

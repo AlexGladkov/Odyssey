@@ -20,7 +20,7 @@ import ru.alexgladkov.shared.screens.ActionCell
 import ru.alexgladkov.shared.screens.CounterView
 
 @Composable
-fun TabScreen(count: Int?) {
+internal fun TabScreen(count: Int?) {
     val rootController = LocalRootController.current
 
     Column {

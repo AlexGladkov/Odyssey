@@ -25,7 +25,7 @@ import ru.alexgladkov.shared.screens.CounterView
 import ru.alexgladkov.shared.screens.ModalSheetScreen
 
 @Composable
-fun PresentedActionsScreen(count: Int?) {
+internal fun PresentedActionsScreen(count: Int?) {
     val rootController = LocalRootController.current
     val modalController = rootController.findModalController()
 

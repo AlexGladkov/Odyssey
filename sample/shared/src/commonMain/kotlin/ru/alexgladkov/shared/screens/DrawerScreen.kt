@@ -17,7 +17,7 @@ import ru.alexgladkov.odyssey.compose.controllers.MultiStackRootController
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
 
 @Composable
-fun DrawerScreen(params: Any?) {
+internal fun DrawerScreen(params: Any?) {
     val rootController = LocalRootController.current as MultiStackRootController
     val tabItem = rootController.stackChangeObserver.collectAsState().value ?: return
     val coroutineScope = rememberCoroutineScope()
@@ -53,7 +53,7 @@ fun DrawerScreen(params: Any?) {
                                     scaffoldState.drawerState.close()
                                 }
                             },
-                        text = currentItem.tabInfo.tabItem.name,
+                        text = currentItem.tabInfo.tabConfiguration.title,
                         textAlign = TextAlign.Center,
                         color = Color.White
                     )
@@ -66,5 +66,5 @@ fun DrawerScreen(params: Any?) {
     }
 
 
-    rootController.tabsNavModel.launchedEffect.invoke()
+//    rootController.tabsNavModel.launchedEffect.invoke()
 }

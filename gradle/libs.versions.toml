@@ -11,7 +11,7 @@ compileSdk = "33"
 targetSdk = "33"
 
 packageName = "io.github.alexgladkov"
-packageVersion = "1.4.0"
+packageVersion = "1.4.0-alpha02"
 
 [libraries]
 coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines"}

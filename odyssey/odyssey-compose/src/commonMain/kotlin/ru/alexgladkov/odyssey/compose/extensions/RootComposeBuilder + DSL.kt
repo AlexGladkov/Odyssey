@@ -1,9 +1,16 @@
 package ru.alexgladkov.odyssey.compose.extensions
 
+import androidx.compose.runtime.Composable
 import ru.alexgladkov.odyssey.compose.RenderWithParams
 import ru.alexgladkov.odyssey.compose.helpers.*
 import ru.alexgladkov.odyssey.compose.navigation.RootComposeBuilder
 import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.*
+import ru.alexgladkov.odyssey.compose.navigation.tabs.TabColors
+import ru.alexgladkov.odyssey.compose.navigation.tabs.TabConfiguration
+import ru.alexgladkov.odyssey.compose.navigation.tabs.TabContent
+import ru.alexgladkov.odyssey.compose.navigation.tabs.TabDefaults
+import ru.alexgladkov.odyssey.compose.navigation.top_navigation.TopBarColors
+import ru.alexgladkov.odyssey.compose.navigation.top_navigation.TopBarDefaults
 
 /**
  * Adds screen to navigation graph
@@ -47,21 +54,28 @@ fun FlowBuilder.screen(name: String, content: RenderWithParams<Any?>) {
 /**
  * Adds bottom bar navigation to navigation graph
  * @param name - name in graph
- * @param tabsNavModel - UI configuration for bottom navigation
+ * @param colors - colors configuration for bottom bar
+ * @param elevation - elevation configuration for bottom bar
  * @param builder - dsl for bottom nav bar building
  */
+@Composable
 fun RootComposeBuilder.bottomNavigation(
     name: String,
-    tabsNavModel: TabsNavModel<BottomNavConfiguration>,
-    builder: MultiStackBuilder.() -> Unit
+    colors: BottomBarColors = BottomBarDefaults.bottomColors(),
+    elevation: BottomBarElevations = BottomBarDefaults.elevation(),
+    builder: @Composable MultiStackBuilder.() -> Unit
 ) {
+    val configuration: MultiStackConfiguration = MultiStackConfiguration.BottomNavConfiguration(
+        backgroundColor = colors.backgroundColor().value,
+        defaultElevation = elevation.default().value
+    )
+
     addMultiStack(
         key = name,
-        tabsNavModel = tabsNavModel,
-        multiStackBuilderModel = MultiStackBuilder(name).apply(builder).build()
+        displayConfiguration = configuration,
+        multiStackBuilderModel = MultiStackBuilder(name).apply { builder.invoke(this) }.build()
     )
 }
-
 
 /**
  * Adds top bar navigation to navigation graph
@@ -69,42 +83,62 @@ fun RootComposeBuilder.bottomNavigation(
  * @param tabsNavModel - UI configuration for top navigation
  * @param builder - dsl for top nav bar building
  */
+@Composable
 fun RootComposeBuilder.topNavigation(
     name: String,
-    tabsNavModel: TabsNavModel<TopNavConfiguration>,
-    builder: MultiStackBuilder.() -> Unit
+    colors: TopBarColors = TopBarDefaults.backgroundLineColors(),
+    builder: @Composable MultiStackBuilder.() -> Unit
 ) {
     addMultiStack(
         key = name,
-        tabsNavModel = tabsNavModel,
-        multiStackBuilderModel = MultiStackBuilder(name).apply(builder).build()
+        displayConfiguration = MultiStackConfiguration.TopNavConfiguration(
+            backgroundColor = colors.backgroundColor().value,
+            dividerColor = colors.dividerColor().value,
+            contentColor = colors.contentColor().value
+        ),
+        multiStackBuilderModel = MultiStackBuilder(name).apply { builder.invoke(this) }.build()
     )
 }
-
-/**
- * Adds custom bar navigation to navigation graph
- * @param name - name in graph
- * @param tabsNavModel - UI configuration for custom navigation
- * @param builder - dsl for custom nav bar building
- */
-fun RootComposeBuilder.customNavigation(
-    name: String,
-    tabsNavModel: TabsNavModel<CustomNavConfiguration>,
-    builder: MultiStackBuilder.() -> Unit
-) {
-    addMultiStack(
-        key = name,
-        tabsNavModel = tabsNavModel,
-        multiStackBuilderModel = MultiStackBuilder(name).apply(builder).build()
-    )
-}
-
+//
+///**
+// * Adds custom bar navigation to navigation graph
+// * @param name - name in graph
+// * @param tabsNavModel - UI configuration for custom navigation
+// * @param builder - dsl for custom nav bar building
+// */
+////fun RootComposeBuilder.customNavigation(
+////    name: String,
+////    tabsNavModel: TabsNavModel<CustomNavConfiguration>,
+////    builder: MultiStackBuilder.() -> Unit
+////) {
+////    addMultiStack(
+////        key = name,
+////        tabsNavModel = tabsNavModel,
+////        multiStackBuilderModel = MultiStackBuilder(name).apply(builder).build()
+////    )
+////}
+//
 /**
  * Adds tab to bottom nav bar building
  * @param tabItem - tab UI configuration
  * @param builder - dsl buidler for flow in tab
  */
-fun MultiStackBuilder.tab(tabItem: TabItem, builder: FlowBuilder.() -> Unit) {
-    val flow = FlowBuilder(tabItem.name).apply(builder).build()
-    addTab(tabItem, flow)
+@Composable
+fun MultiStackBuilder.tab(
+    content: TabContent,
+    colors: TabColors = TabDefaults.simpleTabColors(),
+    builder: FlowBuilder.() -> Unit
+) {
+    val title = content.title().value
+    val flow = FlowBuilder(title).apply(builder).build()
+    addTab(
+        TabConfiguration(
+            title = title,
+            icon = content.icon().value,
+            selectedIconColor = colors.iconColor(true).value,
+            unselectedIconColor = colors.iconColor(false).value,
+            selectedTextColor = colors.textColor(true).value,
+            unselectedTextColor = colors.textColor(false).value,
+        ), flow
+    )
 }

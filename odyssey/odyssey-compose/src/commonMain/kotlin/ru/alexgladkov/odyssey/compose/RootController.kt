@@ -9,6 +9,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import ru.alexgladkov.odyssey.compose.base.BottomBarNavigator
 import ru.alexgladkov.odyssey.compose.base.Navigator
 import ru.alexgladkov.odyssey.compose.base.TopBarNavigator
+import ru.alexgladkov.odyssey.compose.base.local.BottomConfiguration
+import ru.alexgladkov.odyssey.compose.base.local.LocalBottomConfiguration
 import ru.alexgladkov.odyssey.compose.controllers.ModalController
 import ru.alexgladkov.odyssey.compose.controllers.MultiStackRootController
 import ru.alexgladkov.odyssey.compose.controllers.TabNavigationModel
@@ -37,9 +39,9 @@ typealias Render = @Composable (key: String) -> Unit
 sealed class ScreenType {
     object Simple : ScreenType()
     data class Flow(val flowBuilderModel: FlowBuilderModel) : ScreenType()
-    data class MultiStack<Cfg : TabsNavConfiguration>(
+    data class MultiStack(
         val multiStackBuilderModel: MultiStackBuilderModel,
-        val tabsNavModel: TabsNavModel<Cfg>
+        val displayConfiguration: MultiStackConfiguration
     ) : ScreenType()
 }
 
@@ -48,7 +50,8 @@ data class AllowedDestination(
     val screenType: ScreenType
 )
 
-open class RootController(rootControllerType: RootControllerType): CoreRootController<Screen>(rootControllerType) {
+open class RootController(rootControllerType: RootControllerType) :
+    CoreRootController<Screen>(rootControllerType) {
     private val _allowedDestinations: MutableList<AllowedDestination> = mutableListOf()
     override val _backstack = mutableListOf<Screen>()
     private val _currentScreen: MutableStateFlow<NavConfiguration?> =
@@ -94,12 +97,12 @@ open class RootController(rootControllerType: RootControllerType): CoreRootContr
         ReplaceWith("renderScreen(screenName, params)")
     )
     @Composable
-    fun RenderScreen(screenName: String?, params: Any?) {
+    internal fun RenderScreen(screenName: String?, params: Any?) {
         renderScreen(screenName, params)
     }
 
     @Composable
-    fun renderScreen(screenName: String?, params: Any?) {
+    internal fun renderScreen(screenName: String?, params: Any?) {
         _screenMap[screenName]?.invoke(params)
     }
 
@@ -112,7 +115,7 @@ open class RootController(rootControllerType: RootControllerType): CoreRootContr
      * Update root controller screen map to find composables
      * @param screenMap - generated screen map
      */
-    fun updateScreenMap(screenMap: HashMap<String, RenderWithParams<Any?>>) {
+    internal fun updateScreenMap(screenMap: HashMap<String, RenderWithParams<Any?>>) {
         _screenMap.putAll(screenMap)
     }
 
@@ -185,11 +188,11 @@ open class RootController(rootControllerType: RootControllerType): CoreRootContr
             )
 
             is ScreenType.Simple -> launchSimpleScreen(screen, params, animationType, launchFlag)
-            is ScreenType.MultiStack<*> -> launchMultiStackScreen(
+            is ScreenType.MultiStack -> launchMultiStackScreen(
                 screenName = screen,
                 animationType = animationType,
                 multiStackBuilderModel = screenType.multiStackBuilderModel,
-                tabsNavModel = screenType.tabsNavModel,
+                displayConfiguration = screenType.displayConfiguration,
                 launchFlag = launchFlag,
                 startScreen = startScreen,
                 startTabPosition = startTabPosition,
@@ -308,7 +311,7 @@ open class RootController(rootControllerType: RootControllerType): CoreRootContr
             when (val screen = destination.screenType) {
                 ScreenType.Simple -> searchKey == destination.key
                 is ScreenType.Flow -> screen.flowBuilderModel.allowedDestination.firstOrNull { it.key == searchKey } != null
-                is ScreenType.MultiStack<*> -> {
+                is ScreenType.MultiStack -> {
                     var containsScreen = false
                     run loop@{
                         screen.multiStackBuilderModel.tabItems.forEachIndexed { index, info ->
@@ -467,7 +470,7 @@ open class RootController(rootControllerType: RootControllerType): CoreRootContr
         screenName: String,
         animationType: AnimationType,
         multiStackBuilderModel: MultiStackBuilderModel,
-        tabsNavModel: TabsNavModel<*>,
+        displayConfiguration: MultiStackConfiguration,
         startScreen: String? = null,
         startTabPosition: Int = 0,
         launchFlag: LaunchFlag?,
@@ -482,7 +485,7 @@ open class RootController(rootControllerType: RootControllerType): CoreRootContr
         val parentRootController = this
         val multiStackRootController = MultiStackRootController(
             rootControllerType = RootControllerType.MultiStack,
-            tabsNavModel = tabsNavModel,
+            displayConfiguration = displayConfiguration,
         )
 
         multiStackRootController.setDeepLinkUri(_deepLinkUri)
@@ -494,7 +497,7 @@ open class RootController(rootControllerType: RootControllerType): CoreRootContr
                 RootController(RootControllerType.Tab)
             rootController.backgroundColor = backgroundColor
             rootController.parentRootController = multiStackRootController
-            rootController.debugName = it.tabItem.name
+            rootController.debugName = it.tabConfiguration.title
             rootController.onScreenNavigate = onScreenNavigate
             rootController.setDeepLinkUri(_deepLinkUri)
             rootController.updateScreenMap(it.screenMap)
@@ -534,25 +537,25 @@ open class RootController(rootControllerType: RootControllerType): CoreRootContr
             _screenMap[multiStackKey] = {
                 val bundle = it as MultiStackBundle
                 CompositionLocalProvider(
-                    LocalRootController provides bundle.rootController
+                    LocalRootController provides bundle.rootController,
                 ) {
-                    when (bundle.rootController.tabsNavModel.navConfiguration.type) {
-                        TabsNavType.Bottom -> {
+                    when (val configuration = bundle.rootController.displayConfiguration) {
+                        is MultiStackConfiguration.BottomNavConfiguration -> {
                             BottomBarNavigator(
-                                startScreen = bundle.startScreen
+                                startScreen = bundle.startScreen,
+                                bottomNavConfiguration = configuration
                             )
                         }
 
-                        TabsNavType.Top -> {
+                        is MultiStackConfiguration.CustomNavConfiguration -> {
+                            configuration.content(bundle.params)
+                        }
+
+                        is MultiStackConfiguration.TopNavConfiguration -> {
                             TopBarNavigator(
-                                startScreen = bundle.startScreen
+                                startScreen = bundle.startScreen,
+                                navConfiguration = configuration
                             )
-                        }
-
-                        TabsNavType.Custom -> {
-                            val customNavConfiguration =
-                                bundle.rootController.tabsNavModel.navConfiguration as CustomNavConfiguration
-                            customNavConfiguration.content(bundle.params)
                         }
                     }
                 }
@@ -611,14 +614,17 @@ open class RootController(rootControllerType: RootControllerType): CoreRootContr
                 _modalController?.clearBackStack()
                 _backstack.clear()
             }
+
             LaunchFlag.SingleInstance -> {
                 _modalController?.clearBackStack()
                 _backstack.removeAll { it.realKey == screenKey }
             }
+
             LaunchFlag.ClearPrevious -> {
                 _modalController?.clearBackStack()
                 _backstack.removeLastOrNull()
             }
+
             null -> {}
         }
     }

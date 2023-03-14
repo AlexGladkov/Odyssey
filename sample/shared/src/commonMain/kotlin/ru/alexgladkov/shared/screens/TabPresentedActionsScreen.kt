@@ -23,7 +23,7 @@ import ru.alexgladkov.shared.screens.CounterView
 import ru.alexgladkov.shared.screens.ModalSheetScreen
 
 @Composable
-fun TabPresentedActionsScreen(count: Int?) {
+internal fun TabPresentedActionsScreen(count: Int?) {
     val rootController = LocalRootController.current
     val modalController = rootController.findModalController()
 

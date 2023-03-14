@@ -6,11 +6,7 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
-import ru.alexgladkov.odyssey.compose.setup.OdysseyConfiguration
-import ru.alexgladkov.odyssey.compose.setup.setNavigationContent
-import ru.alexgladkov.shared.navigation.navigationGraph
-import ru.alexgladkov.shared.theme.Odyssey
-import ru.alexgladkov.shared.theme.OdysseyTheme
+import ru.alexgladkov.shared.MainView
 
 fun main() = application {
     Window(
@@ -22,16 +18,8 @@ fun main() = application {
             position = WindowPosition.Aligned(Alignment.Center)
         )
     ) {
-        OdysseyTheme {
-            val configuration = OdysseyConfiguration(
-                backgroundColor = Odyssey.color.primaryBackground
-            )
-
-            setNavigationContent(configuration, onApplicationFinish = {
-                exitApplication()
-            }) {
-                navigationGraph()
-            }
+        MainView {
+            exitApplication()
         }
     }
 }

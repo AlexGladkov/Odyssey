@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JetHabit</title>
+    <script src="skiko.js"> </script>
+    <link type="text/css" rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div id="clip">
+    <canvas id="ComposeTarget"/>
+</div>
+<script>
+    const canvas = document.getElementById("ComposeTarget");
+    canvas.width = window.innerWidth
+    canvas.height = window.innerHeight
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth
+      canvas.height = window.innerHeight
+    })
+</script>
+<script src="jsApp.js"> </script>
+</body>
+</html>
