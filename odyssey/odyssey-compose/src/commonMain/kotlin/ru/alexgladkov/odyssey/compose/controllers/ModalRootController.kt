@@ -12,7 +12,7 @@ import ru.alexgladkov.odyssey.core.extensions.wrap
 sealed class ModalDialogState {
     object Idle : ModalDialogState()
     object Open : ModalDialogState()
-    data class Close(val animate: Boolean = true, val byBackPressed: Boolean =  false) : ModalDialogState()
+    data class Close(val animate: Boolean = true, val byBackPressed: Boolean = false) : ModalDialogState()
 }
 
 /**

@@ -45,7 +45,7 @@ in [example](common/common-sample/src/commonMain/kotlin/ru/alexgladkov/common/co
 Projects/Companies using this library:
 
 - [Leroy Merlin](https://play.google.com/store/apps/details?id=ru.leroymerlin.employee&hl=ru&gl=US)
-- [1Coin](https://github.com/VitalyPeryatin/1Coin)
+- [1Coin](https://play.google.com/store/apps/details?id=com.finance_tracker.finance_tracker)
 - Trinity Monsters
 
 If you use Odyssey in your project please contact me with [telegram](https://t.me/neuradev)
