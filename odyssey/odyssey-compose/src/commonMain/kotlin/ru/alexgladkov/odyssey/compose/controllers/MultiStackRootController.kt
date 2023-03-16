@@ -1,5 +1,7 @@
 package ru.alexgladkov.odyssey.compose.controllers
 
+import androidx.compose.runtime.Immutable
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import ru.alexgladkov.odyssey.compose.RootController
@@ -8,6 +10,7 @@ import ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation.TabInfo
 import ru.alexgladkov.odyssey.core.breadcrumbs.Breadcrumb
 import ru.alexgladkov.odyssey.core.configuration.RootControllerType
 
+@Immutable
 data class TabNavigationModel(
     val tabInfo: TabInfo,
     val rootController: RootController
@@ -26,7 +29,7 @@ class MultiStackRootController(
     val stackChangeObserver = _stackChangeObserver.asStateFlow()
     val tabItems = _tabItems
 
-    fun setupWithTabs(tabItems: List<TabNavigationModel>, startPosition: Int = 0) {
+    fun setupWithTabs(tabItems: ImmutableList<TabNavigationModel>, startPosition: Int = 0) {
         if (startPosition >= tabItems.size) throw IllegalStateException("Setup error: Position must be less than tab items count")
         _tabItems.clear()
         _tabItems.addAll(tabItems)

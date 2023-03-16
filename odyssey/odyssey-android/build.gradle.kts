@@ -22,16 +22,16 @@ kotlin {
 
         val androidMain by getting {
             dependencies {
-//                implementation(Dependencies.Google.Dagger.hiltAndroid)
-//                implementation(Dependencies.AndroidX.Hilt.hiltNavigationCompose)
+                implementation(libs.hilt.android)
+                implementation(libs.hilt.compose)
 
-//                configurations.getByName("kapt").dependencies.add(
-//                    org.gradle.api.internal.artifacts.dependencies.DefaultExternalModuleDependency(
-//                        "com.google.dagger",
-//                        "hilt-android-compiler",
-//                        Dependencies.Google.Dagger.version.toString()
-//                    )
-//                )
+                configurations.getByName("kapt").dependencies.add(
+                    org.gradle.api.internal.artifacts.dependencies.DefaultExternalModuleDependency(
+                        "com.google.dagger",
+                        "hilt-android-compiler",
+                        libs.versions.hiltVersion.get()
+                    )
+                )
             }
         }
     }

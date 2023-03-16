@@ -1,5 +1,8 @@
 package ru.alexgladkov.odyssey.compose.navigation
 
+import kotlinx.collections.immutable.ImmutableMap
+import kotlinx.collections.immutable.toImmutableList
+import kotlinx.collections.immutable.toImmutableMap
 import ru.alexgladkov.odyssey.compose.AllowedDestination
 import ru.alexgladkov.odyssey.compose.RootController
 import ru.alexgladkov.odyssey.compose.RenderWithParams
@@ -19,7 +22,7 @@ class RootComposeBuilder {
 
     internal fun addScreen(
         key: String,
-        screenMap: Map<String, RenderWithParams<Any?>>,
+        screenMap: ImmutableMap<String, RenderWithParams<Any?>>,
     ) {
         _screens.add(AllowedDestination(key = key, screenType = ScreenType.Simple))
         _screenMap.putAll(screenMap)
@@ -52,7 +55,7 @@ class RootComposeBuilder {
 
     fun build(): RootController = RootController(RootControllerType.Root)
         .apply {
-            updateScreenMap(_screenMap)
-            setNavigationGraph(_screens)
+            updateScreenMap(_screenMap.toImmutableMap())
+            setNavigationGraph(_screens.toImmutableList())
         }
 }

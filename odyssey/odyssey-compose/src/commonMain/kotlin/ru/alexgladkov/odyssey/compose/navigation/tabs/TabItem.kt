@@ -1,16 +1,10 @@
 package ru.alexgladkov.odyssey.compose.navigation.tabs
 
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.TextStyle
-
-/**
- * Class for Bottom Navigation Tab Configuration
- */
-interface TabItem {
-    val name: String
-        get() = this::class.simpleName!!
-}
 
 /**
  * Class for Bottom Navigation UI Configuration
@@ -22,6 +16,7 @@ interface TabItem {
  * @param unselectedTextColor - color when tab not selected
  * @param titleStyle - text style for tab title
  */
+@Immutable
 data class TabConfiguration(
     val title: String,
     val icon: Painter? = null,

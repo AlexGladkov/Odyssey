@@ -22,7 +22,9 @@ fun MainView(platformConfiguration: PlatformConfiguration) {
             }
         )
 
-        setNavigationContent(configuration) {
+        setNavigationContent(configuration, onApplicationFinish = {
+            platformConfiguration.activity.finishAffinity()
+        }) {
             navigationGraph()
         }
     }

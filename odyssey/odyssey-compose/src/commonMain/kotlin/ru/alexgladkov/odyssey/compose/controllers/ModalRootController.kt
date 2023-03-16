@@ -1,5 +1,10 @@
 package ru.alexgladkov.odyssey.compose.controllers
 
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
 import ru.alexgladkov.odyssey.compose.Render
 import ru.alexgladkov.odyssey.compose.RootController
@@ -26,6 +31,7 @@ sealed class ModalDialogState {
  * @param content - composable content
  * @param closeOnBackClick - true if you want to close on the hardware back button
  */
+@Immutable
 internal data class ModalSheetBundle(
     override val key: String,
     override val dialogState: ModalDialogState,
@@ -51,6 +57,7 @@ internal data class ModalSheetBundle(
  * @param content - composable content
  * @param closeOnBackClick - true if you want to close on the hardware back button
  */
+@Immutable
 internal data class AlertBundle(
     override val key: String,
     override val dialogState: ModalDialogState,
@@ -67,6 +74,7 @@ internal data class AlertBundle(
 /**
  * Class helper to use with modal for custom modal
  */
+@Immutable
 internal data class CustomModalBundle(
     override val key: String,
     override val dialogState: ModalDialogState,
@@ -78,6 +86,7 @@ internal data class CustomModalBundle(
  * Common interface for any modal screens
  * @see ModalDialogState
  */
+@Stable
 sealed interface ModalBundle {
     val key: String
 
@@ -97,16 +106,13 @@ sealed interface ModalBundle {
     val dialogState: ModalDialogState
 }
 
-@Deprecated("see ModalController", ReplaceWith("ModalController"))
-class ModalSheetController : ModalController()
-
 /**
  * Class controller for bottom modal sheet
  */
 open class ModalController {
     private var _backStack = mutableListOf<ModalBundle>()
-    private val _currentStack: MutableStateFlow<List<ModalBundle>> = MutableStateFlow(emptyList())
-    val currentStack: CFlow<List<ModalBundle>> = _currentStack.wrap()
+    private val _currentStack: MutableStateFlow<ImmutableList<ModalBundle>> = MutableStateFlow(persistentListOf())
+    val currentStack: CFlow<ImmutableList<ModalBundle>> = _currentStack.wrap()
 
     internal fun presentNew(
         modalSheetConfiguration: ModalSheetConfiguration,
@@ -192,7 +198,7 @@ open class ModalController {
         val newStack = ArrayList<ModalBundle>().apply {
             addAll(_backStack)
         }
-        _currentStack.value = newStack
+        _currentStack.value = newStack.toImmutableList()
     }
     companion object{
         private val ModalBundle.closeOnBackClick get() = when (this) {

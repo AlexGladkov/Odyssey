@@ -2,7 +2,11 @@ package ru.alexgladkov.odyssey.compose
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.Stable
 import androidx.compose.ui.graphics.Color
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.ImmutableMap
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -41,6 +45,7 @@ sealed class ScreenType {
     ) : ScreenType()
 }
 
+@Stable
 data class AllowedDestination(
     val key: String,
     val screenType: ScreenType
@@ -111,7 +116,7 @@ open class RootController(rootControllerType: RootControllerType) :
      * Update root controller screen map to find composables
      * @param screenMap - generated screen map
      */
-    internal fun updateScreenMap(screenMap: HashMap<String, RenderWithParams<Any?>>) {
+    internal fun updateScreenMap(screenMap: ImmutableMap<String, RenderWithParams<Any?>>) {
         _screenMap.putAll(screenMap)
     }
 
@@ -120,7 +125,7 @@ open class RootController(rootControllerType: RootControllerType) :
      * @param list - list of destinations
      * @see Destination to know more
      */
-    fun setNavigationGraph(list: List<AllowedDestination>) {
+    fun setNavigationGraph(list: ImmutableList<AllowedDestination>) {
         _allowedDestinations.clear()
         _allowedDestinations.addAll(list)
     }
@@ -503,7 +508,7 @@ open class RootController(rootControllerType: RootControllerType) :
             rootController.updateScreenMap(it.screenMap)
             rootController.setNavigationGraph(it.allowedDestination)
             TabNavigationModel(tabInfo = it, rootController = rootController)
-        }
+        }.toImmutableList()
 
         multiStackRootController.setupWithTabs(configurations, startTabPosition)
         _childrenRootController.add(multiStackRootController)

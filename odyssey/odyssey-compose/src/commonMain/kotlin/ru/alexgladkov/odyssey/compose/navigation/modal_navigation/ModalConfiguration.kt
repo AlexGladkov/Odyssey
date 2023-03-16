@@ -1,5 +1,7 @@
 package ru.alexgladkov.odyssey.compose.navigation.modal_navigation
 
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
 import ru.alexgladkov.odyssey.compose.Render
 
 /**
@@ -13,6 +15,7 @@ import ru.alexgladkov.odyssey.compose.Render
  * @param closeOnBackClick - true if you want to close on the hardware back button
  * @param backContent - draw behind modal view (composable)
  */
+@Immutable
 data class ModalSheetConfiguration(
     override val animationTime: Int = 400,
     val maxHeight: Float? = null,
@@ -25,6 +28,17 @@ data class ModalSheetConfiguration(
     val backContent: Render? = null,
 ) : ModalConfiguration
 
+/**
+ * Configuration for alert dialog
+ * @param animationTime - time to animation display
+ * @param maxHeight - maximum height in percents
+ * @param maxWidth - maximum width in percents
+ * @param cornerRadius - corner radius in dp (Int)
+ * @param alpha - back screamer alpha
+ * @param closeOnBackdropClick - true for outside clickable exit
+ * @param closeOnBackClick - true for hardware backpress exit
+ */
+@Immutable
 data class AlertConfiguration(
     override val animationTime: Int = 400,
     val maxHeight: Float? = null,
@@ -35,10 +49,16 @@ data class AlertConfiguration(
     val closeOnBackClick: Boolean = true,
 ) : ModalConfiguration
 
+/**
+ * Configuration for custom modal forms
+ * @param animationTime - time to animation display
+ */
+@Immutable
 data class CustomModalConfiguration(
     override val animationTime: Int = 400
 ) : ModalConfiguration
 
+@Stable
 interface ModalConfiguration {
     val animationTime: Int
 }

@@ -1,4 +1,4 @@
-package ru.alexgladkov.hilt_demo.ui
+package ru.alexgladkov.hilt_demo.legacy.ui
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize

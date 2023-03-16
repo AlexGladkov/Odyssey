@@ -29,7 +29,9 @@ kotlin {
                 implementation(compose.foundation)
                 implementation(compose.material)
                 implementation(compose.runtime)
+
                 implementation(libs.uuid)
+                implementation(libs.kotlin.immutable)
 
                 implementation(project(":odyssey:odyssey-core"))
             }

@@ -34,6 +34,7 @@ fun AnimatedHost(
     }
 
     LaunchedEffect(currentScreen, screenToRemove) {
+        println("DEBUG: cur ${currentScreen.key}, remove $screenToRemove")
         screenToRemove?.let {
             saveableStateHolder.removeState(it.key)
             onScreenRemove?.invoke(it)

@@ -46,7 +46,7 @@ Projects/Companies using this library:
 
 - [Leroy Merlin](https://play.google.com/store/apps/details?id=ru.leroymerlin.employee&hl=ru&gl=US)
 - [1Coin](https://play.google.com/store/apps/details?id=com.finance_tracker.finance_tracker)
-- Trinity Monsters
+- [VMIGclean](https://play.google.com/store/apps/details?id=ru.vmig.clean)
 
 If you use Odyssey in your project please contact me with [telegram](https://t.me/neuradev)
 

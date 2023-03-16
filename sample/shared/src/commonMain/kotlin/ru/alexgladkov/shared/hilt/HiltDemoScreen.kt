@@ -1,4 +1,4 @@
-package ru.alexgladkov.hilt_demo.ui
+package ru.alexgladkov.shared.hilt
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -9,9 +9,9 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import ru.alexgladkov.common.compose.screens.ActionCell
-import ru.alexgladkov.common.compose.theme.Odyssey
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
+import ru.alexgladkov.shared.screens.ActionCell
+import ru.alexgladkov.shared.theme.Odyssey
 
 @Composable
 fun HiltDemoScreen(

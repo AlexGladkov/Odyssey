@@ -1,6 +1,7 @@
 package ru.alexgladkov.odyssey.compose.extensions
 
 import androidx.compose.runtime.Composable
+import kotlinx.collections.immutable.persistentMapOf
 import ru.alexgladkov.odyssey.compose.RenderWithParams
 import ru.alexgladkov.odyssey.compose.helpers.*
 import ru.alexgladkov.odyssey.compose.navigation.RootComposeBuilder
@@ -23,7 +24,7 @@ fun RootComposeBuilder.screen(
 ) {
     addScreen(
         key = name,
-        screenMap = hashMapOf(name to content)
+        screenMap = persistentMapOf(name to content)
     )
 }
 

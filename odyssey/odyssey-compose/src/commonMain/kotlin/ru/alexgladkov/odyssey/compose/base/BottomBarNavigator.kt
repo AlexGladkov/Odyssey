@@ -33,8 +33,6 @@ fun BottomBarNavigator(
 
                 BottomNavigationItem(
                     selected = isSelected,
-                    selectedContentColor = Color.White,
-                    unselectedContentColor = Color.White,
                     icon = {
                         configuration.icon?.let {
                             Icon(

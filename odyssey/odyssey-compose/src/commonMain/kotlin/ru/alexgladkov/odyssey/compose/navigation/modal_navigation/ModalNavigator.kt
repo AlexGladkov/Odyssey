@@ -6,10 +6,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import ru.alexgladkov.odyssey.compose.controllers.*
 import ru.alexgladkov.odyssey.compose.helpers.noRippleClickable
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
-import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.configuration.DefaultModalConfiguration
 import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.configuration.ModalNavigatorConfiguration
 import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.views.AlertDialog
 import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.views.BottomModalSheet
@@ -23,7 +24,7 @@ fun ModalNavigator(
 ) {
     val modalController = remember { ModalController() }
     val rootController = LocalRootController.current
-    var modalStack: List<ModalBundle> by remember { mutableStateOf(emptyList()) }
+    var modalStack: ImmutableList<ModalBundle> by remember { mutableStateOf(persistentListOf()) }
     var closeable: Closeable? = null
 
     rootController.attachModalController(modalController)

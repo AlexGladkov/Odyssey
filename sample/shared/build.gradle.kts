@@ -91,7 +91,7 @@ kotlin {
 android {
     compileSdk = libs.versions.compileSdk.get().toInt()
 
-    namespace = "ru.alexgladkov.odyssey_demo"
+    namespace = "ru.alexgladkov.shared"
 
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()

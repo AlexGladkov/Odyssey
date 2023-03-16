@@ -26,6 +26,7 @@ import ru.alexgladkov.odyssey.core.LaunchFlag
 
 @Composable
 internal fun ActionsScreen(count: Int?) {
+    println("DEBUG: Draw action screen")
     val rootController = LocalRootController.current
     val modalController = rootController.findModalController()
 
