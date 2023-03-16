@@ -1,15 +1,18 @@
 package ru.alexgladkov.odyssey.compose.navigation.modal_navigation
 
-import androidx.compose.animation.core.*
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.TweenSpec
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import ru.alexgladkov.odyssey.compose.controllers.*
 import ru.alexgladkov.odyssey.compose.helpers.noRippleClickable
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
-import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.configuration.DefaultModalConfiguration
 import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.configuration.ModalNavigatorConfiguration
 import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.views.AlertDialog
 import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.views.BottomModalSheet
@@ -70,5 +73,8 @@ internal fun <T> Int.asTween(): TweenSpec<T> = tween(durationMillis = this, easi
 internal fun Screamer(alpha: Float, onCloseClick: () -> Unit) {
     Box(modifier = Modifier
         .noRippleClickable { onCloseClick.invoke() }
-        .fillMaxSize().background(Color.Black.copy(alpha = alpha)))
+        .fillMaxSize()
+        .background(Color.Black.copy(alpha = alpha))
+        .testTag(ModalNavigatorTestTags.Screamer)
+    )
 }
