@@ -20,6 +20,7 @@ import ru.alexgladkov.odyssey.compose.controllers.ModalDialogState
 import ru.alexgladkov.odyssey.compose.helpers.extractWindowHeight
 import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.Screamer
 import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.asTween
+import ru.alexgladkov.odyssey.core.animations.AnimationType
 
 @Composable
 internal fun BoxScope.AlertDialog(
@@ -34,9 +35,19 @@ internal fun BoxScope.AlertDialog(
     if (bundle.maxWidth != null)
         modifier = modifier.fillMaxWidth(bundle.maxWidth)
 
+    val heightInitial = when (bundle.animationType) {
+        is AnimationType.Present -> height
+        else -> 0
+    }
+
+    val dialogAlphaInitial = when (bundle.animationType) {
+        is AnimationType.Present -> 1f
+        else -> 0f
+    }
+
     var backdropAlphaValue by remember { mutableStateOf(0f) }
-    var dialogAlphaValue by remember { mutableStateOf(0f) }
-    var offsetValue by remember { mutableStateOf(0) }
+    var dialogAlphaValue by remember { mutableStateOf(dialogAlphaInitial) }
+    var offsetValue by remember { mutableStateOf(heightInitial) }
 
     val backdropAlpha by animateFloatAsState(
         targetValue = backdropAlphaValue,
@@ -69,8 +80,14 @@ internal fun BoxScope.AlertDialog(
         }
     }
 
+    var cardModifier = modifier.alpha(dialogAlpha)
+    when (bundle.animationType) {
+        is AnimationType.Present -> cardModifier = cardModifier.offset { IntOffset(x = 0, y = offset) }
+        else -> { }
+    }
+
     Card(
-        modifier = modifier.alpha(dialogAlpha).offset { IntOffset(x = 0, y = offset) },
+        modifier = cardModifier,
         shape = RoundedCornerShape(corner = CornerSize(bundle.cornerRadius))
     ) {
         bundle.content.invoke(bundle.key)
@@ -79,9 +96,19 @@ internal fun BoxScope.AlertDialog(
     LaunchedEffect(bundle.dialogState) {
         when (bundle.dialogState) {
             is ModalDialogState.Close -> {
-                backdropAlphaValue = 0f
-                dialogAlphaValue = 1f
-                offsetValue = height
+                when (bundle.animationType) {
+                    is AnimationType.Present -> {
+                        backdropAlphaValue = 0f
+                        dialogAlphaValue = 1f
+                        offsetValue = height
+                    }
+
+                    else -> {
+                        backdropAlphaValue = 0f
+                        dialogAlphaValue = 0f
+                        offsetValue = height
+                    }
+                }
             }
 
             else -> {

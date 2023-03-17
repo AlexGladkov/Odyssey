@@ -11,13 +11,16 @@ import ru.alexgladkov.odyssey.compose.RootController
 import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.AlertConfiguration
 import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.CustomModalConfiguration
 import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.ModalSheetConfiguration
+import ru.alexgladkov.odyssey.core.animations.AnimationType
+import ru.alexgladkov.odyssey.core.animations.getAnimationTime
 import ru.alexgladkov.odyssey.core.extensions.CFlow
 import ru.alexgladkov.odyssey.core.extensions.wrap
 
 sealed class ModalDialogState {
     object Idle : ModalDialogState()
     object Open : ModalDialogState()
-    data class Close(val animate: Boolean = true, val byBackPressed: Boolean = false) : ModalDialogState()
+    data class Close(val animate: Boolean = true, val byBackPressed: Boolean = false) :
+        ModalDialogState()
 }
 
 /**
@@ -35,6 +38,7 @@ sealed class ModalDialogState {
 internal data class ModalSheetBundle(
     override val key: String,
     override val dialogState: ModalDialogState,
+    override val animationType: AnimationType,
     override val animationTime: Int,
     override val content: Render,
     val maxHeight: Float?,
@@ -61,6 +65,7 @@ internal data class ModalSheetBundle(
 internal data class AlertBundle(
     override val key: String,
     override val dialogState: ModalDialogState,
+    override val animationType: AnimationType,
     override val animationTime: Int,
     override val content: Render,
     val maxHeight: Float?,
@@ -78,6 +83,7 @@ internal data class AlertBundle(
 internal data class CustomModalBundle(
     override val key: String,
     override val dialogState: ModalDialogState,
+    override val animationType: AnimationType,
     override val animationTime: Int,
     override val content: Render
 ) : ModalBundle
@@ -86,7 +92,6 @@ internal data class CustomModalBundle(
  * Common interface for any modal screens
  * @see ModalDialogState
  */
-@Stable
 sealed interface ModalBundle {
     val key: String
 
@@ -96,7 +101,12 @@ sealed interface ModalBundle {
     val content: Render
 
     /**
-     * time for all animations
+     * Animation type
+     */
+    val animationType: AnimationType
+
+    /**
+     * Animation time
      */
     val animationTime: Int
 
@@ -111,7 +121,8 @@ sealed interface ModalBundle {
  */
 open class ModalController {
     private var _backStack = mutableListOf<ModalBundle>()
-    private val _currentStack: MutableStateFlow<ImmutableList<ModalBundle>> = MutableStateFlow(persistentListOf())
+    private val _currentStack: MutableStateFlow<ImmutableList<ModalBundle>> =
+        MutableStateFlow(persistentListOf())
     val currentStack: CFlow<ImmutableList<ModalBundle>> = _currentStack.wrap()
 
     internal fun presentNew(
@@ -144,7 +155,12 @@ open class ModalController {
     }
 
     fun popBackStack(key: String? = null, animate: Boolean = true, byBackPressed: Boolean = false) {
-        setTopDialogState(modalDialogState = ModalDialogState.Close(animate, byBackPressed = byBackPressed), key)
+        setTopDialogState(
+            modalDialogState = ModalDialogState.Close(
+                animate,
+                byBackPressed = byBackPressed
+            ), key
+        )
     }
 
     internal fun setTopDialogState(modalDialogState: ModalDialogState, key: String? = null) {
@@ -200,36 +216,42 @@ open class ModalController {
         }
         _currentStack.value = newStack.toImmutableList()
     }
-    companion object{
-        private val ModalBundle.closeOnBackClick get() = when (this) {
-            is ModalSheetBundle -> this.closeOnBackClick
-            is AlertBundle -> this.closeOnBackClick
-            else -> true
-        }
+
+    companion object {
+        private val ModalBundle.closeOnBackClick
+            get() = when (this) {
+                is ModalSheetBundle -> this.closeOnBackClick
+                is AlertBundle -> this.closeOnBackClick
+                else -> true
+            }
+
         internal fun randomizeKey() = RootController.randomizeKey("modal_")
     }
 }
 
-internal fun ModalSheetConfiguration.wrap(key: String, with: Render): ModalBundle = ModalSheetBundle(
-    key = key,
-    maxHeight = maxHeight,
-    closeOnBackdropClick = closeOnBackdropClick,
-    closeOnSwipe = closeOnSwipe,
-    closeOnBackClick = closeOnBackClick,
-    threshold = threshold,
-    animationTime = animationTime,
-    cornerRadius = cornerRadius,
-    alpha = alpha,
-    backContent = backContent,
-    dialogState = ModalDialogState.Idle,
-    content = with
-)
+internal fun ModalSheetConfiguration.wrap(key: String, with: Render): ModalBundle =
+    ModalSheetBundle(
+        key = key,
+        maxHeight = maxHeight,
+        closeOnBackdropClick = closeOnBackdropClick,
+        closeOnSwipe = closeOnSwipe,
+        closeOnBackClick = closeOnBackClick,
+        threshold = threshold,
+        animationType = animationType,
+        animationTime = animationType.getAnimationTime(),
+        cornerRadius = cornerRadius,
+        alpha = alpha,
+        backContent = backContent,
+        dialogState = ModalDialogState.Idle,
+        content = with
+    )
 
 internal fun AlertConfiguration.wrap(key: String, with: Render): ModalBundle = AlertBundle(
     key = key,
     maxHeight = maxHeight,
     maxWidth = maxWidth,
-    animationTime = animationTime,
+    animationType = animationType,
+    animationTime = animationType.getAnimationTime(),
     dialogState = ModalDialogState.Idle,
     closeOnBackdropClick = closeOnBackdropClick,
     closeOnBackClick = closeOnBackClick,
@@ -239,6 +261,11 @@ internal fun AlertConfiguration.wrap(key: String, with: Render): ModalBundle = A
 )
 
 @Suppress("unused")
-internal fun CustomModalConfiguration.wrap(key: String, with: Render): ModalBundle = CustomModalBundle(
-    key = key, content = with, dialogState = ModalDialogState.Idle, animationTime = animationTime
-)
+internal fun CustomModalConfiguration.wrap(key: String, with: Render): ModalBundle =
+    CustomModalBundle(
+        key = key,
+        content = with,
+        dialogState = ModalDialogState.Idle,
+        animationType = animationType,
+        animationTime = animationType.getAnimationTime()
+    )

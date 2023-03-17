@@ -1,5 +1,6 @@
 package ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation
 
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
@@ -13,7 +14,7 @@ import ru.alexgladkov.odyssey.compose.navigation.tabs.TabConfiguration
 /**
  * Worker class for multistack
  */
-@Stable
+@Immutable
 data class MultiStackBuilderModel(
     val name: String,
     val tabItems: ImmutableList<TabInfo>
@@ -22,7 +23,7 @@ data class MultiStackBuilderModel(
 /**
  * Worker class for tab info
  */
-@Stable
+@Immutable
 class TabInfo internal constructor(
     val tabConfiguration: TabConfiguration,
     val screenMap: ImmutableMap<String, RenderWithParams<Any?>>,
@@ -33,7 +34,7 @@ class TabInfo internal constructor(
  * Builder for any multistack navigation with tabs
  * @param name - name for graph routing
  */
-@Stable
+@Immutable
 class MultiStackBuilder(val name: String) {
     private val _tabItems = mutableListOf<TabInfo>()
 

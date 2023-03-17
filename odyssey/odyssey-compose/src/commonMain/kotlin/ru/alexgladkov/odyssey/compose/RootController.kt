@@ -2,6 +2,7 @@ package ru.alexgladkov.odyssey.compose
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.graphics.Color
 import kotlinx.collections.immutable.ImmutableList
@@ -45,7 +46,7 @@ sealed class ScreenType {
     ) : ScreenType()
 }
 
-@Stable
+@Immutable
 data class AllowedDestination(
     val key: String,
     val screenType: ScreenType

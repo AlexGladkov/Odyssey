@@ -17,3 +17,10 @@ sealed class AnimationType {
     data class Present(val animationTime: Int) : AnimationType()
     data class Fade(val animationTime: Int) : AnimationType()
 }
+
+fun AnimationType.getAnimationTime(): Int = when (this) {
+    is AnimationType.Fade -> animationTime
+    AnimationType.None -> 0
+    is AnimationType.Present -> animationTime
+    is AnimationType.Push -> animationTime
+}

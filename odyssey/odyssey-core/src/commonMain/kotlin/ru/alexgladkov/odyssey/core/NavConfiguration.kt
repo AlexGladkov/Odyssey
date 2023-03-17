@@ -1,10 +1,11 @@
 package ru.alexgladkov.odyssey.core
 
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import ru.alexgladkov.odyssey.core.screen.ScreenBundle
 import ru.alexgladkov.odyssey.core.screen.ScreenInteractor
 
-@Stable
+@Immutable
 data class NavConfiguration(
     val screen: ScreenInteractor,
     val screenToRemove: ScreenInteractor? = null

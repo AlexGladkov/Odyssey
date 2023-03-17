@@ -3,9 +3,14 @@ package ru.alexgladkov.odyssey.compose.navigation.modal_navigation
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import ru.alexgladkov.odyssey.compose.Render
+import ru.alexgladkov.odyssey.core.animations.AnimationType
+import ru.alexgladkov.odyssey.core.animations.defaultFadeAnimation
+import ru.alexgladkov.odyssey.core.animations.defaultPresentationAnimation
 
 /**
  * Class configurator for modal sheet controller
+ * @param animationTime (deprecated) - time to animation display
+ * @param animationType - type of appearing animation
  * @param maxHeight - maxHeight in Float. use null for wrap by content
  * @param threshold - threshold to close modal bottom sheet by swipe
  * @param cornerRadius - card corner radius in dp
@@ -17,7 +22,9 @@ import ru.alexgladkov.odyssey.compose.Render
  */
 @Immutable
 data class ModalSheetConfiguration(
+    @Deprecated("No need to provide animation time more, use instead animation type")
     override val animationTime: Int = 400,
+    override val animationType: AnimationType = defaultPresentationAnimation(),
     val maxHeight: Float? = null,
     val threshold: Float = 0.3f,
     val cornerRadius: Int = 0,
@@ -30,7 +37,8 @@ data class ModalSheetConfiguration(
 
 /**
  * Configuration for alert dialog
- * @param animationTime - time to animation display
+ * @param animationTime (deprecated) - time to animation display
+ * @param animationType - type of appearing animation
  * @param maxHeight - maximum height in percents
  * @param maxWidth - maximum width in percents
  * @param cornerRadius - corner radius in dp (Int)
@@ -40,7 +48,9 @@ data class ModalSheetConfiguration(
  */
 @Immutable
 data class AlertConfiguration(
+    @Deprecated("No need to provide animation time more, use instead animation type")
     override val animationTime: Int = 400,
+    override val animationType: AnimationType = defaultFadeAnimation(),
     val maxHeight: Float? = null,
     val maxWidth: Float? = null,
     val cornerRadius: Int = 0,
@@ -51,14 +61,18 @@ data class AlertConfiguration(
 
 /**
  * Configuration for custom modal forms
- * @param animationTime - time to animation display
+ * @param animationTime (deprecated) - time to animation display
+ * @param animationType - type of appearing animation
  */
 @Immutable
 data class CustomModalConfiguration(
-    override val animationTime: Int = 400
+    @Deprecated("No need to provide animation time more, use instead animation type")
+    override val animationTime: Int = 400,
+    override val animationType: AnimationType
 ) : ModalConfiguration
 
 @Stable
 interface ModalConfiguration {
     val animationTime: Int
+    val animationType: AnimationType
 }

@@ -1,9 +1,10 @@
 package ru.alexgladkov.odyssey.core.screen
 
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import ru.alexgladkov.odyssey.core.animations.AnimationType
 
-@Stable
+@Immutable
 data class Screen(
     override val key: String = "",
     override val realKey: String = "",
