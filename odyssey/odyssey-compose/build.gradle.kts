@@ -11,8 +11,10 @@ group = libs.versions.packageName.get()
 version = libs.versions.packageVersion.get()
 
 kotlin {
-    android()
     jvm("desktop")
+    android {
+        publishLibraryVariants("release")
+    }
     ios()
     iosSimulatorArm64()
     js(IR) {
@@ -37,29 +39,58 @@ kotlin {
             }
         }
 
+        val commonButJSMain by creating {
+            dependsOn(commonMain)
+        }
+        val skikoMain by creating {
+            dependsOn(commonMain)
+        }
+        val jvmAndAndroidMain by creating {
+            dependsOn(commonMain)
+        }
+        val nativeMain by creating {
+            dependsOn(commonMain)
+        }
+
+        val desktopMain by getting {
+            dependsOn(skikoMain)
+            dependsOn(jvmAndAndroidMain)
+            dependsOn(commonButJSMain)
+
+            dependencies {
+                implementation(libs.coroutines.swing)
+                implementation(compose.desktop.common)
+            }
+        }
+
         val androidMain by getting {
+            dependsOn(jvmAndAndroidMain)
+            dependsOn(commonButJSMain)
+
             dependencies {
                 implementation(libs.coroutines.android)
                 implementation(libs.activity.compose)
             }
         }
 
-        val iosMain by getting
+        val iosMain by getting {
+            dependsOn(skikoMain)
+            dependsOn(commonButJSMain)
+            dependsOn(nativeMain)
+        }
+
         val iosTest by getting
-        val iosSimulatorArm64Main by getting {
-            dependsOn(iosMain)
-        }
-        val iosSimulatorArm64Test by getting {
-            dependsOn(iosTest)
-        }
-        val desktopMain by getting {
-            dependencies {
-                implementation(libs.coroutines.swing)
-                implementation(compose.desktop.common)
-            }
+        val iosSimulatorArm64Main by getting
+        iosSimulatorArm64Main.dependsOn(iosMain)
+        val iosSimulatorArm64Test by getting
+        iosSimulatorArm64Test.dependsOn(iosTest)
+        val jsMain by getting {
+            dependsOn(skikoMain)
         }
         val macosMain by creating {
-            dependsOn(commonMain)
+            dependsOn(skikoMain)
+            dependsOn(commonButJSMain)
+            dependsOn(nativeMain)
         }
         val macosX64Main by getting {
             dependsOn(macosMain)
@@ -73,6 +104,8 @@ kotlin {
 android {
     compileSdk = libs.versions.compileSdk.get().toInt()
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
+
+    namespace = "ru.alexgladkov.odyssey.compose"
 
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
@@ -90,3 +123,9 @@ android {
         }
     }
 }
+
+configureMavenPublication(
+    groupId = libs.versions.packageName.get(),
+    artifactId = "odyssey-compose",
+    name = "Compose implementation for core"
+)

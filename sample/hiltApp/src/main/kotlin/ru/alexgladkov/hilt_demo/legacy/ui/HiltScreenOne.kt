@@ -18,5 +18,5 @@ fun HiltScreenOne() {
     ) {
         Text("Push")
     }
-    NumberLabel(viewModel.randomLifecycleValue)
+//    NumberLabel(viewModel.randomLifecycleValue)
 }

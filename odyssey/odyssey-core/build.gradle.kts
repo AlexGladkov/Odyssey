@@ -9,8 +9,8 @@ group = libs.versions.packageName.get()
 version = libs.versions.packageVersion.get()
 
 kotlin {
-    jvm("desktop")
     android()
+    jvm("desktop")
     ios()
     iosSimulatorArm64()
     js(IR) {
@@ -45,6 +45,8 @@ android {
     compileSdk = libs.versions.compileSdk.get().toInt()
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
 
+    namespace = "ru.alexgladkov.odyssey.core"
+
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
@@ -61,3 +63,9 @@ android {
         }
     }
 }
+
+configureMavenPublication(
+    groupId = libs.versions.packageName.get(),
+    artifactId = "odyssey-core",
+    name = "Library core"
+)

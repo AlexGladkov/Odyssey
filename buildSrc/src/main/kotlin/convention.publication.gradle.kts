@@ -38,8 +38,6 @@ val javadocJar by tasks.registering(Jar::class) {
     archiveClassifier.set("javadoc")
 }
 
-fun getExtraString(name: String) = ext[name]?.toString()
-
 publishing {
     // Configure maven central repository
     repositories {
@@ -47,8 +45,8 @@ publishing {
             name = "sonatype"
             setUrl("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
             credentials {
-                username = getExtraString("ossrhUsername")
-                password = getExtraString("ossrhPassword")
+                username = getLocalProperty("ossrhUsername")
+                password = getLocalProperty("ossrhPassword")
             }
         }
     }

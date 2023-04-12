@@ -12,3 +12,24 @@ allprojects {
         mavenLocal()
     }
 }
+
+subprojects {
+    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>() {
+        kotlinOptions.jvmTarget = "11"
+    }
+
+    plugins.withId("maven-publish") {
+        configure<PublishingExtension> {
+            repositories {
+                maven {
+                    name = "sonatype"
+                    setUrl("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+                    credentials {
+                        username = getLocalProperty("ossrhUsername")
+                        password = getLocalProperty("ossrhPassword")
+                    }
+                }
+            }
+        }
+    }
+}

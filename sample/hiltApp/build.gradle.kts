@@ -31,6 +31,7 @@ dependencies {
 android {
     compileSdk = 33
     sourceSets["main"].manifest.srcFile("src/main/AndroidManifest.xml")
+    namespace = "ru.alexgladkov.hilt_demo"
 
     defaultConfig {
         applicationId = "ru.alexgladkov.hilt_demo"
