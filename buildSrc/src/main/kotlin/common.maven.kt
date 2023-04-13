@@ -1,7 +1,11 @@
 import org.gradle.api.Project
 import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.publish.maven.MavenPublication
+import org.gradle.api.tasks.bundling.Jar
 import org.gradle.kotlin.dsl.configure
+import org.gradle.kotlin.dsl.getValue
+import org.gradle.kotlin.dsl.provideDelegate
+import org.gradle.kotlin.dsl.registering
 import java.io.File
 
 var MavenPublication.mppArtifactId: String
@@ -16,6 +20,10 @@ fun Project.configureMavenPublication(
     artifactId: String,
     name: String
 ) {
+    val javadocJar by tasks.registering(Jar::class) {
+        archiveClassifier.set("javadoc")
+    }
+
     extensions.configure<PublishingExtension> {
         publications {
             all {
@@ -24,8 +32,13 @@ fun Project.configureMavenPublication(
                 this.groupId = groupId
                 mppArtifactId = artifactId
 
+                artifact(javadocJar.get())
+
                 pom {
                     this.name.set(name)
+                    this.description.set("Lightweight multiplatform navigation library (jvm, android, ios)")
+                    this.url.set("https://github.com/AlexGladkov/Odyssey")
+
                     url.set("https://github.com/AlexGladkov/Odyssey")
                     licenses {
                         license {
