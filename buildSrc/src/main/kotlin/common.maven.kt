@@ -1,11 +1,14 @@
 import org.gradle.api.Project
 import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.publish.maven.MavenPublication
+import org.gradle.api.publish.maven.tasks.AbstractPublishToMaven
 import org.gradle.api.tasks.bundling.Jar
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.getValue
 import org.gradle.kotlin.dsl.provideDelegate
 import org.gradle.kotlin.dsl.registering
+import org.gradle.kotlin.dsl.withType
+import org.gradle.plugins.signing.Sign
 import java.io.File
 
 var MavenPublication.mppArtifactId: String
@@ -72,4 +75,11 @@ fun Project.getLocalProperty(key: String, file: String = "local.properties"): St
     } else error("File from not found")
 
     return properties.getProperty(key)
+}
+
+fun Project.configureImplicitDependencies() {
+    val signingTasks = tasks.withType<Sign>()
+    tasks.withType<AbstractPublishToMaven>().configureEach {
+        dependsOn(signingTasks)
+    }
 }

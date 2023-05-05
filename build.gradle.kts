@@ -24,7 +24,11 @@ extra.apply {
 }
 
 subprojects {
-    configureImplicitDependencies()
+    afterEvaluate {
+        afterEvaluate {
+            configureImplicitDependencies()
+        }
+    }
 
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>() {
         kotlinOptions.jvmTarget = "11"
@@ -72,12 +76,5 @@ subprojects {
                 }
             }
         }
-    }
-}
-
-fun configureImplicitDependencies() {
-    val signingTasks = tasks.withType<Sign>()
-    tasks.withType<AbstractPublishToMaven>().configureEach {
-        dependsOn(signingTasks)
     }
 }
