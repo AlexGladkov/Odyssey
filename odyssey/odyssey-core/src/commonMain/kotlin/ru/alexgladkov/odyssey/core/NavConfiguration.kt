@@ -1,7 +1,6 @@
 package ru.alexgladkov.odyssey.core
 
 import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.Stable
 import ru.alexgladkov.odyssey.core.screen.ScreenBundle
 import ru.alexgladkov.odyssey.core.screen.ScreenInteractor
 
@@ -13,4 +12,4 @@ data class NavConfiguration(
 
 fun ScreenInteractor.wrap(): NavConfiguration = NavConfiguration(this)
 fun ScreenInteractor.wrap(with: ScreenInteractor): NavConfiguration = NavConfiguration(this, with)
-fun ScreenInteractor.toScreenBundle(): ScreenBundle = ScreenBundle(key, realKey, params)
+fun ScreenInteractor.toCoreScreen(): CoreScreen = ScreenBundle(key, realKey, params)

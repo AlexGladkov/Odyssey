@@ -1,11 +1,11 @@
 package ru.alexgladkov.odyssey.core.screen
 
 import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.Stable
+import ru.alexgladkov.odyssey.core.CoreScreen
 
 @Immutable
-data class ScreenBundle(
-    val key: String,
-    val realKey: String? = null,
-    val params: Any?
-)
+class ScreenBundle(
+    override val key: String,
+    override val realKey: String?,
+    override val params: Any?
+) : CoreScreen

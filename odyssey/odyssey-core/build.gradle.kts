@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.compose")
     id("maven-publish")
     id("com.android.library")
+    id("kotlin-parcelize")
 }
 
 group = libs.versions.packageName.get()
@@ -20,23 +21,56 @@ kotlin {
     macosArm64()
 
     sourceSets {
-        named("commonMain") {
+        val commonMain by getting {
             dependencies {
                 implementation(compose.ui)
                 implementation(compose.foundation)
                 implementation(compose.material)
                 implementation(compose.runtime)
 
+                implementation(libs.uuid)
+
                 implementation(libs.coroutines.core)
                 implementation(libs.kotlin.immutable)
             }
         }
-        named("commonTest")
+
+        named("commonTest") {
+            dependencies {
+                implementation(kotlin("test-common"))
+                implementation(kotlin("test-annotations-common"))
+                implementation("junit:junit:4.13.2")
+            }
+        }
 
         named("androidMain") {
             dependencies {
                 implementation(libs.activity.compose)
             }
+        }
+
+        val desktopTest by getting {
+            dependencies {
+                implementation(kotlin("test-junit"))
+                implementation("junit:junit:4.13.2")
+            }
+        }
+
+        val iosMain by getting {
+            dependsOn(commonMain)
+        }
+
+        val iosSimulatorArm64Main by getting
+        iosSimulatorArm64Main.dependsOn(iosMain)
+
+        val macosMain by creating {
+            dependsOn(commonMain)
+        }
+        val macosX64Main by getting {
+            dependsOn(macosMain)
+        }
+        val macosArm64Main by getting {
+            dependsOn(macosMain)
         }
     }
 }
@@ -53,13 +87,13 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     kotlin {
         jvmToolchain {
-            languageVersion.set(JavaLanguageVersion.of("11"))
+            languageVersion.set(JavaLanguageVersion.of("17"))
         }
     }
 }

@@ -2,17 +2,27 @@ package ru.alexgladkov.odyssey.compose.base
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Button
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import ru.alexgladkov.odyssey.compose.RootController
+import ru.alexgladkov.odyssey.compose.extensions.push
 import ru.alexgladkov.odyssey.compose.helpers.BottomSheetBundle
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
 import ru.alexgladkov.odyssey.core.CoreRootController
 import ru.alexgladkov.odyssey.core.NavConfiguration
 import ru.alexgladkov.odyssey.core.screen.ScreenInteractor
-import ru.alexgladkov.odyssey.core.toScreenBundle
+import ru.alexgladkov.odyssey.core.toCoreScreen
 
 @Composable
 fun Navigator(
@@ -39,8 +49,8 @@ private fun NavigatorAnimated(
     backgroundColor: Color
 ) {
     AnimatedHost(
-        currentScreen = screen.toScreenBundle(),
-        screenToRemove = configuration.screenToRemove?.toScreenBundle(),
+        currentScreen = screen.toCoreScreen(),
+        screenToRemove = configuration.screenToRemove?.toCoreScreen(),
         animationType = screen.animationType,
         isForward = screen.isForward,
         modifier = Modifier.background(backgroundColor).fillMaxSize(),

@@ -3,7 +3,6 @@ package ru.alexgladkov.odyssey_demo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-
 import ru.alexgladkov.shared.MainView
 import ru.alexgladkov.shared.PlatformConfiguration
 

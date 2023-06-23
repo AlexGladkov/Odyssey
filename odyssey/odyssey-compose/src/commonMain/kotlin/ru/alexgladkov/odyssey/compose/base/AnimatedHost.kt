@@ -3,21 +3,23 @@ package ru.alexgladkov.odyssey.compose.base
 import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.ui.Modifier
 import ru.alexgladkov.odyssey.compose.animations.AnimatedTransition
+import ru.alexgladkov.odyssey.core.CoreScreen
 import ru.alexgladkov.odyssey.core.animations.AnimationType
-import ru.alexgladkov.odyssey.core.screen.ScreenBundle
 
 @Composable
 fun AnimatedHost(
-    currentScreen: ScreenBundle,
-    screenToRemove: ScreenBundle?,
+    currentScreen: CoreScreen,
+    screenToRemove: CoreScreen?,
     animationType: AnimationType,
     isForward: Boolean,
     modifier: Modifier = Modifier,
-    onScreenRemove: ((ScreenBundle) -> Unit)? = null,
-    content: @Composable (ScreenBundle) -> Unit
+    onScreenRemove: ((CoreScreen) -> Unit)? = null,
+    content: @Composable (CoreScreen) -> Unit
 ) {
     val saveableStateHolder = rememberSaveableStateHolder()
 
@@ -27,14 +29,14 @@ fun AnimatedHost(
             animation = animationType,
             isForwardDirection = isForward
         ) {
-            saveableStateHolder.SaveableStateProvider(it.key) {
-                content(it)
+            val key = remember { currentScreen.key }
+            saveableStateHolder.SaveableStateProvider(key) {
+                content(currentScreen)
             }
         }
     }
 
     LaunchedEffect(currentScreen, screenToRemove) {
-        println("DEBUG: cur ${currentScreen.key}, remove $screenToRemove")
         screenToRemove?.let {
             saveableStateHolder.removeState(it.key)
             onScreenRemove?.invoke(it)

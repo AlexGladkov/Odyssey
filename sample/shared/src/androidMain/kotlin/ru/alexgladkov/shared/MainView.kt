@@ -8,24 +8,27 @@ import ru.alexgladkov.odyssey.core.configuration.DisplayType
 import ru.alexgladkov.shared.navigation.navigationGraph
 import ru.alexgladkov.shared.theme.Odyssey
 import ru.alexgladkov.shared.theme.OdysseyTheme
+import ru.alexgladkov.odyssey.compose.navigators.TestNavigator
 
 @Composable
 fun MainView(platformConfiguration: PlatformConfiguration) {
-    OdysseyTheme {
-        val configuration = OdysseyConfiguration(
-            canvas = platformConfiguration.activity,
-            displayType = DisplayType.EdgeToEdge,
-            backgroundColor = Odyssey.color.primaryBackground,
-            navigationBarColor = Odyssey.color.primaryBackground.toArgb(),
-            breadcrumbCallback = { breadcrumb ->
+//    OdysseyTheme {
+//        val configuration = OdysseyConfiguration(
+//            canvas = platformConfiguration.activity,
+//            displayType = DisplayType.EdgeToEdge,
+//            backgroundColor = Odyssey.color.primaryBackground,
+//            navigationBarColor = Odyssey.color.primaryBackground.toArgb(),
+//            breadcrumbCallback = { breadcrumb ->
+//
+//            }
+//        )
+//
+//        setNavigationContent(configuration, onApplicationFinish = {
+//            platformConfiguration.activity.finishAffinity()
+//        }) {
+//            navigationGraph()
+//        }
+//    }
 
-            }
-        )
-
-        setNavigationContent(configuration, onApplicationFinish = {
-            platformConfiguration.activity.finishAffinity()
-        }) {
-            navigationGraph()
-        }
-    }
+    TestNavigator()
 }

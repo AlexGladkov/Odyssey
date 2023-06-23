@@ -39,6 +39,13 @@ kotlin {
             }
         }
 
+        val commonTest by getting {
+            dependencies {
+                implementation(kotlin("test-common"))
+                implementation(kotlin("test-annotations-common"))
+            }
+        }
+
         val commonButJSMain by creating {
             dependsOn(commonMain)
         }
@@ -60,6 +67,13 @@ kotlin {
             dependencies {
                 implementation(libs.coroutines.swing)
                 implementation(compose.desktop.common)
+            }
+        }
+
+        val desktopTest by getting {
+            dependencies {
+                implementation(kotlin("test-junit"))
+                implementation("junit:junit:4.13.2")
             }
         }
 
@@ -113,13 +127,13 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     kotlin {
         jvmToolchain {
-            languageVersion.set(JavaLanguageVersion.of("11"))
+            languageVersion.set(JavaLanguageVersion.of("17"))
         }
     }
 }

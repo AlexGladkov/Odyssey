@@ -9,7 +9,7 @@ import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.ui.Modifier
 import ru.alexgladkov.odyssey.compose.controllers.TabNavigationModel
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
-import ru.alexgladkov.odyssey.core.toScreenBundle
+import ru.alexgladkov.odyssey.core.toCoreScreen
 
 @Composable
 fun TabNavigator(
@@ -27,9 +27,9 @@ fun TabNavigator(
             ) {
                 configuration.value?.let { navConfig ->
                     AnimatedHost(
-                        currentScreen = navConfig.screen.toScreenBundle(),
+                        currentScreen = navConfig.screen.toCoreScreen(),
                         animationType = navConfig.screen.animationType,
-                        screenToRemove = navConfig.screenToRemove?.toScreenBundle(),
+                        screenToRemove = navConfig.screenToRemove?.toCoreScreen(),
                         isForward = navConfig.screen.isForward,
                         onScreenRemove = currentTab.rootController.onScreenRemove
                     ) {

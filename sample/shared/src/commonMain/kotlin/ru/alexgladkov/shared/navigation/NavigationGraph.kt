@@ -22,7 +22,6 @@ import ru.alexgladkov.shared.theme.Odyssey
 @Composable
 internal fun RootComposeBuilder.navigationGraph() {
     screen(NavigationTree.Actions.name) {
-        println("DEBUG: Call actions screen")
         ActionsScreen(count = 0)
     }
 

@@ -1,5 +1,6 @@
 package ru.alexgladkov.odyssey.compose.navigation
 
+import androidx.compose.runtime.saveable.Saver
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toImmutableMap

@@ -11,6 +11,7 @@ import ru.alexgladkov.odyssey.compose.RootController
 import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.AlertConfiguration
 import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.CustomModalConfiguration
 import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.ModalSheetConfiguration
+import ru.alexgladkov.odyssey.core.CoreRootController
 import ru.alexgladkov.odyssey.core.animations.AnimationType
 import ru.alexgladkov.odyssey.core.animations.getAnimationTime
 import ru.alexgladkov.odyssey.core.extensions.CFlow
@@ -225,7 +226,7 @@ open class ModalController {
                 else -> true
             }
 
-        internal fun randomizeKey() = RootController.randomizeKey("modal_")
+        internal fun randomizeKey() = CoreRootController.randomizeKey("modal_")
     }
 }
 

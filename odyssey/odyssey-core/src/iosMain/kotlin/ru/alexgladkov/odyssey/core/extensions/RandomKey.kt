@@ -1,4 +1,4 @@
-package ru.alexgladkov.odyssey.compose.extensions
+package ru.alexgladkov.odyssey.core.extensions
 
 import platform.Foundation.NSUUID
 
