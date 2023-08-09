@@ -4,4 +4,4 @@ package ru.alexgladkov.odyssey.core.platform
 @OptionalExpectation
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.BINARY)
-expect annotation class CommonParcelize()
+expect annotation class Parcelize()

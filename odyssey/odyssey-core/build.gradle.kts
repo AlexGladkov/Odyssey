@@ -4,6 +4,7 @@ plugins {
     id("maven-publish")
     id("com.android.library")
     id("kotlin-parcelize")
+    id("kotlin-kapt")
 }
 
 group = libs.versions.packageName.get()

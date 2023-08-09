@@ -1,7 +1,7 @@
 package ru.alexgladkov.odyssey.core.animations
 
-import ru.alexgladkov.odyssey.core.platform.CommonParcelable
-import ru.alexgladkov.odyssey.core.platform.CommonParcelize
+import ru.alexgladkov.odyssey.core.platform.Parcelable
+import ru.alexgladkov.odyssey.core.platform.Parcelize
 
 /**
  * Animation type is types of animation for navigation transition
@@ -14,8 +14,8 @@ import ru.alexgladkov.odyssey.core.platform.CommonParcelize
  *
  * @constructor Create empty Animation typ
  */
-@CommonParcelize
-sealed class AnimationType : CommonParcelable {
+@Parcelize
+sealed class AnimationType : Parcelable {
     object None : AnimationType()
     data class Push(val animationTime: Int) : AnimationType()
     data class Present(val animationTime: Int) : AnimationType()

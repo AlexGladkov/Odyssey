@@ -5,6 +5,7 @@ plugins {
     id("org.jetbrains.compose")
     id("maven-publish")
     id("com.android.library")
+    id("kotlin-parcelize")
 }
 
 group = libs.versions.packageName.get()
