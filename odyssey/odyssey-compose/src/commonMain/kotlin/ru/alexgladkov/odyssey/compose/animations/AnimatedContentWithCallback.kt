@@ -22,7 +22,7 @@ import androidx.compose.ui.Modifier
 fun <S> AnimatedContentWithCallback(
     targetState: S,
     modifier: Modifier = Modifier,
-    transitionSpec: AnimatedContentScope<S>.() -> ContentTransform,
+    transitionSpec: AnimatedContentTransitionScope<S>.() -> ContentTransform,
     contentAlignment: Alignment = Alignment.TopStart,
     onAnimationEnd: () -> Unit,
     content: @Composable AnimatedVisibilityScope.(targetState: S) -> Unit

@@ -19,3 +19,13 @@ kotlin {
         }
     }
 }
+
+android {
+    namespace = "ru.alexgladkov.common.compose.platform"
+
+    kotlin {
+        jvmToolchain {
+            languageVersion.set(JavaLanguageVersion.of("17"))
+        }
+    }
+}

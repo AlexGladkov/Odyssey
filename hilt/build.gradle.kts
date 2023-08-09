@@ -8,6 +8,7 @@ plugins {
 }
 
 android {
+    namespace = "ru.alexgladkov.hilt_demo"
     compileSdkVersion(Dependencies.compileSdk)
 
     defaultConfig {

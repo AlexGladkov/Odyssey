@@ -1,5 +1,5 @@
 plugins {
-    id("multiplatform-compose-setup")
+    id("multiplatform-android-setup")
     id("android-setup")
     id("maven-publish")
     id("convention.publication")
@@ -35,6 +35,16 @@ kotlin {
                     )
                 )
             }
+        }
+    }
+}
+
+android {
+    namespace = "ru.alexgladkov.common.compose.android"
+
+    kotlin {
+        jvmToolchain {
+            languageVersion.set(JavaLanguageVersion.of("17"))
         }
     }
 }

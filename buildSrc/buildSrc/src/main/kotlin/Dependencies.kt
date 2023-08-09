@@ -1,6 +1,6 @@
 object Dependencies {
 
-    val odyssey = "1.3.1"
+    val odyssey = "1.3.20"
     val odysseyPackage = "io.github.alexgladkov"
 
     val compileSdk = 33
@@ -17,7 +17,7 @@ object Dependencies {
     object JetBrains {
         object Kotlin {
             // __KOTLIN_COMPOSE_VERSION__
-            private const val VERSION = "1.7.20"
+            private const val VERSION = "1.9.0"
             const val gradlePlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$VERSION"
             const val testCommon = "org.jetbrains.kotlin:kotlin-test-common:$VERSION"
             const val testJunit = "org.jetbrains.kotlin:kotlin-test-junit:$VERSION"
@@ -26,10 +26,10 @@ object Dependencies {
 
             const val dateTime = "org.jetbrains.kotlinx:kotlinx-datetime:0.2.1"
 
-            const val serialization = "org.jetbrains.kotlinx:kotlinx-serialization-core:1.4.0"
-            const val serializationPlugin = "org.jetbrains.kotlin:kotlin-serialization:1.5.31"
+            const val serialization = "org.jetbrains.kotlinx:kotlinx-serialization-core:1.6.0-RC"
+            const val serializationPlugin = "org.jetbrains.kotlin:kotlin-serialization:1.9.0"
 
-            private const val coroutinesVersion = "1.6.4"
+            private const val coroutinesVersion = "1.7.3"
             const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
             const val coroutinesAndroid = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
             const val coroutinesSwing = "org.jetbrains.kotlinx:kotlinx-coroutines-swing:$coroutinesVersion"
@@ -39,7 +39,7 @@ object Dependencies {
 
         object Compose {
             // __LATEST_COMPOSE_RELEASE_VERSION__
-            private const val VERSION = "1.2.1"
+            private const val VERSION = "1.5.0-beta01"
             const val gradlePlugin = "org.jetbrains.compose:compose-gradle-plugin:$VERSION"
         }
     }
@@ -47,7 +47,7 @@ object Dependencies {
     object Android {
         object Tools {
             object Build {
-                const val gradlePlugin = "com.android.tools.build:gradle:4.1.0"
+                const val gradlePlugin = "com.android.tools.build:gradle:8.1.0"
             }
         }
     }

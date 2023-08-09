@@ -23,7 +23,7 @@ import dagger.hilt.android.internal.lifecycle.HiltViewModelFactory
  * Credits: @puritanin
  */
 class SimpleViewModelStoreOwner(
-    activityContext: Context
+    activityContext: Context,
 ) : ViewModelStoreOwner,
     HasDefaultViewModelProviderFactory,
     SavedStateRegistryOwner,
@@ -42,7 +42,7 @@ class SimpleViewModelStoreOwner(
 
     private val store = ViewModelStore()
 
-    private val lifecycle = LifecycleRegistry(this).apply {
+    override val lifecycle = LifecycleRegistry(this).apply {
         this.currentState = Lifecycle.State.INITIALIZED
     }
 
@@ -63,11 +63,8 @@ class SimpleViewModelStoreOwner(
         defaultFactory
     )
 
-    override fun getViewModelStore(): ViewModelStore = store
-
-    override fun getDefaultViewModelProviderFactory(): ViewModelProvider.Factory = factory
-
-    override fun getLifecycle(): Lifecycle = lifecycle
+    override val defaultViewModelProviderFactory: ViewModelProvider.Factory = factory
+    override val viewModelStore: ViewModelStore = store
 
     override val savedStateRegistry: SavedStateRegistry
         get() = savedStateRegistryController.savedStateRegistry

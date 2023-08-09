@@ -6,6 +6,7 @@ plugins {
 }
 
 android {
+    namespace = "ru.alexgladkov.odyssey_demo"
     compileSdkVersion(Dependencies.compileSdk)
 
     defaultConfig {

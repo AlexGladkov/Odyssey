@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Application
+import androidx.compose.ui.window.ComposeUIViewController
 import kotlinx.cinterop.*
 import platform.Foundation.NSStringFromClass
 import platform.UIKit.*
@@ -14,6 +14,7 @@ import ru.alexgladkov.common.compose.theme.OdysseyTheme
 import ru.alexgladkov.odyssey.compose.setup.OdysseyConfiguration
 import ru.alexgladkov.odyssey.compose.setup.setNavigationContent
 
+@OptIn(ExperimentalForeignApi::class)
 fun main() {
     val args = emptyArray<String>()
     memScoped {
@@ -25,6 +26,7 @@ fun main() {
     }
 }
 
+@OptIn(ExperimentalForeignApi::class)
 class SkikoAppDelegate : UIResponder, UIApplicationDelegateProtocol {
     companion object : UIResponderMeta(), UIApplicationDelegateProtocolMeta
 
@@ -42,7 +44,7 @@ class SkikoAppDelegate : UIResponder, UIApplicationDelegateProtocol {
         didFinishLaunchingWithOptions: Map<Any?, *>?
     ): Boolean {
         window = UIWindow(frame = UIScreen.mainScreen.bounds)
-        window!!.rootViewController = Application("Odyssey Demo") {
+        window!!.rootViewController = ComposeUIViewController {
             OdysseyTheme {
                 Column(modifier = Modifier.background(Odyssey.color.primaryBackground)) {
                     // To skip upper part of screen.

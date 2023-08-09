@@ -26,10 +26,10 @@ fun <T> AnimatedTransition(
     AnimatedNavigation(
         targetState = targetState,
         transitionSpec = when (animation) {
-            is AnimationType.Present -> providePresentationTransition(isForwardDirection, animation.animationTime)
-            is AnimationType.Fade -> provideCrossFadeTransition(animation.animationTime)
-            AnimationType.None -> providePresentationTransition(isForwardDirection, 1)
-            is AnimationType.Push -> providePushTransition(isForwardDirection, animation.animationTime)
+            is AnimationType.Present -> providePresentationTransition<T>(isForwardDirection, animation.animationTime)
+            is AnimationType.Fade -> provideCrossFadeTransition<T>(animation.animationTime)
+            AnimationType.None -> providePresentationTransition<T>(isForwardDirection, 1)
+            is AnimationType.Push -> providePushTransition<T>(isForwardDirection, animation.animationTime)
         },
         onAnimationEnd = onAnimationEnd,
         content = content
@@ -40,7 +40,7 @@ fun <T> AnimatedTransition(
 @Composable
 fun <T> AnimatedNavigation(
     targetState: T,
-    transitionSpec: AnimatedContentScope<T>.() -> ContentTransform,
+    transitionSpec: AnimatedContentTransitionScope<T>.() -> ContentTransform,
     onAnimationEnd: (() -> Unit)? = null,
     content: @Composable (T) -> Unit
 ) {

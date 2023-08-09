@@ -30,3 +30,13 @@ kotlin {
         }
     }
 }
+
+android {
+    namespace = "ru.alexgladkov.odyssey.core"
+
+    kotlin {
+        jvmToolchain {
+            languageVersion.set(JavaLanguageVersion.of("17"))
+        }
+    }
+}

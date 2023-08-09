@@ -12,4 +12,4 @@ include(
 )
 
 //includeBuild("convention-plugins")
-rootProject.name = "odyssey"
+rootProject.name = "Odyssey"

@@ -14,7 +14,7 @@ import androidx.compose.animation.core.tween
 fun <T> providePresentationTransition(
     isOpen: Boolean,
     transitionTime: Int
-): AnimatedContentScope<T>.() -> ContentTransform = {
+): AnimatedContentTransitionScope<T>.() -> ContentTransform = {
     if (isOpen) {
         // Forward animation
         (slideInVertically(
@@ -51,7 +51,7 @@ fun <T> providePresentationTransition(
  * @param transitionTime - animation duration
  */
 @OptIn(ExperimentalAnimationApi::class)
-fun <T> providePushTransition(isForward: Boolean, transitionTime: Int): AnimatedContentScope<T>.() -> ContentTransform =
+fun <T> providePushTransition(isForward: Boolean, transitionTime: Int): AnimatedContentTransitionScope<T>.() -> ContentTransform =
     {
         if (isForward) {
             // Forward animation
@@ -80,7 +80,7 @@ fun <T> providePushTransition(isForward: Boolean, transitionTime: Int): Animated
     }
 
 @OptIn(ExperimentalAnimationApi::class)
-fun <T> provideCrossFadeTransition(transitionTime: Int): AnimatedContentScope<T>.() -> ContentTransform = {
+fun <T> provideCrossFadeTransition(transitionTime: Int): AnimatedContentTransitionScope<T>.() -> ContentTransform = {
     (fadeIn(animationSpec = tween(transitionTime)) with fadeOut(animationSpec = tween(transitionTime)))
         .using(SizeTransform(clip = false))
 }

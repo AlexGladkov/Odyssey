@@ -37,3 +37,13 @@ kotlin {
         }
     }
 }
+
+android {
+    namespace = "ru.alexgladkov.common.compose.navigation"
+
+    kotlin {
+        jvmToolchain {
+            languageVersion.set(JavaLanguageVersion.of("17"))
+        }
+    }
+}
