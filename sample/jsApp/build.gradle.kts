@@ -8,6 +8,7 @@ kotlin {
         browser()
         binaries.executable()
     }
+
     sourceSets {
         val jsMain by getting  {
             dependencies {
