@@ -1,45 +1,136 @@
 import org.jetbrains.compose.compose
 
 plugins {
-    id("multiplatform-compose-setup")
-    id("android-setup")
+    kotlin("multiplatform")
+    id("org.jetbrains.compose")
     id("maven-publish")
-    id("convention.publication")
+    id("com.android.library")
+    id("kotlin-parcelize")
 }
 
-group = Dependencies.odysseyPackage
-version = Dependencies.odyssey
+group = libs.versions.packageName.get()
+version = libs.versions.packageVersion.get()
 
 kotlin {
+    jvm("desktop")
     android {
-        publishLibraryVariants("release", "debug")
+        publishLibraryVariants("release")
     }
+    ios()
+    iosSimulatorArm64()
+    js(IR) {
+        browser()
+        binaries.executable()
+    }
+    macosX64()
+    macosArm64()
 
     sourceSets {
-        named("commonMain") {
+        val commonMain by getting {
             dependencies {
+                implementation(compose.ui)
+                implementation(compose.foundation)
+                implementation(compose.material)
+                implementation(compose.runtime)
+
+                implementation(libs.uuid)
+                implementation(libs.kotlin.immutable)
+
                 implementation(project(":odyssey:odyssey-core"))
-                implementation(Dependencies.Utils.UUID)
-            }
-        }
-        named("commonTest")
-        named("androidMain") {
-            dependencies {
-                implementation(Dependencies.JetBrains.Kotlin.coroutinesAndroid)
-                implementation(Dependencies.AndroidX.Activity.activityCompose)
             }
         }
 
-        desktopMain {
+        val commonTest by getting {
             dependencies {
-                implementation(Dependencies.JetBrains.Kotlin.coroutinesSwing)
+                implementation(kotlin("test-common"))
+                implementation(kotlin("test-annotations-common"))
             }
+        }
+
+        val commonButJSMain by creating {
+            dependsOn(commonMain)
+        }
+        val skikoMain by creating {
+            dependsOn(commonMain)
+        }
+        val jvmAndAndroidMain by creating {
+            dependsOn(commonMain)
+        }
+        val nativeMain by creating {
+            dependsOn(commonMain)
+        }
+
+        val desktopMain by getting {
+            dependsOn(skikoMain)
+            dependsOn(jvmAndAndroidMain)
+            dependsOn(commonButJSMain)
+
+            dependencies {
+                implementation(libs.coroutines.swing)
+                implementation(compose.desktop.common)
+            }
+        }
+
+        val desktopTest by getting {
+            dependencies {
+                implementation(kotlin("test-junit"))
+                implementation("junit:junit:4.13.2")
+            }
+        }
+
+        val androidMain by getting {
+            dependsOn(jvmAndAndroidMain)
+            dependsOn(commonButJSMain)
+
+            dependencies {
+                implementation(libs.coroutines.android)
+                implementation(libs.activity.compose)
+            }
+        }
+
+        val iosMain by getting {
+            dependsOn(skikoMain)
+            dependsOn(commonButJSMain)
+            dependsOn(nativeMain)
+        }
+
+        val iosTest by getting
+        val iosSimulatorArm64Main by getting
+        iosSimulatorArm64Main.dependsOn(iosMain)
+        val iosSimulatorArm64Test by getting
+        iosSimulatorArm64Test.dependsOn(iosTest)
+        val jsMain by getting {
+            dependsOn(skikoMain)
+        }
+        val macosMain by creating {
+            dependsOn(skikoMain)
+            dependsOn(commonButJSMain)
+            dependsOn(nativeMain)
+        }
+        val macosX64Main by getting {
+            dependsOn(macosMain)
+        }
+        val macosArm64Main by getting {
+            dependsOn(macosMain)
         }
     }
 }
 
 android {
-    namespace = "ru.alexgladkov.common.compose.navigation"
+    compileSdk = libs.versions.compileSdk.get().toInt()
+    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
+
+    namespace = "ru.alexgladkov.odyssey.compose"
+
+    defaultConfig {
+        minSdk = libs.versions.minSdk.get().toInt()
+        targetSdk = libs.versions.targetSdk.get().toInt()
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
 
     kotlin {
         jvmToolchain {
@@ -47,3 +138,9 @@ android {
         }
     }
 }
+
+configureMavenPublication(
+    groupId = libs.versions.packageName.get(),
+    artifactId = "odyssey-compose",
+    name = "Compose implementation for core"
+)

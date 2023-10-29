@@ -1,38 +1,96 @@
-import org.jetbrains.compose.compose
-
 plugins {
-    id("multiplatform-compose-setup")
-    id("android-setup")
+    kotlin("multiplatform")
+    id("org.jetbrains.compose")
     id("maven-publish")
-    id("convention.publication")
+    id("com.android.library")
+    id("kotlin-parcelize")
+    id("kotlin-kapt")
 }
 
-group = Dependencies.odysseyPackage
-version = Dependencies.odyssey
+group = libs.versions.packageName.get()
+version = libs.versions.packageVersion.get()
 
 kotlin {
-    android {
-        publishLibraryVariants("release", "debug")
+    android()
+    jvm("desktop")
+    ios()
+    iosSimulatorArm64()
+    js(IR) {
+        browser()
     }
+    macosX64()
+    macosArm64()
 
     sourceSets {
-        named("commonMain") {
+        val commonMain by getting {
             dependencies {
-                implementation(Dependencies.JetBrains.Kotlin.coroutines)
+                implementation(compose.ui)
+                implementation(compose.foundation)
+                implementation(compose.material)
+                implementation(compose.runtime)
+
+                implementation(libs.uuid)
+
+                implementation(libs.coroutines.core)
+                implementation(libs.kotlin.immutable)
             }
         }
-        named("commonTest")
+
+        named("commonTest") {
+            dependencies {
+                implementation(kotlin("test-common"))
+                implementation(kotlin("test-annotations-common"))
+                implementation("junit:junit:4.13.2")
+            }
+        }
 
         named("androidMain") {
             dependencies {
-                implementation(Dependencies.AndroidX.Activity.activityCompose)
+                implementation(libs.activity.compose)
             }
+        }
+
+        val desktopTest by getting {
+            dependencies {
+                implementation(kotlin("test-junit"))
+                implementation("junit:junit:4.13.2")
+            }
+        }
+
+        val iosMain by getting {
+            dependsOn(commonMain)
+        }
+
+        val iosSimulatorArm64Main by getting
+        iosSimulatorArm64Main.dependsOn(iosMain)
+
+        val macosMain by creating {
+            dependsOn(commonMain)
+        }
+        val macosX64Main by getting {
+            dependsOn(macosMain)
+        }
+        val macosArm64Main by getting {
+            dependsOn(macosMain)
         }
     }
 }
 
 android {
+    compileSdk = libs.versions.compileSdk.get().toInt()
+    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
+
     namespace = "ru.alexgladkov.odyssey.core"
+
+    defaultConfig {
+        minSdk = libs.versions.minSdk.get().toInt()
+        targetSdk = libs.versions.targetSdk.get().toInt()
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
 
     kotlin {
         jvmToolchain {
@@ -40,3 +98,9 @@ android {
         }
     }
 }
+
+configureMavenPublication(
+    groupId = libs.versions.packageName.get(),
+    artifactId = "odyssey-core",
+    name = "Library core"
+)

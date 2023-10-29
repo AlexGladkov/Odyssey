@@ -41,3 +41,4 @@ core-data-shared/build/
 keys/my-key.asc
 
 *.asc
+/kotlin-js-store/

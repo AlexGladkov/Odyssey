@@ -1,0 +1,38 @@
+[versions]
+serialization = "1.4.1"
+uuidVersion = "0.3.1"
+coroutines = "1.6.4"
+activityVersion = "1.6.1"
+appCompatVersion = "1.6.1"
+composeVersion = "1.3.3"
+hiltVersion = "2.41"
+hiltComposeVersion = "1.1.0-alpha01"
+
+minSdk = "24"
+compileSdk = "33"
+targetSdk = "33"
+
+packageName = "io.github.alexgladkov"
+packageVersion = "1.4.0-alpha05"
+
+[libraries]
+coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines"}
+coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines"}
+coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "coroutines"}
+
+test-compose-junit = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "composeVersion"}
+test-compose-manifest = { module = "androidx.compose.ui:ui-test-manifest" , version.ref = "composeVersion"}
+
+activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityVersion" }
+activity-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appCompatVersion" }
+
+compose-navigation = "androidx.navigation:navigation-compose:2.5.3"
+
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltVersion" }
+hilt-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltVersion" }
+hilt-compose = { module = "androidx.hilt:hilt-navigation-compose",  version.ref = "hiltComposeVersion" }
+
+uuid = { module = "com.benasher44:uuid", version.ref = "uuidVersion"}
+
+kotlin-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
+kotlin-immutable = "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5"
