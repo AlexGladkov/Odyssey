@@ -1,18 +1,16 @@
 plugins {
-    id("multiplatform-android-setup")
-    id("android-setup")
+    kotlin("multiplatform")
+    id("org.jetbrains.compose")
     id("maven-publish")
-    id("convention.publication")
+    id("com.android.library")
     kotlin("kapt")
 }
 
-group = Dependencies.odysseyPackage
-version = Dependencies.odyssey
+group = libs.versions.packageName.get()
+version = libs.versions.packageVersion.get()
 
 kotlin {
-    android {
-        publishLibraryVariants("release", "debug")
-    }
+    android()
 
     sourceSets {
         commonMain {
@@ -22,16 +20,16 @@ kotlin {
             }
         }
 
-        androidMain {
+        val androidMain by getting {
             dependencies {
-                implementation(Dependencies.Google.Dagger.hiltAndroid)
-                implementation(Dependencies.AndroidX.Hilt.hiltNavigationCompose)
+                implementation(libs.hilt.android)
+                implementation(libs.hilt.compose)
 
                 configurations.getByName("kapt").dependencies.add(
                     org.gradle.api.internal.artifacts.dependencies.DefaultExternalModuleDependency(
                         "com.google.dagger",
                         "hilt-android-compiler",
-                        Dependencies.Google.Dagger.version.toString()
+                        libs.versions.hiltVersion.get()
                     )
                 )
             }
@@ -40,7 +38,20 @@ kotlin {
 }
 
 android {
-    namespace = "ru.alexgladkov.common.compose.android"
+    compileSdk = libs.versions.compileSdk.get().toInt()
+    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
+
+    namespace = "ru.alexgladkov.odyssey.android"
+
+    defaultConfig {
+        minSdk = libs.versions.minSdk.get().toInt()
+        targetSdk = libs.versions.targetSdk.get().toInt()
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
 
     kotlin {
         jvmToolchain {
@@ -48,3 +59,9 @@ android {
         }
     }
 }
+
+configureMavenPublication(
+    groupId = libs.versions.packageName.get(),
+    artifactId = "odyssey-android",
+    name = "Android extensions for Odyssey"
+)

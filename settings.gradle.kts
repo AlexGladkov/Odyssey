@@ -1,15 +1,29 @@
+rootProject.name = "Odyssey"
 include(
-    ":common:common-sample",
-
     ":odyssey:odyssey-core",
     ":odyssey:odyssey-compose",
     ":odyssey:odyssey-android",
-
-    ":android",
-    ":desktop",
-    ":uikit",
-    ":hilt",
+    ":sample:shared",
+    ":sample:androidApp",
+    ":sample:desktopApp",
+    ":sample:jsApp",
+    ":sample:hiltApp"
 )
 
-//includeBuild("convention-plugins")
-rootProject.name = "Odyssey"
+pluginManagement {
+    repositories {
+        google()
+        gradlePluginPortal()
+        mavenCentral()
+        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
+        mavenLocal()
+    }
+}
+
+dependencyResolutionManagement {
+    repositories {
+        google()
+        mavenCentral()
+        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
+    }
+}
