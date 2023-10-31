@@ -1,26 +1,11 @@
-import org.apache.tools.ant.taskdefs.condition.Os
-
 plugins {
     `kotlin-dsl`
 }
 
 repositories {
-    mavenLocal()
-    google()
-    mavenCentral()
-    maven(url = "https://maven.pkg.jetbrains.space/public/p/compose/dev")
+    gradlePluginPortal()
 }
 
 dependencies {
-    implementation(Dependencies.JetBrains.Compose.gradlePlugin)
-    implementation(Dependencies.JetBrains.Kotlin.gradlePlugin)
-    implementation(Dependencies.Android.Tools.Build.gradlePlugin)
-    implementation(Dependencies.JetBrains.Kotlin.serializationPlugin)
-    implementation(Dependencies.Google.Dagger.hiltGradlePlugin)
-}
-
-val rootDirProject = file("../")
-
-kotlin {
-    sourceSets.getByName("main").kotlin.srcDir("buildSrc/src/main/kotlin")
+    compileOnly(gradleApi())
 }
