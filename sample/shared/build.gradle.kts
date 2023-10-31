@@ -16,6 +16,7 @@ kotlin {
         browser()
         binaries.executable()
     }
+
     macosX64 {
         binaries {
             executable {

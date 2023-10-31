@@ -16,6 +16,7 @@ kotlin {
     android {
         publishLibraryVariants("release")
     }
+
     ios()
     iosSimulatorArm64()
     js(IR) {

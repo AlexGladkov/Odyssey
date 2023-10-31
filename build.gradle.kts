@@ -1,7 +1,8 @@
 plugins {
-    kotlin("multiplatform") apply false
-    id("com.android.library") apply false
-    id("com.google.dagger.hilt.android") apply false
+    alias(libs.plugins.multiplatform).apply(false)
+    alias(libs.plugins.compose).apply(false)
+    alias(libs.plugins.android.library).apply(false)
+    alias(libs.plugins.dagger).apply(false)
     `maven-publish`
 }
 
