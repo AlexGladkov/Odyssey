@@ -10,6 +10,7 @@ import ru.alexgladkov.odyssey.compose.Render
  * @param alpha - scrimer alpha
  * @param closeOnBackdropClick - true if you want to close on backdrop click
  * @param backContent - draw behind modal view (composable)
+ * @param name - non-unique user identifier
  */
 data class ModalSheetConfiguration(
     override val animationTime: Int = 400,
@@ -20,6 +21,7 @@ data class ModalSheetConfiguration(
     val closeOnBackdropClick: Boolean = true,
     val closeOnSwipe: Boolean = true,
     val backContent: Render? = null,
+    override val name: String? = null
 ) : ModalConfiguration
 
 data class AlertConfiguration(
@@ -28,13 +30,16 @@ data class AlertConfiguration(
     val maxWidth: Float? = null,
     val cornerRadius: Int = 0,
     val alpha: Float = 0.2f,
-    val closeOnBackdropClick: Boolean = true
+    val closeOnBackdropClick: Boolean = true,
+    override val name: String? = null
 ) : ModalConfiguration
 
 data class CustomModalConfiguration(
-    override val animationTime: Int = 400
+    override val animationTime: Int = 400,
+    override val name: String? = null
 ) : ModalConfiguration
 
 interface ModalConfiguration {
     val animationTime: Int
+    val name: String?
 }

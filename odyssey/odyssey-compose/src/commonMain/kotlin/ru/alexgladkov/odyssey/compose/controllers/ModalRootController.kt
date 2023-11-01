@@ -9,9 +9,11 @@ import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.ModalSheetConf
 import ru.alexgladkov.odyssey.core.extensions.CFlow
 import ru.alexgladkov.odyssey.core.extensions.wrap
 
+class Modal(val key: String, val name: String?)
+
 sealed class ModalDialogState {
-    object Idle : ModalDialogState()
-    object Open : ModalDialogState()
+    data object Idle : ModalDialogState()
+    data object Open : ModalDialogState()
     data class Close(val animate: Boolean = true) : ModalDialogState()
 }
 
@@ -37,6 +39,7 @@ internal data class ModalSheetBundle(
     val cornerRadius: Int,
     val closeOnSwipe: Boolean = true,
     val backContent: Render? = null,
+    override val name: String?,
 ) : ModalBundle
 
 /**
@@ -58,6 +61,7 @@ internal data class AlertBundle(
     val closeOnBackdropClick: Boolean,
     val alpha: Float,
     val cornerRadius: Int,
+    override val name: String?,
 ) : ModalBundle
 
 /**
@@ -67,7 +71,8 @@ internal data class CustomModalBundle(
     override val key: String,
     override val dialogState: ModalDialogState,
     override val animationTime: Int,
-    override val content: Render
+    override val content: Render,
+    override val name: String?,
 ) : ModalBundle
 
 /**
@@ -75,6 +80,11 @@ internal data class CustomModalBundle(
  * @see ModalDialogState
  */
 sealed interface ModalBundle {
+    /**
+     * Non-unique user identifier
+     */
+    val name: String?
+
     val key: String
 
     /**
@@ -103,6 +113,9 @@ open class ModalController {
     private var _backStack = mutableListOf<ModalBundle>()
     private val _currentStack: MutableStateFlow<List<ModalBundle>> = MutableStateFlow(emptyList())
     val currentStack: CFlow<List<ModalBundle>> = _currentStack.wrap()
+    val backStack: List<Modal> get() = _backStack
+        .filter { !it.isClosed }
+        .map { Modal(it.key, it.name) }
 
     internal fun presentNew(
         modalSheetConfiguration: ModalSheetConfiguration,
@@ -176,7 +189,7 @@ open class ModalController {
         redrawStack()
     }
 
-    fun isEmpty() = _backStack.none { it.dialogState !is ModalDialogState.Close }
+    fun isEmpty(): Boolean = _backStack.none { !it.isClosed }
 
     private fun redrawStack() {
         val newStack = ArrayList<ModalBundle>().apply {
@@ -191,6 +204,7 @@ open class ModalController {
 
 internal fun ModalSheetConfiguration.wrap(key: String, with: Render): ModalBundle = ModalSheetBundle(
     key = key,
+    name = name,
     maxHeight = maxHeight,
     closeOnBackdropClick = closeOnBackdropClick,
     closeOnSwipe = closeOnSwipe,
@@ -205,6 +219,7 @@ internal fun ModalSheetConfiguration.wrap(key: String, with: Render): ModalBundl
 
 internal fun AlertConfiguration.wrap(key: String, with: Render): ModalBundle = AlertBundle(
     key = key,
+    name = name,
     maxHeight = maxHeight,
     maxWidth = maxWidth,
     animationTime = animationTime,
@@ -217,5 +232,11 @@ internal fun AlertConfiguration.wrap(key: String, with: Render): ModalBundle = A
 
 @Suppress("unused")
 internal fun CustomModalConfiguration.wrap(key: String, with: Render): ModalBundle = CustomModalBundle(
-    key = key, content = with, dialogState = ModalDialogState.Idle, animationTime = animationTime
+    key = key,
+    name = name,
+    content = with,
+    dialogState = ModalDialogState.Idle,
+    animationTime = animationTime
 )
+
+private inline val ModalBundle.isClosed: Boolean get() = this.dialogState is ModalDialogState.Close
