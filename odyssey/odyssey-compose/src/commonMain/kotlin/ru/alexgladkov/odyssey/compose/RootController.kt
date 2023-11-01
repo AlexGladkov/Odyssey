@@ -65,7 +65,6 @@ open class RootController(rootControllerType: RootControllerType): CoreRootContr
 
     var currentScreen: StateFlow<NavConfiguration?> = _currentScreen.asStateFlow()
 
-    val backStack: List<Screen> get() = _backstack.toList()
     /**
      * Debug name need to debug :) if you like console debugging
      * Setup automatically

@@ -113,9 +113,6 @@ open class ModalController {
     private var _backStack = mutableListOf<ModalBundle>()
     private val _currentStack: MutableStateFlow<List<ModalBundle>> = MutableStateFlow(emptyList())
     val currentStack: CFlow<List<ModalBundle>> = _currentStack.wrap()
-    val backStack: List<Modal> get() = _backStack
-        .filter { !it.isClosed }
-        .map { Modal(it.key, it.name) }
 
     internal fun presentNew(
         modalSheetConfiguration: ModalSheetConfiguration,
@@ -190,6 +187,13 @@ open class ModalController {
     }
 
     fun isEmpty(): Boolean = _backStack.none { !it.isClosed }
+
+    fun top(): Modal? = _backStack.lastOrNull { !it.isClosed }?.let {
+        Modal(
+            key = it.key,
+            name = it.name
+        )
+    }
 
     private fun redrawStack() {
         val newStack = ArrayList<ModalBundle>().apply {
