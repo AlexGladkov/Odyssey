@@ -9,6 +9,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -83,12 +84,13 @@ internal fun BoxScope.BottomModalSheet(
                 IntOffset(x = 0, y = offset + positiveOffset.toInt())
             }
         }
-        Card(
-            modifier = modifier,
-            shape = RoundedCornerShape(
-                topStart = bundle.cornerRadius.dp,
-                topEnd = bundle.cornerRadius.dp
-            )
+
+        Box(
+            modifier = modifier
+                .clip(shape = RoundedCornerShape(
+                    topStart = bundle.cornerRadius.dp,
+                    topEnd = bundle.cornerRadius.dp
+                )),
         ) {
             bundle.content.invoke(bundle.key)
         }
