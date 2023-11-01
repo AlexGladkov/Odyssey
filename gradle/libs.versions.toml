@@ -1,9 +1,9 @@
 [versions]
 
-kotlin = "1.9.10"
+kotlin = "1.9.20"
 androidGradlePlugin = "8.1.2"
 dagger = "2.44"
-compose = "1.5.1"
+compose = "1.5.10"
 serialization = "1.4.1"
 uuidVersion = "0.3.1"
 coroutines = "1.6.4"
