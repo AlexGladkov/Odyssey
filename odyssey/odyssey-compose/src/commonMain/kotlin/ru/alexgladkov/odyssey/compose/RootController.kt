@@ -23,19 +23,16 @@ import ru.alexgladkov.odyssey.core.animations.AnimationType
 import ru.alexgladkov.odyssey.core.backpress.BackPressedCallback
 import ru.alexgladkov.odyssey.core.backpress.OnBackPressedDispatcher
 import ru.alexgladkov.odyssey.core.breadcrumbs.Breadcrumb
-import ru.alexgladkov.odyssey.core.configuration.DisplayType
-import ru.alexgladkov.odyssey.core.configuration.RootConfiguration
 import ru.alexgladkov.odyssey.core.configuration.RootControllerType
 import ru.alexgladkov.odyssey.core.screen.Screen
 import ru.alexgladkov.odyssey.core.screen.ScreenBundle
 import ru.alexgladkov.odyssey.core.wrap
-import kotlin.collections.HashMap
 
 typealias RenderWithParams<T> = @Composable (T) -> Unit
 typealias Render = @Composable (key: String) -> Unit
 
 sealed class ScreenType {
-    object Simple : ScreenType()
+    data object Simple : ScreenType()
     data class Flow(val flowBuilderModel: FlowBuilderModel) : ScreenType()
     data class MultiStack<Cfg : TabsNavConfiguration>(
         val multiStackBuilderModel: MultiStackBuilderModel,
