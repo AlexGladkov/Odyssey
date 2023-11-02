@@ -35,7 +35,11 @@ fun ModalNavigator(
             modalStack.forEach { bundle ->
                 when (bundle) {
                     is ModalSheetBundle -> {
-                        BottomModalSheet(bundle, modalController)
+                        BottomModalSheet(
+                            configuration.backgroundColor,
+                            bundle,
+                            modalController
+                        )
                     }
 
                     is AlertBundle -> {
@@ -64,7 +68,8 @@ fun ModalNavigator(
     }
 }
 
-internal fun <T> Int.asTween(): TweenSpec<T> = tween(durationMillis = this, easing = FastOutSlowInEasing)
+internal fun <T> Int.asTween(): TweenSpec<T> =
+    tween(durationMillis = this, easing = FastOutSlowInEasing)
 
 @Composable
 internal fun Screamer(alpha: Float, onCloseClick: () -> Unit) {

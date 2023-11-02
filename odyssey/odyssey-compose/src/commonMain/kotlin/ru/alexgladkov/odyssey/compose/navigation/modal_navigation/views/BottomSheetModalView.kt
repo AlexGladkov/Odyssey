@@ -2,6 +2,7 @@ package ru.alexgladkov.odyssey.compose.navigation.modal_navigation.views
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.animateIntAsState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -9,6 +10,8 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -22,6 +25,7 @@ import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.asTween
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 internal fun BoxScope.BottomModalSheet(
+    backgroundColor: Color,
     bundle: ModalSheetBundle,
     modalController: ModalController,
 ) {
@@ -83,12 +87,14 @@ internal fun BoxScope.BottomModalSheet(
                 IntOffset(x = 0, y = offset + positiveOffset.toInt())
             }
         }
-        Card(
-            modifier = modifier,
-            shape = RoundedCornerShape(
-                topStart = bundle.cornerRadius.dp,
-                topEnd = bundle.cornerRadius.dp
-            )
+
+        Box(
+            modifier = modifier
+                .background(backgroundColor)
+                .clip(shape = RoundedCornerShape(
+                    topStart = bundle.cornerRadius.dp,
+                    topEnd = bundle.cornerRadius.dp
+                )),
         ) {
             bundle.content.invoke(bundle.key)
         }
@@ -96,7 +102,7 @@ internal fun BoxScope.BottomModalSheet(
 
     LaunchedEffect(bundle.dialogState, swipeableState.offset.value) {
         if (swipeableState.offset.value == viewHeight && bundle.dialogState !is ModalDialogState.Close) {
-            modalController.setTopDialogState(ModalDialogState.Close(), bundle.key)
+            modalController.setTopDialogState(ModalDialogState.Close(animate = false), bundle.key)
         }
 
         when (bundle.dialogState) {
