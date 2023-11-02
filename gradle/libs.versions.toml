@@ -1,9 +1,9 @@
 [versions]
 
-kotlin = "1.9.20"
+kotlin = "1.9.10"
 androidGradlePlugin = "8.1.2"
 dagger = "2.44"
-compose = "1.5.10"
+compose = "1.5.2"
 serialization = "1.4.1"
 uuidVersion = "0.3.1"
 coroutines = "1.6.4"
@@ -18,7 +18,7 @@ compileSdk = "33"
 targetSdk = "33"
 
 packageName = "io.github.alexgladkov"
-packageVersion = "1.3.40"
+packageVersion = "1.3.31"
 
 [libraries]
 coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines"}
