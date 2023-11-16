@@ -70,9 +70,11 @@ subprojects {
                 maven {
                     name = "sonatype"
                     setUrl("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
-                    credentials {
-                        username = extra.get("ossrhUsername").toString()
-                        password = extra.get("ossrhPassword").toString()
+                    if (extra.has("ossrhUsername") && extra.has("ossrhPassword")) {
+                        credentials {
+                            username = extra.get("ossrhUsername").toString()
+                            password = extra.get("ossrhPassword").toString()
+                        }
                     }
                 }
             }
