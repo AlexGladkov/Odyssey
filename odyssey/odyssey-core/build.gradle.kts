@@ -10,12 +10,14 @@ group = libs.versions.packageName.get()
 version = libs.versions.packageVersion.get()
 
 kotlin {
-    android()
+
+    androidTarget()
     jvm("desktop")
     ios()
     iosSimulatorArm64()
     js(IR) {
         browser()
+        binaries.executable()
     }
     macosX64()
     macosArm64()

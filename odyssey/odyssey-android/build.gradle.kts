@@ -10,7 +10,7 @@ group = libs.versions.packageName.get()
 version = libs.versions.packageVersion.get()
 
 kotlin {
-    android()
+    androidTarget()
 
     sourceSets {
         commonMain {

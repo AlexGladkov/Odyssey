@@ -7,7 +7,7 @@ include(
     ":sample:androidApp",
     ":sample:desktopApp",
     ":sample:jsApp",
-    ":sample:hiltApp"
+//    ":sample:hiltApp"
 )
 
 pluginManagement {
@@ -18,6 +18,10 @@ pluginManagement {
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
         mavenLocal()
     }
+}
+
+plugins {
+    id("org.gradle.toolchains.foojay-resolver-convention") version "0.4.0"
 }
 
 dependencyResolutionManagement {

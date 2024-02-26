@@ -8,12 +8,20 @@ plugins {
 version = "1.0-SNAPSHOT"
 
 kotlin {
-    android()
+    androidTarget()
     jvm("desktop")
-    ios()
+
+    iosX64()
+    iosArm64()
     iosSimulatorArm64()
-    js(IR) {
-        browser()
+
+    js {
+        moduleName = "composeApp"
+        browser {
+            commonWebpackConfig {
+                outputFileName = "composeApp.js"
+            }
+        }
         binaries.executable()
     }
 
@@ -62,29 +70,6 @@ kotlin {
                 implementation(libs.activity.appcompat)
                 implementation(libs.activity.compose)
             }
-        }
-
-        val iosMain by getting
-        val iosTest by getting
-        val iosSimulatorArm64Main by getting {
-            dependsOn(iosMain)
-        }
-        val iosSimulatorArm64Test by getting {
-            dependsOn(iosTest)
-        }
-        val desktopMain by getting {
-            dependencies {
-                implementation(compose.desktop.common)
-            }
-        }
-        val macosMain by creating {
-            dependsOn(commonMain)
-        }
-        val macosX64Main by getting {
-            dependsOn(macosMain)
-        }
-        val macosArm64Main by getting {
-            dependsOn(macosMain)
         }
     }
 }

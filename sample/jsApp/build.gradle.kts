@@ -4,9 +4,14 @@ plugins {
 }
 
 kotlin {
-    targetHierarchy.default()
+
     js {
-        browser()
+        moduleName = "composeApp"
+        browser {
+            commonWebpackConfig {
+                outputFileName = "composeApp.js"
+            }
+        }
         binaries.executable()
     }
 

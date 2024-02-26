@@ -13,16 +13,19 @@ version = libs.versions.packageVersion.get()
 
 kotlin {
     jvm("desktop")
-    android {
+    androidTarget {
         publishLibraryVariants("release")
     }
 
-    ios()
+    iosX64()
+    iosArm64()
     iosSimulatorArm64()
-    js(IR) {
+
+    js {
         browser()
         binaries.executable()
     }
+
     macosX64()
     macosArm64()
 
@@ -48,24 +51,7 @@ kotlin {
             }
         }
 
-        val commonButJSMain by creating {
-            dependsOn(commonMain)
-        }
-        val skikoMain by creating {
-            dependsOn(commonMain)
-        }
-        val jvmAndAndroidMain by creating {
-            dependsOn(commonMain)
-        }
-        val nativeMain by creating {
-            dependsOn(commonMain)
-        }
-
         val desktopMain by getting {
-            dependsOn(skikoMain)
-            dependsOn(jvmAndAndroidMain)
-            dependsOn(commonButJSMain)
-
             dependencies {
                 implementation(libs.coroutines.swing)
                 implementation(compose.desktop.common)
@@ -80,39 +66,10 @@ kotlin {
         }
 
         val androidMain by getting {
-            dependsOn(jvmAndAndroidMain)
-            dependsOn(commonButJSMain)
-
             dependencies {
                 implementation(libs.coroutines.android)
                 implementation(libs.activity.compose)
             }
-        }
-
-        val iosMain by getting {
-            dependsOn(skikoMain)
-            dependsOn(commonButJSMain)
-            dependsOn(nativeMain)
-        }
-
-        val iosTest by getting
-        val iosSimulatorArm64Main by getting
-        iosSimulatorArm64Main.dependsOn(iosMain)
-        val iosSimulatorArm64Test by getting
-        iosSimulatorArm64Test.dependsOn(iosTest)
-        val jsMain by getting {
-            dependsOn(skikoMain)
-        }
-        val macosMain by creating {
-            dependsOn(skikoMain)
-            dependsOn(commonButJSMain)
-            dependsOn(nativeMain)
-        }
-        val macosX64Main by getting {
-            dependsOn(macosMain)
-        }
-        val macosArm64Main by getting {
-            dependsOn(macosMain)
         }
     }
 }
