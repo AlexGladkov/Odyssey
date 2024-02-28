@@ -90,11 +90,11 @@ internal fun BoxScope.BottomModalSheet(
 
         Box(
             modifier = modifier
-                .background(backgroundColor)
                 .clip(shape = RoundedCornerShape(
                     topStart = bundle.cornerRadius.dp,
                     topEnd = bundle.cornerRadius.dp
-                )),
+                ))
+                .background(backgroundColor),
         ) {
             bundle.content.invoke(bundle.key)
         }
