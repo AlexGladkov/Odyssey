@@ -1,13 +1,13 @@
 plugins {
     id("com.android.application")
     kotlin("android")
-    id("org.jetbrains.compose")
+    id(libs.plugins.compose.get().pluginId)
 }
 
 dependencies {
-    implementation(project(":sample:shared"))
-    implementation(project(":odyssey:odyssey-compose"))
-    implementation(project(":odyssey:odyssey-core"))
+    implementation(projects.sample.shared)
+    implementation(projects.odysseyCompose)
+    implementation(projects.odysseyCore)
 
     implementation(compose.material)
 

@@ -1,38 +1,35 @@
 plugins {
     kotlin("multiplatform")
-    id("org.jetbrains.compose")
-    id("maven-publish")
-    id("com.android.library")
-    kotlin("kapt")
+    id(libs.plugins.compose.get().pluginId)
+    id(libs.plugins.publish.get().pluginId)
+    id(libs.plugins.android.library.get().pluginId)
+    id(libs.plugins.kapt.get().pluginId)
 }
 
 group = libs.versions.packageName.get()
 version = libs.versions.packageVersion.get()
 
 kotlin {
+    applyDefaultHierarchyTemplate()
     androidTarget()
 
     sourceSets {
-        commonMain {
-            dependencies {
-                implementation(project(":odyssey:odyssey-core"))
-                implementation(project(":odyssey:odyssey-compose"))
-            }
+        commonMain.dependencies {
+            implementation(projects.odysseyCore)
+            implementation(projects.odysseyCompose)
         }
 
-        val androidMain by getting {
-            dependencies {
-                implementation(libs.hilt.android)
-                implementation(libs.hilt.compose)
+        androidMain.dependencies {
+            implementation(libs.hilt.android)
+            implementation(libs.hilt.compose)
 
-                configurations.getByName("kapt").dependencies.add(
-                    org.gradle.api.internal.artifacts.dependencies.DefaultExternalModuleDependency(
-                        "com.google.dagger",
-                        "hilt-android-compiler",
-                        libs.versions.hiltVersion.get()
-                    )
+            configurations.getByName("kapt").dependencies.add(
+                org.gradle.api.internal.artifacts.dependencies.DefaultExternalModuleDependency(
+                    "com.google.dagger",
+                    "hilt-android-compiler",
+                    libs.versions.hiltVersion.get()
                 )
-            }
+            )
         }
     }
 }
@@ -45,7 +42,6 @@ android {
 
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
-        targetSdk = libs.versions.targetSdk.get().toInt()
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     compileOptions {

@@ -1,8 +1,8 @@
 plugins {
-    kotlin("multiplatform")
-    kotlin("native.cocoapods")
-    id("com.android.library")
-    id("org.jetbrains.compose")
+    id(libs.plugins.multiplatform.get().pluginId)
+    id(libs.plugins.cocoapods.get().pluginId)
+    id(libs.plugins.android.library.get().pluginId)
+    id(libs.plugins.compose.get().pluginId)
 }
 
 version = "1.0-SNAPSHOT"
@@ -53,16 +53,14 @@ kotlin {
     }
 
     sourceSets {
-        val commonMain by getting {
-            dependencies {
-                implementation(compose.ui)
-                implementation(compose.foundation)
-                implementation(compose.material)
-                implementation(compose.runtime)
+        commonMain.dependencies {
+            implementation(compose.ui)
+            implementation(compose.foundation)
+            implementation(compose.material)
+            implementation(compose.runtime)
 
-                implementation(project(":odyssey:odyssey-core"))
-                implementation(project(":odyssey:odyssey-compose"))
-            }
+            implementation(projects.odysseyCore)
+            implementation(projects.odysseyCompose)
         }
 
         val androidMain by getting {
@@ -81,7 +79,6 @@ android {
 
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
-        targetSdk = libs.versions.targetSdk.get().toInt()
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     compileOptions {

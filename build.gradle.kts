@@ -1,18 +1,13 @@
 plugins {
-    alias(libs.plugins.multiplatform).apply(false)
-    alias(libs.plugins.compose).apply(false)
-    alias(libs.plugins.android.library).apply(false)
-    alias(libs.plugins.dagger).apply(false)
+    id(libs.plugins.multiplatform.get().pluginId).apply(false)
+    id(libs.plugins.android.library.get().pluginId).apply(false)
+    id(libs.plugins.compose.get().pluginId)
+        .version(libs.versions.plugin.multiplatform.compose.get())
+        .apply(false)
+    id(libs.plugins.dagger.get().pluginId)
+        .version(libs.versions.dagger.get())
+        .apply(false)
     `maven-publish`
-}
-
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
-        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
-        mavenLocal()
-    }
 }
 
 // Stub secrets to let the project sync and build without the publication values set up

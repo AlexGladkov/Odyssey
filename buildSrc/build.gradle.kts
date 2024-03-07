@@ -4,8 +4,11 @@ plugins {
 
 repositories {
     gradlePluginPortal()
+    google()
+    mavenCentral()
 }
 
 dependencies {
-    compileOnly(gradleApi())
+    implementation(libs.plugin.android)
+    implementation(libs.plugin.kotlin)
 }
