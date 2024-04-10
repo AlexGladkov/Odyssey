@@ -31,11 +31,11 @@ abstract class TabsNavModel<Cfg : TabsNavConfiguration> {
  * @param elevation - shadow control for bottom navigation
  */
 data class BottomNavConfiguration(
-    val modifier: Modifier = Modifier,
     val backgroundColor: Color,
     val selectedColor: Color,
     val unselectedColor: Color,
     val elevation: Dp = 8.dp,
+    val modifier: Modifier = Modifier
 ) : TabsNavConfiguration {
     override val type = TabsNavType.Bottom
 }
