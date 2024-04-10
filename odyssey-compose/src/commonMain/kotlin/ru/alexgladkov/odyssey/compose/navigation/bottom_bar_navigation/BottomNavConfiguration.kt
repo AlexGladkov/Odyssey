@@ -1,6 +1,7 @@
 package ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -30,6 +31,7 @@ abstract class TabsNavModel<Cfg : TabsNavConfiguration> {
  * @param elevation - shadow control for bottom navigation
  */
 data class BottomNavConfiguration(
+    val modifier: Modifier = Modifier,
     val backgroundColor: Color,
     val selectedColor: Color,
     val unselectedColor: Color,

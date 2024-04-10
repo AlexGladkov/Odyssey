@@ -58,6 +58,7 @@ fun BottomBarNavigator(startScreen: String?) {
         TabNavigator(modifier = Modifier.weight(1f), startScreen, tabItem)
 
         BottomNavigation(
+            modifier = bottomNavConfiguration.modifier,
             backgroundColor = bottomNavConfiguration.backgroundColor,
             elevation = bottomNavConfiguration.elevation
         ) {
