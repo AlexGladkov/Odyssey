@@ -5,8 +5,8 @@
 ```kotlin
 named("commonMain") {
     dependencies {
-        implementation("io.github.alexgladkov:odyssey-core:1.3.60") // For core classes
-        implementation("io.github.alexgladkov:odyssey-compose:1.3.60") // For compose extensions
+        implementation("io.github.alexgladkov:odyssey-core:1.3.61") // For core classes
+        implementation("io.github.alexgladkov:odyssey-compose:1.3.61") // For compose extensions
     }
 }
 ```
