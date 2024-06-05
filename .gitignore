@@ -42,3 +42,9 @@ keys/my-key.asc
 
 *.asc
 /kotlin-js-store/
+
+sample/iosApp/iosApp.xcodeproj/xcuserdata/neuradev.xcuserdatad/xcschemes/xcschememanagement.plist
+
+sample/iosApp/iosApp.xcworkspace/xcuserdata/neuradev.xcuserdatad/xcschemes/xcschememanagement.plist
+
+sample/iosApp/Pods/Pods.xcodeproj/xcuserdata/neuradev.xcuserdatad/xcschemes/xcschememanagement.plist
