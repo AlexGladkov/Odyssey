@@ -1,6 +1,7 @@
 package ru.alexgladkov.odyssey.compose.navigation.bottom_bar_navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -34,6 +35,7 @@ data class BottomNavConfiguration(
     val selectedColor: Color,
     val unselectedColor: Color,
     val elevation: Dp = 8.dp,
+    val modifier: Modifier = Modifier
 ) : TabsNavConfiguration {
     override val type = TabsNavType.Bottom
 }
